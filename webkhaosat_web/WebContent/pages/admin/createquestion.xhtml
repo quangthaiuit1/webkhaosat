@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>LIXCO</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<!-- Bootstrap core CSS -->
+	<h:outputStylesheet library="bootstrap"
+		name="web/css/bootstrap.min.css" />
+	<h:outputStylesheet library="bootstrap" name="web/css/css-search.css" />
+
+</h:head>
+<h:body>
+	<ui:composition template="common.xhtml">
+		<ui:define name="content">
+			<!-- Them cau hoi -->
+			<h:form id="addQuestion">
+				<div class="row"
+					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+					<div class="row" style="width: 100%">
+						<span class="group-name"
+							style="margin: 0 auto; color: black; margin-bottom: 10px;margin-top: 20px">THÊM
+							CÂU HỎI</span> <span class="group-description"><p
+								style="text-align: center; margin-left: 5px"></p></span> <br />
+					</div>
+					<div class="row"
+						style="width: 60%; margin-left: 0px; margin: 0 auto">
+						<div class="row" style="width: 100%; margin: 0 auto">
+							<p:autoComplete id="bocauhoiId" dropdown="true"
+								value="#{questionsBean.setofquestionsSelected1}"
+								completeMethod="#{questionsBean.completesSetofquestion}"
+								var="abc" itemLabel="#{abc.name}" itemValue="#{abc}"
+								placeholder="Chọn bộ câu hỏi"
+								style="margin-right: 5%;margin: 0 auto;margin-bottom:0px"
+								inputStyle="width: 100%" converter="#{themeConverter}"
+								forceSelection="true" />
+						</div>
+						<h:outputText value="Nhập tên câu hỏi" style="text-align:center" />
+						<br />
+						<p:inputText style="width: 100%!important;margin-bottom: 10px"
+							id="inputQuestion" value="#{questionsBean.questionNameNew}" />
+						<!--Autocomplete loai cau hoi -->
+						<div class="row" style="width: 100%; margin: 0 auto">
+							<p:autoComplete id="loaicongviecId" dropdown="true"
+								value="#{questionsBean.questiontypeAdd}"
+								completeMethod="#{questionsBean.completeQuestionType}" var="abc"
+								itemLabel="#{abc.name}" itemValue="#{abc}"
+								placeholder="Loại câu hỏi"
+								style="margin-right: 5%;margin: 0 auto;margin-bottom:0px"
+								inputStyle="width: 100%" converter="#{themeConverter}"
+								forceSelection="true" />
+						</div>
+						<h:outputText value="Nhập đáp án 1" style="text-align:center" />
+						<div class="row" style="width: 100%; margin: 0 auto">
+							<p:inputText style="width: 100%!important;margin-bottom: 10px"
+								id="inputAnswer1" value="#{questionsBean.answersNew[0]}" />
+						</div>
+						<h:outputText value="Nhập đáp án 2" style="text-align:center" />
+						<div class="row" style="width: 100%; margin: 0 auto">
+							<p:inputText style="width: 100%!important;margin-bottom: 10px"
+								id="inputAnswer2" value="#{questionsBean.answersNew[1]}" />
+						</div>
+						<h:outputText value="Nhập đáp án 3" style="text-align:center" />
+						<div class="row" style="width: 100%; margin: 0 auto">
+							<p:inputText style="width: 100%!important;margin-bottom: 10px"
+								id="inputAnswer3" value="#{questionsBean.answersNew[2]}" />
+						</div>
+						<h:outputText value="Nhập đáp án 4" style="text-align:center" />
+						<div class="row" style="width: 100%; margin: 0 auto">
+							<p:inputText style="width: 100%!important;margin-bottom: 10px"
+								id="inputAnswer4" value="#{questionsBean.answersNew[3]}" />
+						</div>
+						<h:outputText value="Nhập đáp án 5" style="text-align:center" />
+						<div class="row" style="width: 100%; margin: 0 auto">
+							<p:inputText style="width: 100%!important;margin-bottom: 10px"
+								id="inputAnswer5" value="#{questionsBean.answersNew[4]}" />
+						</div>
+
+						<div class="row" style="margin: 0 auto; margin-top: 10px">
+							<p:commandButton update="addQuestion" value="Tạo"
+								icon="fa fa-plus" style=" margin-left: 10%;margin-bottom: 10px"
+								action="#{questionsBean.createQuestion()}" />
+						</div>
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

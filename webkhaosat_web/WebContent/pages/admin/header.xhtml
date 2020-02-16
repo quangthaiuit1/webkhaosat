@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:body>
+	<ui:composition>
+		<h:form id="headerCustom">
+			<div class="row"
+				style="width: 90%; box-shadow: 0px 0px 5px #888; margin: 0 auto; margin-bottom: 15px; margin-top: 20px; border-radius: 5px">
+				<div class="row" style="width: 100%">
+					<span class="group-name"
+						style="margin-left: 1%; color: black; font-weight: bold; margin-top: 10px; font-size: 20px"><a style="text-decoration: none" href="http://192.168.0.132:8380/webkhaosat_web/pages/admin/index.jsf">Kỳ
+						khảo sát</a></span>
+				</div>
+				<hr width="97%" style="border-top: 1px solid #9c7e7e" />
+				<div class="row" style="width: 100%; color: black">
+					<div class="col-sm-12 col-md-4 col-lg-3" style="margin-bottom: 5px">
+						<h:outputText value="Tên kỳ khảo sát: " />
+						<p:inputText value="#{questionsBean.setofquestionsplaying.name}"
+							readonly="true" />
+					</div>
+					<div class="col-sm-12 col-md-2 col-lg-3" style="margin-bottom: 5px">
+						<h:outputText value="Ngày bắt đầu: " />
+						<p:inputText
+							value="#{questionsBean.setofquestionsplaying.starttime}"
+							readonly="true">
+							<f:convertDateTime pattern="dd.MM.yyyy" />
+						</p:inputText>
+						<br />
+						<hr width="96%" />
+						<h:outputText value="Ngày kết thúc: " />
+						<p:inputText
+							value="#{questionsBean.setofquestionsplaying.endtime}"
+							readonly="true">
+							<f:convertDateTime pattern="dd.MM.yyyy" />
+						</p:inputText>
+					</div>
+					<div class="col-sm-12 col-md-3 col-lg-6" style="margin-bottom: 5px">
+						<div class="row" style="width: 100%">
+							<div class="col-4">
+								<p:linkButton outcome="createsetofquestions" icon="fa fa-plus"
+									value="Thêm mới" style="width:100%">
+
+								</p:linkButton>
+
+							</div>
+							<div class="col-4">
+								<p:linkButton outcome="setofquestionsloading" icon="fa fa-check"
+									value="Chọn kỳ khảo sát" style="width: 100%;margin-right:20px;">
+
+								</p:linkButton>
+
+							</div>
+							<div class="col-4">
+								<p:linkButton outcome="createquestion" icon="fa fa-plus"
+									value="Thêm mới câu hỏi" style="width:100%">
+
+								</p:linkButton>
+
+							</div>
+						</div>
+						<hr width="95%" />
+						<div class="row" style="width: 100%">
+							<div class="col-4">
+								<p:linkButton outcome="listquestion" icon="fa fa-navicon"
+									value="Danh sách kỳ khảo sát" style="width: 100%;">
+								</p:linkButton>
+							</div>
+							<div class="col-4">
+								<p:linkButton outcome="setofbyuser" icon="fa fa-navicon"
+									value="Danh sách User (theo kỳ KS)" style="width: 100%;margin-right:20px;">
+								</p:linkButton>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</ui:composition>
+</h:body>
+
+</html>

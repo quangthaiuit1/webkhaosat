@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:body>
+	<ui:composition>
+
+		<div class="row" style="background-color: white;">
+			<div class="col-sm-12 col-md-12 col-lg-12">
+				<h4
+					style="text-align: center; color: #1F83D9; margin-top: 10px; font-weight: bold">PHIẾU
+					KHẢO SÁT</h4>
+				<p>Nhằm nâng cao chất lượng đào tạo đáp ứng yêu cầu của thị
+					trường lao động, Trường Đại học Công nghệ Thông tin tiến hành khảo
+					sát lấy ý kiến phản hồi từ người học về hoạt động giảng dạy của
+					giảng viên. Nhà trường rất mong nhận được sự hợp tác của Anh/Chị để
+					Nhà trường hoàn thành tốt nhiệm vụ giáo dục và đào tạo của mình.</p>
+			</div>
+			<h:form id="total">
+				<!-- phan 1  -->
+				<div class="row"
+					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+					<span class="group-name" style="margin: 0 auto">PHẦN 1: ĐÁNH
+						GIÁ</span> <span class="group-description"><p
+							style="text-align: center;">
+							Anh/Chị vui lòng cho ý kiến nhận xét của mình về môn học bằng
+							cách đánh dấu chọn vào ô tương ứng cho từng mục trong tất cả các
+							<strong>lĩnh vực</strong> dưới đây:<strong> </strong>
+						</p>
+						<p style="text-align: center;">
+							<strong>Thang điểm:</strong><strong>&nbsp; <span
+								style="color: #ff0000;">1</span>&nbsp;
+							</strong>
+							<h:graphicImage library="images" name="arrow2.png" />
+							<span style="color: #ff0000;"><strong> 4</strong></span>
+						</p>
+						<p style="text-align: center;">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<strong>Chưa tốt/hài lòng</strong>&nbsp;&nbsp;&nbsp;&nbsp;
+							<h:graphicImage library="images" name="arrow1.png" />
+							<strong>Rất tốt/hài lòng</strong>
+						</p> </span>
+					<c:set var="evenCount" value="${0}" />
+					<c:forEach items="#{questionsBean.questionAndAnswer1}"
+						var="question1">
+						<c:set var="evenCount" value="${evenCount+1}" />
+						<div class="row" style="width: 100%">
+							<p>
+								<h:outputText value="Câu #{evenCount}"
+									style="margin-left: 5px" />
+								: #{question1.question.name}
+							</p>
+						</div>
+						<div class="row" style="width: 100%; margin-left: 10px">
+
+							<h:panelGrid columns="1" style="margin-bottom:10px"
+								cellpadding="5">
+								<p:selectOneRadio id="id1_#{evenCount}"
+									value="#{questionsBean.ketquaPhan1[evenCount]}" layout="grid"
+									columns="1">
+									<c:forEach items="#{question1.ratings}" var="r">
+										<f:selectItem itemLabel="#{r.name}" itemValue="#{r.name}" />
+									</c:forEach>
+									<p:ajax event="valueChange"
+										listener="#{questionsBean.checkcau1()}" />
+								</p:selectOneRadio>
+							</h:panelGrid>
+
+						</div>
+					</c:forEach>
+				</div>
+				<!-- 	het phan 1 -->
+
+				<!-- phan 2  -->
+				<div class="row"
+					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px;">
+					<div class="row" style="width: 100%">
+						<span class="group-name" style="margin: 0 auto">PHẦN 2: TRẢ LỜI</span> <span class="group-description"><p
+								style="text-align: center; margin-left: 5px"></p></span> <br />
+					</div>
+
+					<c:set var="evenCount2" value="${evenCount}" />
+					<c:forEach items="#{questionsBean.questionAndAnswer2}"
+						var="question2">
+						<c:set var="evenCount2" value="${evenCount2+1}" />
+						<div class="row" style="width: 100%">
+							<p>
+								<h:outputText value="Câu #{evenCount2}"
+									style="margin-left: 5px" />
+								: #{question2.question.name}
+							</p>
+						</div>
+						<div class="row" style="width: 100%; margin-left: 10px">
+
+							<h:panelGrid columns="1" style="margin-bottom:10px"
+								cellpadding="5">
+								<p:selectOneRadio id="id2_#{evenCount2}"
+									value="#{questionsBean.ketquaPhan2[evenCount2]}" layout="grid"
+									columns="1">
+									<c:forEach items="#{question2.answers}" var="a">
+										<f:selectItem itemLabel="#{a.name}" itemValue="#{a.name}" />
+									</c:forEach>
+									<p:ajax event="valueChange"
+										listener="#{questionsBean.checkcau2()}" />
+								</p:selectOneRadio>
+							</h:panelGrid>
+
+						</div>
+					</c:forEach>
+
+				</div>
+				<!-- het phan 2 -->
+
+				<!-- phan 3 -->
+				<div class="row"
+					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+					<div class="row" style="width: 100%">
+						<span class="group-name" style="margin: 0 auto">PHẦN 3: LẤY
+							Ý KIẾN</span> <span class="group-description"><p
+								style="text-align: center; margin-left: 5px"></p></span> <br />
+					</div>
+					<c:set var="evenCount3" value="${evenCount2}" />
+					<c:forEach items="#{questionsBean.questionsType1}" var="question3">
+
+
+						<c:set var="evenCount3" value="${evenCount3+1}" />
+						<p>
+							<h:outputText value="Câu #{evenCount3}: "
+								style="margin-left: 5px" />
+							#{question3.name}
+						</p>
+						<br />
+
+						<p:inputTextarea
+							style="margin-left: 10px;margin-bottom: 5px;width: 80%" rows="6"
+							cols="33" value="#{questionsBean.ketquaPhan3[evenCount3]}" />
+						<br />
+
+					</c:forEach>
+				</div>
+				<!-- Het phan 3 -->
+				<div class="row"
+					style="margin: 0 auto; margin-bottom: 30px; margin-top: 10px">
+					<p:commandButton value="Hoàn thành" update="output"
+						icon="fa fa-check" oncomplete="PF('dlg').show()" />
+				</div>
+
+				<p:dialog header="Values" resizable="false" showEffect="fade"
+					widgetVar="dlg">
+					<p:panelGrid id="output" columns="1" columnClasses="label, value">
+						<h:outputText value="Câu 1:" />
+						<h:outputText value="#{questionsBean.ketquaPhan1[1]}" />
+
+						<h:outputText value="Câu 2:" />
+						<h:outputText value="#{questionsBean.ketquaPhan1[2]}" />
+
+						<h:outputText value="Câu 3:" />
+						<h:outputText value="#{questionsBean.ketquaPhan1[3]}" />
+
+						<h:outputText value="Câu 4:" />
+						<h:outputText value="#{questionsBean.ketquaPhan1[4]}" />
+
+						<h:outputText value="Câu 5:" />
+						<h:outputText value="#{questionsBean.ketquaPhan1[5]}" />
+
+						<h:outputText value="Câu 6:" />
+						<h:outputText value="#{questionsBean.ketquaPhan2[1]}" />
+
+						<h:outputText value="Câu 7:" />
+						<h:outputText value="#{questionsBean.ketquaPhan2[2]}" />
+
+						<h:outputText value="Câu 8:" />
+						<h:outputText value="#{questionsBean.ketquaPhan2[3]}" />
+
+						<h:outputText value="Câu 9:" />
+						<h:outputText value="#{questionsBean.ketquaPhan2[4]}" />
+
+						<h:outputText value="Câu 10:" />
+						<h:outputText value="#{questionsBean.ketquaPhan3[1]}" />
+
+						<h:outputText value="Câu 11:" />
+						<h:outputText value="#{questionsBean.ketquaPhan3[2]}" />
+
+					</p:panelGrid>
+				</p:dialog>
+			</h:form>
+		</div>
+
+	</ui:composition>
+</h:body>
+
+</html>

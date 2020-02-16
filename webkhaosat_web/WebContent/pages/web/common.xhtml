@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>HỆ THỐNG KHẢO SÁT</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<!-- Bootstrap core CSS -->
+	<h:outputStylesheet library="bootstrap"
+		name="web/css/bootstrap.min.css" />
+	<h:outputStylesheet library="bootstrap" name="web/css/style-css.css" />
+	<h:outputStylesheet library="bootstrap" name="web/css/css-search.css" />
+
+	<!-- Custom styles for this template -->
+	<h:outputStylesheet library="bootstrap"
+		name="web/css/modern-business.css" />
+	<!-- CSS -->
+	<style type="text/css">
+.ui-g div {
+	background-color: white;
+	border: 1px solid #eee;
+}
+
+.row {
+	margin-left: 0px;
+	margin-right: 0px
+}
+
+.centered {
+	margin: 0px auto;
+	vertical-align: middle;
+}
+.group-name {
+    color: #1F83D9;
+    font-size: 20px;
+    line-height: 35px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+.ui-button {
+	margin: 0 auto;
+}
+/* 	nav.navbar.fixed-top.navbar-expand-lg.navbar-dark.bg-dark {
+		    position: inherit;
+	} */
+</style>
+
+
+</h:head>
+<h:body style="background-color: #eee;width: 60%;margin: 0 auto;padding-top: 0px">
+	<ui:insert name="header">
+		<ui:include src="header.xhtml"></ui:include>
+	</ui:insert>
+	<ui:insert name="content">
+		<ui:include src="content.xhtml"></ui:include>
+	</ui:insert>
+	<ui:insert name="footer">
+		<ui:include src="footer.xhtml"></ui:include>
+	</ui:insert>
+</h:body>
+
+</html>

@@ -1,0 +1,85 @@
+.white-button.ui-button.ui-state-default:enabled:hover, .white-button.ui-button.ui-state-default:focus
+	{
+	background-color: #f2f2f2;
+	border-color: #ccc;
+	color: #373a3c;
+	/* with the exported variables from Nova and Luna Themes*/
+	border-color: var(- -input-hover-border-color, #ccc);
+}
+
+box-sizing: content-box;
+}
+.nest-bf-in-pf .form-group {
+    margin-bottom:0px;
+}
+.bg-dark {
+    background-color: white!important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: black!important;
+}
+
+
+.ui-inputtext{
+	border-radius: 5px!important;
+}
+.ui-autocomplete-input{
+		padding: 10px!important;
+		border-radius: 5px!important;
+
+}
+
+/* Chinh size nút  */
+
+
+.ui-button-text-only .ui-button-text {
+	padding: 10px!important;
+}
+
+.ui-panelgrid.showcase-text-align-center .ui-grid-responsive .ui-panelgrid-cell
+	{
+	text-align: center;
+}
+
+.customPanelGrid .ui-panelgrid-content {
+	align-items: center;
+}
+
+.ui-widget {
+	font-size: 89%;
+}
+
+.value {
+	font-weight: bold;
+}
+
+.ui-datatable-header {
+	height: 50px
+}
+
+.ui-datatable {
+	margin-bottom: 25px
+}
+
+.ui-datatable .ui-datatable-header {
+	text-align: right !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: 0.3em 0.4em;
+}
+
+.ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+	visibility: hidden;
+}
+
+.ui-filter-column .ui-column-customfilter .custom-filter {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.year-spinner input {
+	width: 100%;
+	box-sizing: border-box;
+}

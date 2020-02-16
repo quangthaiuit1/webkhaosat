@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<body>
+	<ui:composition>
+		<ul
+			class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+			id="accordionSidebar">
+
+			<!-- Sidebar - Brand -->
+			<a
+				class="sidebar-brand d-flex align-items-center justify-content-center"
+				href="http://192.168.0.132:8380/webkhaosat_web/pages/admin/createquestion.jsf">
+				<div class="sidebar-brand-icon rotate-n-15">
+					<i class="fa fa-tasks"></i>
+				</div>
+				<div class="sidebar-brand-text mx-3">TRANG QUẢN TRị</div>
+			</a>
+
+			<!-- Divider -->
+			<hr class="sidebar-divider my-0" />
+
+			<!-- Nav Item - Dashboard -->
+			<li class="nav-item active"><a class="nav-link"
+				href="http://192.168.0.132:8380/WebTimViec_WEB/pages/admin/index.jsf">
+					<h:graphicImage rendered="#{!task.IS_SEEN}" styleClass="fa fa-home" />
+					<span>Trang chủ</span>
+			</a></li>
+			<li class="nav-item" style="width: 80%; margin-left: 5px"><h:form
+					id="trangchu">
+					<p:growl id="messages" />
+					<p:menubar>
+						<p:menuitem style="font-size: small" value="Kỳ khảo sát"
+							url="http://192.168.0.132:8380/webkhaosat_web/pages/admin/createquestion.jsf" />
+					</p:menubar>
+				</h:form></li>
+			<hr />
+
+
+			<!-- Divider -->
+			<hr class="sidebar-divider" />
+
+			<!-- Heading -->
+			<div class="sidebar-heading">Addons</div>
+			<!-- Nav Item - Charts -->
+			<li class="nav-item"><a class="nav-link" href="abc.jsf"> <i
+					class="fa fa-chart-pie"></i> <span>Charts</span>
+			</a></li>
+
+			<!-- Nav Item - Tables -->
+			<li class="nav-item"><a class="nav-link" href="abc.jsf"> <i
+					class="fa fa-table"></i> <span>Tables</span>
+			</a></li>
+
+			<!-- Divider -->
+			<hr class="sidebar-divider d-none d-md-block" />
+
+		</ul>
+
+
+	</ui:composition>
+</body>
+
+</html>

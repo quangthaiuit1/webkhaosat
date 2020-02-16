@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<meta name="description" content="" />
+	<meta name="author" content="" />
+
+	<title>Admin</title>
+	<style>
+.ui-datatable table {
+	border-collapse: collapse;
+	width: 100%;
+	table-layout: fixed;
+	background: none !important;
+	background-color: black;
+}
+
+.value {
+	font-weight: bold;
+}
+
+.ui-datatable {
+	margin-bottom: 25px
+}
+
+.ui-datatable .ui-datatable-footer {
+	text-align: left;
+}
+
+.ui-datalist ul {
+	padding: 0 0 0 10px;
+	margin: 5px 0;
+}
+
+.ui-datatable .ui-button-icon-only .ui-button-text {
+	padding: 0;
+	line-height: 1.2;
+}
+.ui-widget {
+   
+    font-size: 13px;
+}
+/* Chinh cac row padding 0 */
+.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td, .ui-datatable tfoot th {
+    padding: 4px 4px;
+}
+</style>
+
+	<!-- Custom fonts for this template-->
+	<h:outputStylesheet library="font-awesome" name="css/all.min.css" />
+	<h:outputStylesheet library="font-awesome"
+		name="css/fontawesome.min.css" />
+	<link
+		href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+		rel="stylesheet" />
+	<!-- Custom styles for this template-->
+	<h:outputStylesheet library="bootstrap"
+		name="admin/css/sb-admin-2.min.css" />
+	<!--font awesome  -->
+	<link
+		href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
+		rel="stylesheet"></link>
+</h:head>
+
+<h:body id="page-top">
+
+	<!-- Page Wrapper -->
+
+	<div id="wrapper">
+		<!-- Content Wrapper -->
+		<div id="content-wrapper" class="d-flex flex-column">
+
+			<!-- Main Content -->
+			<div id="content">
+
+				<!-- TOPBAR -->
+				<ui:insert name="header">
+					<ui:include src="/pages/admin/header.xhtml" />
+				</ui:insert>
+				<!-- END TOPBAR -->
+
+				<!-- Begin Page Content -->
+
+				<!-- CONTENT PAGE -->
+				<ui:insert name="content">
+					<ui:include src="/pages/admin/content.xhtml" />
+				</ui:insert>
+				<!-- END CONTENT PAGE -->
+
+			</div>
+			<!-- End of Main Content -->
+
+			<!-- Footer -->
+
+		</div>
+	</div>
+
+
+</h:body>
+
+</html>

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>LIXCO</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<!-- Bootstrap core CSS -->
+	<h:outputStylesheet library="bootstrap"
+		name="web/css/bootstrap.min.css" />
+	<h:outputStylesheet library="bootstrap" name="web/css/css-search.css" />
+
+</h:head>
+<h:body>
+	<ui:composition template="common.xhtml">
+		<ui:define name="content">
+			<h:form id="createQuestion">
+				<!-- Them bo cau hoi -->
+				<div class="row"
+					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+					<div class="row" style="width: 100%">
+						<span class="group-name" style="margin: 0 auto; color: black;margin-top: 20px">DANH
+							SÁCH CÁC KỲ KHẢO SÁT</span> <span class="group-description"><p
+								style="text-align: center; margin-left: 5px"></p></span> <br />
+					</div>
+					<div class="row"
+						style="width: 60%; margin-left: 0px; margin: 0 auto">
+						<p:dataTable id="listSetofquestions" var="set1"
+							value="#{questionsBean.setofquestions1}" rowKey="#{set1.id}"
+							selection="#{questionsBean.setofquestionSelected2}"
+							selectionMode="single">
+							<p:ajax event="rowSelect" update="createQuestion:listQuestions"
+								listener="#{questionsBean.selectedSetofquestion()}" />
+							<p:column headerText="ID" style="width: 5%;text-align: center">
+								<h:outputText value="#{set1.id}" />
+							</p:column>
+							<p:column headerText="Tên bộ câu hỏi" style="width:60%">
+								<h:outputText value="#{set1.name}" />
+							</p:column>
+							<p:column headerText="Ngày tạo" style="width:15%">
+								<h:outputText value="#{set1.createdDate}">
+									<f:convertDateTime pattern="dd.MM.yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Ngày sửa" style="width:15%">
+								<h:outputText value="#{set1.modifiedDate}">
+									<f:convertDateTime pattern="dd.MM.yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Sửa" style="width:7.5%;text-align: center">
+								<p:commandButton update="createQuestion:updateSetof"
+									icon="fa fa-edit" oncomplete="PF('dialogUpdateSetof').show();">
+									<f:setPropertyActionListener value="#{set1}"
+										target="#{questionsBean.setofquestionsUpdated}" />
+								</p:commandButton>
+							</p:column>
+							<p:column headerText="Xóa" style="width: 7.5%;text-align: center">
+								<p:commandButton update="createQuestion:listSetofquestions"
+									icon="fa fa-trash" oncomplete="PF('dialogDelete').show();">
+									<f:setPropertyActionListener value="#{set1}"
+										target="#{questionsBean.setofquestionsUpdated}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+						<!-- DIALOG cap nhat bo cau hoi -->
+						<p:dialog header="Cập nhật" id="updateSetof" width="600"
+							widgetVar="dialogUpdateSetof" modal="true" showEffect="fade"
+							hideEffect="fade" resizable="false">
+							<p:outputPanel id="editSetof" style="text-align:center;">
+								<div class="row" style="margin-bottom: 15px">
+									<div class="col-sm-12 col-md-4 col-lg-3">
+										<h:outputText value="Tên câu hỏi" />
+									</div>
+									<div class="col-sm-12 col-md-8 col-lg-9">
+										<p:inputText style="width: 100%!important"
+											id="inputEditSetofName"
+											value="#{questionsBean.setofquestionsUpdated.name}" />
+									</div>
+								</div>
+								<div class="row" style="width: 50%; margin: 0 auto">
+									<div class="col-sm-12 col-md-6 col-lg-6">
+										<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
+											style=" margin-left: 0%;"
+											oncomplete="PF('dialogUpdateSetof').hide();" />
+									</div>
+									<div class="col-sm-12 col-md-6 col-lg-6">
+										<p:commandButton update="createQuestion:listSetofquestions"
+											icon="fa fa-check" value="Cập nhật"
+											action="#{questionsBean.updateSetofquestions}" />
+									</div>
+								</div>
+							</p:outputPanel>
+						</p:dialog>
+						<!--Ket thuc DIALOG update  -->
+					</div>
+				</div>
+				<div class="row"
+					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+
+					<div class="row"
+						style="width: 100%; margin-left: 0px; margin: 0 auto">
+						<div class="col-sm-12 col-md-8 col-lg-7">
+							<h5 style="color: black; text-align: center">Danh sách câu
+								hỏi</h5>
+							<p:dataTable id="listQuestions" var="question1"
+								value="#{questionsBean.listQuestionBySet}"
+								rowKey="#{question1.id}"
+								selection="#{questionsBean.questionSelected}"
+								selectionMode="single">
+								<p:ajax event="rowSelect"
+									update="createQuestion:listAnswers createQuestion:listRatings"
+									listener="#{questionsBean.selectedQuestion()}" />
+								<p:column headerText="ID" style="width: 5%;text-align: center">
+									<h:outputText value="#{question1.id}" />
+								</p:column>
+								<p:column headerText="Tên câu hỏi" style="width:55%">
+									<h:outputText value="#{question1.name}" />
+								</p:column>
+								<p:column headerText="Ngày tạo" style="width:10%">
+									<h:outputText value="#{question1.createdDate}">
+										<f:convertDateTime pattern="dd.MM.yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Ngày sửa" style="width:10%">
+									<h:outputText value="#{question1.modifiedDate}">
+										<f:convertDateTime pattern="dd.MM.yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Loại câu hỏi" style="width:10%">
+									<h:outputText value="#{question1.questiontype.name}" />
+								</p:column>
+								<p:column headerText="Sửa" style="width:5%;text-align: center">
+									<p:commandButton update="createQuestion:updateQuest"
+										icon="fa fa-edit" oncomplete="PF('dialogUpdateQuest').show();">
+										<f:setPropertyActionListener value="#{question1}"
+											target="#{questionsBean.questionUpdated}" />
+									</p:commandButton>
+								</p:column>
+								<p:column headerText="Xóa" style="width: 5%;text-align: center">
+									<p:commandButton update="createQuestion:listQuestions"
+										icon="fa fa-trash" oncomplete="PF('dialogDelete').show();">
+										<f:setPropertyActionListener value="#{question1}"
+											target="#{questionsBean.questionDeleteSelected}" />
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+							<!-- DIALOG cap nhat cau hoi -->
+							<p:dialog header="Cập nhật" id="updateQuest" width="600"
+								widgetVar="dialogUpdateQuest" modal="true" showEffect="fade"
+								hideEffect="fade" resizable="false">
+								<p:outputPanel id="editQuest" style="text-align:center;">
+									<div class="row" style="margin-bottom: 15px">
+										<div class="col-sm-12 col-md-4 col-lg-3">
+											<h:outputText value="Tên câu hỏi" />
+										</div>
+										<div class="col-sm-12 col-md-8 col-lg-9">
+											<p:inputText style="width: 100%!important"
+												id="inputEditQuestName"
+												value="#{questionsBean.questionUpdated.name}" />
+										</div>
+									</div>
+									<div class="row" style="width: 50%; margin: 0 auto">
+										<div class="col-sm-12 col-md-6 col-lg-6">
+											<p:commandButton icon="fa fa-remove" value="Hủy bỏ" style=" margin-left: 0%;"
+												oncomplete="PF('dialogUpdateQuest').hide();" />
+										</div>
+										<div class="col-sm-12 col-md-6 col-lg-6">
+											<p:commandButton icon="fa fa-check" update="createQuestion:listQuestions"
+												value="Cập nhật" style=""
+												action="#{questionsBean.updateQuesion}" />
+										</div>
+									</div>
+								</p:outputPanel>
+							</p:dialog>
+							<!--Ket thuc DIALOG update  -->
+							<p:dialog header="Delete" widgetVar="dialogDelete" modal="true"
+								showEffect="fade" hideEffect="fade" resizable="false">
+								<p:outputPanel id="postDetailDelete" style="text-align:center;">
+									<p:panelGrid columns="2" columnClasses="label,value">
+										<p:commandButton update="createQuestion:listQuestions"
+											value="OK" action="#{questionsBean.deleteQuestion()}" />
+										<p:commandButton value="Cancel"
+											action="#{capquyen.cancelDelete}" />
+									</p:panelGrid>
+								</p:outputPanel>
+							</p:dialog>
+						</div>
+						<div class="col-sm-12 col-md-4 col-lg-5">
+							<h5 style="color: black; text-align: center">Danh sách câu
+								trả lời có đáp án</h5>
+
+							<p:dataTable id="listAnswers" var="answer1"
+								value="#{questionsBean.listAnswersByQuestion}">
+								<p:column headerText="ID" style="width: 7%;text-align: center">
+									<h:outputText value="#{answer1.id}" />
+								</p:column>
+								<p:column headerText="Tên câu trả lời" style="width:48%">
+									<h:outputText value="#{answer1.name}" />
+								</p:column>
+								<p:column headerText="Ngày tạo" style="width:15%">
+									<h:outputText value="#{answer1.createdDate}">
+										<f:convertDateTime pattern="dd.MM.yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Ngày sửa" style="width:15%">
+									<h:outputText value="#{answer1.modifiedDate}">
+										<f:convertDateTime pattern="dd.MM.yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Sửa" style="width:7.5%;text-align: center">
+									<p:commandButton update="createQuestion:updateAns"
+										icon="fa fa-edit" oncomplete="PF('dialogUpdateAns').show();">
+										<f:setPropertyActionListener value="#{answer1}"
+											target="#{questionsBean.answerUpdated}" />
+									</p:commandButton>
+								</p:column>
+								<p:column headerText="Xóa"
+									style="width: 7.5%;text-align: center">
+									<p:commandButton update="createQuestion:listQuestions"
+										icon="fa fa-trash" oncomplete="PF('dialogDelete').show();">
+
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+							<!-- DIALOG cap nhat ANSWER -->
+							<p:dialog header="Cập nhật" id="updateAns" width="600"
+								widgetVar="dialogUpdateAns" modal="true" showEffect="fade"
+								hideEffect="fade" resizable="false">
+								<p:outputPanel id="editAns" style="text-align:center;">
+									<div class="row" style="margin-bottom: 15px">
+										<div class="col-sm-12 col-md-4 col-lg-3">
+											<h:outputText value="Tên câu hỏi" />
+										</div>
+										<div class="col-sm-12 col-md-8 col-lg-9">
+											<p:inputText style="width: 100%!important"
+												id="inputEditAnsName"
+												value="#{questionsBean.answerUpdated.name}" />
+										</div>
+									</div>
+									<div class="row" style="width: 50%; margin: 0 auto">
+										<div class="col-sm-12 col-md-6 col-lg-6">
+											<p:commandButton icon="fa fa-remove" value="Hủy bỏ" style=" margin-left: 0%;"
+												oncomplete="PF('dialogUpdateAns').hide();" />
+										</div>
+										<div class="col-sm-12 col-md-6 col-lg-6">
+											<p:commandButton icon="fa fa-check" update="createQuestion:listAnswers"
+												value="Cập nhật" style=""
+												action="#{questionsBean.updateAnswer}" />
+										</div>
+									</div>
+								</p:outputPanel>
+							</p:dialog>
+							<!--Ket thuc DIALOG update  -->
+							<h5 style="color: black; text-align: center">Danh sách câu
+								trả lời câu hỏi thang điểm</h5>
+
+							<p:dataTable id="listRatings" var="answer2"
+								value="#{questionsBean.listRatingByQuestion}">
+								<p:column headerText="ID" style="width: 7%;text-align: center">
+									<h:outputText value="#{answer2.id}" />
+								</p:column>
+								<p:column headerText="Tên câu trả lời" style="width:48%">
+									<h:outputText value="#{answer2.name}" />
+								</p:column>
+								<p:column headerText="Ngày tạo" style="width:15%">
+									<h:outputText value="#{answer2.createdDate}">
+										<f:convertDateTime pattern="dd.MM.yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Ngày sửa" style="width:15%">
+									<h:outputText value="#{answer2.modifiedDate}">
+										<f:convertDateTime pattern="dd.MM.yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Sửa" style="width:7.5%;text-align: center">
+									<p:commandButton update="createQuestion:updateRati"
+										icon="fa fa-edit" oncomplete="PF('dialogUpdateRati').show();">
+										<f:setPropertyActionListener value="#{answer2}"
+											target="#{questionsBean.ratingUpdated}" />
+									</p:commandButton>
+								</p:column>
+								<p:column headerText="Xóa"
+									style="width: 7.5%;text-align: center">
+									<p:commandButton update="createQuestion:listQuestions"
+										icon="fa fa-trash" oncomplete="PF('dialogDelete').show();">
+
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+							<!-- DIALOG cap nhat RATING -->
+							<p:dialog header="Cập nhật" id="updateRati" width="600"
+								widgetVar="dialogUpdateRati" modal="true" showEffect="fade"
+								hideEffect="fade" resizable="false">
+								<p:outputPanel id="editRati" style="text-align:center;">
+									<div class="row" style="margin-bottom: 15px">
+										<div class="col-sm-12 col-md-4 col-lg-3">
+											<h:outputText value="Tên câu trả lời" />
+										</div>
+										<div class="col-sm-12 col-md-8 col-lg-9">
+											<p:inputText style="width: 100%!important"
+												id="inputEditRatiName"
+												value="#{questionsBean.ratingUpdated.name}" />
+										</div>
+									</div>
+									<div class="row" style="width: 50%; margin: 0 auto">
+										<div class="col-sm-12 col-md-6 col-lg-6">
+											<p:commandButton icon="fa fa-remove" value="Hủy bỏ" style=" margin-left: 0%;"
+												oncomplete="PF('dialogUpdateRati').hide();" />
+										</div>
+										<div class="col-sm-12 col-md-6 col-lg-6">
+											<p:commandButton icon="fa fa-check" update="createQuestion:listRatings"
+												value="Cập nhật" style=""
+												action="#{questionsBean.updateRating}" />
+										</div>
+									</div>
+								</p:outputPanel>
+							</p:dialog>
+							<!--Ket thuc DIALOG update  -->
+						</div>
+
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>
