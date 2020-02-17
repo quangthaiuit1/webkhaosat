@@ -31,11 +31,19 @@
 								style="text-align: center; margin-left: 5px"></p></span> <br />
 					</div>
 					<div class="row" style="width: 100%">
-						<div class="row" style="width: 100%">
+						<div class="row" style="width: 100%;margin-bottom: 10px">
 							<p:inputText style="width: 60%!important;margin: 0 auto;margin-bottom: 3px"
 								id="inputSetofquestion"
-								value="#{questionsBean.setofquestionNameNew}"
-								placeholder="Nhập tên kỳ khảo sát" />
+								value="#{questionsBean.setofquestionNew.name}"
+								placeholder="Nhập tên kỳ khảo sát" required="true"/>
+						</div>
+						<div class="row" style="width: 100%;margin-bottom: 10px">
+							<h:outputText value="Ngày bắt đầu: " style="color: black;margin-left: 20%"/>
+							<p:calendar id="startTime" style="margin-left: 5%" value="#{questionsBean.startDate}" locale="de" pattern="dd.MM.yyyy HH:mm" required="true"/>
+						</div>
+						<div class="row" style="width: 100%;margin-bottom: 10px">
+							<h:outputText value="Ngày kết thúc: " style="color: black;margin-left: 20%"/>
+							<p:calendar id="endTime" style="margin-left: 5%" value="#{questionsBean.endDate}" locale="de" pattern="dd.MM.yyyy HH:mm" required="true"/>
 						</div>
 						<div class="row"
 							style="margin: 0 auto; margin-top: 10px; width: 40%">
@@ -48,7 +56,7 @@
 							<div class="col-sm-12 col-md-6 col-lg-6">
 								<p:commandButton value="Thêm mới" icon="fa fa-plus"
 									style="margin-bottom: 10px"
-									action="#{questionsBean.createSetofquestion()}" />
+									action="#{questionsBean.createSetofquestion}" />
 							</div>
 						</div>
 					</div>

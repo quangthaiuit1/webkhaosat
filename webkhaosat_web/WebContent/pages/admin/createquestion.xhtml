@@ -32,22 +32,20 @@
 					</div>
 					<div class="row"
 						style="width: 60%; margin-left: 0px; margin: 0 auto">
-						<div class="row" style="width: 100%; margin: 0 auto">
+						<div class="row" style="width: 100%; margin: 0 auto;margin-bottom: 10px">
 							<p:autoComplete id="bocauhoiId" dropdown="true"
 								value="#{questionsBean.setofquestionsSelected1}"
 								completeMethod="#{questionsBean.completesSetofquestion}"
 								var="abc" itemLabel="#{abc.name}" itemValue="#{abc}"
-								placeholder="Chọn bộ câu hỏi"
+								placeholder="Chọn kỳ khảo sát"
 								style="margin-right: 5%;margin: 0 auto;margin-bottom:0px"
 								inputStyle="width: 100%" converter="#{themeConverter}"
-								forceSelection="true" />
+								forceSelection="true" required="true"/>
 						</div>
-						<h:outputText value="Nhập tên câu hỏi" style="text-align:center" />
-						<br />
 						<p:inputText style="width: 100%!important;margin-bottom: 10px"
-							id="inputQuestion" value="#{questionsBean.questionNameNew}" />
+							id="inputQuestion" required="true" placeholder="Nhập tên câu hỏi" value="#{questionsBean.questionNameNew}" />
 						<!--Autocomplete loai cau hoi -->
-						<div class="row" style="width: 100%; margin: 0 auto">
+						<div class="row" style="width: 100%; margin: 0 auto;margin-bottom: 10px">
 							<p:autoComplete id="loaicongviecId" dropdown="true"
 								value="#{questionsBean.questiontypeAdd}"
 								completeMethod="#{questionsBean.completeQuestionType}" var="abc"
@@ -55,32 +53,27 @@
 								placeholder="Loại câu hỏi"
 								style="margin-right: 5%;margin: 0 auto;margin-bottom:0px"
 								inputStyle="width: 100%" converter="#{themeConverter}"
-								forceSelection="true" />
+								forceSelection="true" required="true"/>
 						</div>
-						<h:outputText value="Nhập đáp án 1" style="text-align:center" />
-						<div class="row" style="width: 100%; margin: 0 auto">
+						<div class="row" style="width: 100%; margin: 0 auto;margin-bottom: 10px">
 							<p:inputText style="width: 100%!important;margin-bottom: 10px"
-								id="inputAnswer1" value="#{questionsBean.answersNew[0]}" />
+								id="inputAnswer1" placeholder="Nhập đáp án 1" value="#{questionsBean.answersNew[0]}" />
 						</div>
-						<h:outputText value="Nhập đáp án 2" style="text-align:center" />
-						<div class="row" style="width: 100%; margin: 0 auto">
+						<div class="row" style="width: 100%; margin: 0 auto;margin-bottom: 10px">
 							<p:inputText style="width: 100%!important;margin-bottom: 10px"
-								id="inputAnswer2" value="#{questionsBean.answersNew[1]}" />
+								id="inputAnswer2" placeholder="Nhập đáp án 2" value="#{questionsBean.answersNew[1]}" />
 						</div>
-						<h:outputText value="Nhập đáp án 3" style="text-align:center" />
-						<div class="row" style="width: 100%; margin: 0 auto">
+						<div class="row" style="width: 100%; margin: 0 auto;margin-bottom: 10px">
 							<p:inputText style="width: 100%!important;margin-bottom: 10px"
-								id="inputAnswer3" value="#{questionsBean.answersNew[2]}" />
+								id="inputAnswer3" placeholder="Nhập đáp án 3" value="#{questionsBean.answersNew[2]}" />
 						</div>
-						<h:outputText value="Nhập đáp án 4" style="text-align:center" />
-						<div class="row" style="width: 100%; margin: 0 auto">
+						<div class="row" style="width: 100%; margin: 0 auto;margin-bottom: 10px">
 							<p:inputText style="width: 100%!important;margin-bottom: 10px"
-								id="inputAnswer4" value="#{questionsBean.answersNew[3]}" />
+								id="inputAnswer4" placeholder="Nhập đáp án 4" value="#{questionsBean.answersNew[3]}" />
 						</div>
-						<h:outputText value="Nhập đáp án 5" style="text-align:center" />
-						<div class="row" style="width: 100%; margin: 0 auto">
+						<div class="row" style="width: 100%; margin: 0 auto;margin-bottom: 10px">
 							<p:inputText style="width: 100%!important;margin-bottom: 10px"
-								id="inputAnswer5" value="#{questionsBean.answersNew[4]}" />
+								id="inputAnswer5" placeholder="Nhập đáp án 5" value="#{questionsBean.answersNew[4]}" />
 						</div>
 
 						<div class="row" style="margin: 0 auto; margin-top: 10px">

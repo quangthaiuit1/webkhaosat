@@ -3,7 +3,10 @@ package lixco.com.beans;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.inject.Inject;
+
+import org.primefaces.PrimeFaces;
 
 import lixco.com.services.AnswerService;
 import lixco.com.services.QuestionService;
@@ -14,29 +17,46 @@ import lixco.com.services.UserService;
 
 public class AbstractBean {
 	@Inject
-	protected QuestionService questionService;
+	protected QuestionService QUESTION_SERVICE;
 
 	@Inject
-	protected AnswerService answerService;
+	protected AnswerService ANSWER_SERVICE;
 
 	@Inject
-	protected RatingService ratingService; // RATING_SERVICE
+	protected RatingService RATING_SERVICE; // RATING_SERVICE
 
 	@Inject
-	protected SetofquestionService setofquestionService;
+	protected SetofquestionService SETOFQUESTION_SERVICE;
 
 	@Inject
-	protected QuestiontypeService questiontypeService;
+	protected QuestiontypeService QUESTIONTYPE_SERVICE;
 	
 	@Inject 
-	protected UserService userService;
+	protected UserService USER_SERVICE;
 	
 	@PostConstruct
 	public void init() {
 		
 	}
-	public Date getDate() {
+	protected Date getDate() {
 		return new Date();
+	}
+// Bo thong bao
+	protected void notifySuccess(){
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Thành công!");
+		PrimeFaces.current().dialog().showMessageDynamic(message);
+	}
+	protected void notifyAddSuccess() {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Thêm mới thành công!");
+		PrimeFaces.current().dialog().showMessageDynamic(message);
+	}
+	protected void notifyUpdateSuccess() {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Cập nhật thành công!");
+		PrimeFaces.current().dialog().showMessageDynamic(message);
+	}
+	protected void notifyDeleteSuccess() {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Đã xóa!");
+		PrimeFaces.current().dialog().showMessageDynamic(message);
 	}
 
 }

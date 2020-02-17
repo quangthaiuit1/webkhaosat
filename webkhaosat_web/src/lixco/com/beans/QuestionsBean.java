@@ -1,6 +1,7 @@
 package lixco.com.beans;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
 
 import lixco.com.entities.Answer;
@@ -58,7 +60,6 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	// Danh sach cau hoi thuoc 1 bo
 	private List<Question> listQuestionBySet;
 	// Danh sach bien hung gia tri
-	private String setofquestionNameNew;
 	private String questionNameNew;
 	private Setofquestions setofquestionNew;
 	// Bien hung dap an khi tao moi
@@ -88,11 +89,11 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	private List<User> listusersBySetofquestion;
 	// Danh sach toan bo user
 	private List<User> users;
+	
+	//CAC BIEN HUNG GIA TRI TAM THOI
+	private Date startDate;
+	private Date endDate;
 
-	// Bien de giu gia tri bo cau hoi dang dien ra
-	private long setofquestionsId;
-	// Ten bo cau hoi dang dien ra
-	private String setofquestionsName;
 	// Bo ca hoi dang dien ra
 	private Setofquestions setofquestionsplaying;
 
@@ -113,11 +114,11 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		ratingUpdated = new Rating();
 		setofquestionsUpdated = new Setofquestions();
 		// Toan bo user
-		users = userService.findAllByFilter();
+		users = USER_SERVICE.findAllByFilter();
 
 		// END
 		// Danh sach toan bo cau hoi tu DB
-		setofquestions1 = setofquestionService.findAllByFilter();
+		setofquestions1 = SETOFQUESTION_SERVICE.findAllByFilter();
 		// Duyet danh sach bo cau hoi thu bo nao dang dien ra
 		for (Setofquestions set : setofquestions1) {
 			if (set.getStatus().equals("ON")) {
@@ -125,14 +126,14 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			}
 		}
 		// Danh sach loai cau hoi truy van tu DB
-		questionTypeList1 = questiontypeService.findAllByFilter();
+		questionTypeList1 = QUESTIONTYPE_SERVICE.findAllByFilter();
 		setofquestionNew = new Setofquestions();
 		// Lay y kien
-		questionsType1 = questionService.find(1L, setofquestionsplaying.getId());
+		questionsType1 = QUESTION_SERVICE.find(1L, setofquestionsplaying.getId());
 		// thang diem
-		questionsType2 = questionService.find(2L, setofquestionsplaying.getId());
+		questionsType2 = QUESTION_SERVICE.find(2L, setofquestionsplaying.getId());
 		// co dap an
-		questionsType3 = questionService.find(3L, setofquestionsplaying.getId());
+		questionsType3 = QUESTION_SERVICE.find(3L, setofquestionsplaying.getId());
 		// tao bien hung ket qua phan 1
 		ketquaPhan1 = new String[questionsType2.size() + 1];
 		ketquaPhan2 = new String[questionsType3.size() + 1];
@@ -140,8 +141,8 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		// Danh sach dap an tao moi
 		answersNew = new String[5];
 
-		answers1 = ratingService.findAllByFilter();
-		answers2 = answerService.findAllByFilter();
+		answers1 = RATING_SERVICE.findAllByFilter();
+		answers2 = ANSWER_SERVICE.findAllByFilter();
 		// Bo cau hoi phan danh gia
 		questionAndAnswer1 = new ArrayList<>();
 		for (Question q : questionsType2) {
@@ -171,7 +172,6 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			tempQA.setAnswers(tempAnswers);
 			questionAndAnswer2.add(tempQA);
 		}
-
 	}
 
 	public void checkcau1() {
@@ -192,7 +192,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 
 // Khi bo cau hoi duoc chon -> danh sach cac cau hoi theo bo
 	public void selectedSetofquestion() {
-		listQuestionBySet = questionService.find(null, this.setofquestionSelected2.getId());
+		listQuestionBySet = QUESTION_SERVICE.find(null, this.setofquestionSelected2.getId());
 	}
 
 // Danh sach user theo bo cau hoi khi bo cau hoi duoc chon
@@ -205,28 +205,28 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		}
 		// Them nguoi dung thuoc bo cau hoi vao danh sach
 		for (int i = 0; i < longs.length; i++) {
-			User userTemp = userService.findById(longs[i]);
+			User userTemp = USER_SERVICE.findById(longs[i]);
 			listusersBySetofquestion.add(userTemp);
 		}
 		setofquestionsSelected4 = new Setofquestions();
-
 	}
 
 //Cau hoi duoc chon -> danh sach dap an theo cau hoi neu co
 	public void selectedQuestion() {
-		// select danh sach cau hoi tu questionselected
-		// Cau tra loi cua cau hoi thang diem
+		// Danh sach cau tra loi theo id cau hoi
+		// Thang diem
 		if (questionSelected.getQuestiontype().getId() == 2) {
-			listRatingByQuestion = ratingService.find(questionSelected.getId());
+			listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId());
 			// Reset lai ds dap ap cua loai cau hoi co dap an de update ben view
 			listAnswersByQuestion = new ArrayList<>();
 		}
-		// Cau tra loi cua cau hoi co dap an
+		// Co dap an
 		if (questionSelected.getQuestiontype().getId() == 3) {
-			listAnswersByQuestion = answerService.find(questionSelected.getId());
-			// Reset lai ds dap ap cua loai cau hoi thang diem de update ben view
+			listAnswersByQuestion = ANSWER_SERVICE.find(questionSelected.getId());
+			// Reset lai ds dap ap cua loai cau hoi thang diem -> update ben view
 			listRatingByQuestion = new ArrayList<>();
 		}
+		// Lay y kien
 		if (questionSelected.getQuestiontype().getId() == 1) {
 			listAnswersByQuestion = new ArrayList<>();
 			listRatingByQuestion = new ArrayList<>();
@@ -235,205 +235,182 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			PrimeFaces.current().dialog().showMessageDynamic(message);
 		}
 	}
-
 //Chon bo cau hoi se dien ra
 	public void SetofquestionSelected() {
-		// them try catch de xu ly neu nguoi dung nhap sai format
+		// try catch de xu ly neu nguoi dung nhap sai format
 		try {
 			if (setOfquestionsSelected3.getId() == 0) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 						"Vui lòng chọn bộ câu hỏi!");
 				PrimeFaces.current().dialog().showMessageDynamic(message);
 			} else {
-				setofquestions1 = setofquestionService.findAllByFilter();
+				setofquestions1 = SETOFQUESTION_SERVICE.findAllByFilter();
 				for (Setofquestions setTemp : setofquestions1) {
-					// Se doi thanh id thay vi ten cho de quan ly
+					// OFF toan bo list bo cau hoi
 					if (setTemp.getStatus().equals("ON")) {
 						setTemp.setStatus("OFF");
-						setofquestionService.update(setTemp);
+						SETOFQUESTION_SERVICE.update(setTemp);
 					}
+					// Lay bo cau hoi vua duoc chon gan ON
 					if (setTemp.getId() == setOfquestionsSelected3.getId()) {
 						setOfquestionsSelected3.setStatus("ON");
-						setofquestionService.update(setOfquestionsSelected3);
+						SETOFQUESTION_SERVICE.update(setOfquestionsSelected3);
 					}
 				}
 				setofquestionsplaying = setOfquestionsSelected3;
 				setOfquestionsSelected3 = new Setofquestions();
-				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Chọn thành công.");
-				PrimeFaces.current().dialog().showMessageDynamic(message);
+				notifySuccess();
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	}
+// BO THEM XOA SUA 
 
-//Them bo cau hoi
+	// Them bo cau hoi
 	public void createSetofquestion() {
-		if (this.setofquestionNameNew != null && !this.setofquestionNameNew.equals("")) {
-			// Tao ra 1 doi tuong bo cau hoi xong luu xuong DB
-			Setofquestions temp = new Setofquestions();
-			temp.setDeleted(false);
-			Date dateTemp = new Date();
-			temp.setCreatedDate(dateTemp);
-			temp.setName(setofquestionNameNew);
-			temp.setStatus("OFF");
-			setofquestionNew = setofquestionService.create(temp);
-			setofquestionNameNew = null;
-			setofquestions1 = setofquestionService.findAllByFilter();
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Thêm thành công.");
-			PrimeFaces.current().dialog().showMessageDynamic(message);
-		} else {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-					"Vui lòng nhập thông tin trước khi tạo!.");
-			PrimeFaces.current().dialog().showMessageDynamic(message);
+		try {
+			setofquestionNew.setDeleted(false);
+			setofquestionNew.setCreatedDate(getDate());
+			java.sql.Timestamp temp = new java.sql.Timestamp(startDate.getTime());		
+			setofquestionNew.setStarttime(temp);
+			temp = new Timestamp(endDate.getTime());
+			setofquestionNew.setEndtime(temp);
+			setofquestionNew.setStatus("OFF");
+			SETOFQUESTION_SERVICE.create(setofquestionNew);
+			setofquestions1 = SETOFQUESTION_SERVICE.findAllByFilter();
+			setofquestionNew = new Setofquestions();
+			notifyAddSuccess();
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 	}
-
-//sua bo cau hoi
+	// sua bo cau hoi
 	public void updateSetofquestions() {
 		Date newDate = super.getDate();
 		setofquestionsUpdated.setModifiedDate(newDate);
-		setofquestionService.update(setofquestionsUpdated);
+		SETOFQUESTION_SERVICE.update(setofquestionsUpdated);
 		PrimeFaces.current().executeScript("PF('dialogUpdateSetof').hide()");
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Cập nhật thành công!");
-		PrimeFaces.current().dialog().showMessageDynamic(message);
+		notifyUpdateSuccess();
 	}
-
-//Them cau hoi
+	// Them cau hoi
 	public void createQuestion() {
+		FacesMessage messageError;
 		// Khong nhap gi ca
-		//
-		boolean inValid = false;
-		FacesMessage messageError = new FacesMessage();
-		// khong nhap bo cau hoi
-		if (setofquestionsSelected1.getName() == null || setofquestionsSelected1.getName().equals("")) {
-			messageError = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng chọn bộ câu hỏi!.");
-			inValid = true;
-		}
-		// khong nhap ten cau hoi
-		if (questionNameNew == null || questionNameNew.equals("")) {
-			messageError = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng nhập tên câu hỏi!.");
-			inValid = true;
-		}
-		// khong nhap loai cau hoi
-		if (questiontypeAdd.getName() == null || questiontypeAdd.getName().equals("")) {
-			messageError = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng chọn loại câu hỏi!.");
-			inValid = true;
-		}
-
-		if (inValid) {
+		if (setofquestionsSelected1.getName() == null && questiontypeAdd.getName() == null) {
+			messageError = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng nhập đầy đủ thông tin!");
 			PrimeFaces.current().dialog().showMessageDynamic(messageError);
 			return;
 		}
-
-		// Tao bien tam de giu gia tri moi
+		// khong nhap bo cau hoi
+		if (setofquestionsSelected1.getName() == null) {
+			messageError = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng chọn bộ câu hỏi!.");
+			PrimeFaces.current().dialog().showMessageDynamic(messageError);
+			return;
+		}
+		// khong nhap loai cau hoi
+		if (questiontypeAdd.getName() == null) {
+			messageError = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng chọn loại câu hỏi!.");
+			PrimeFaces.current().dialog().showMessageDynamic(messageError);
+			return;
+		}
 		Question tempQ = new Question();
 		tempQ.setSetofquestions(setofquestionsSelected1);
 		tempQ.setQuestiontype(questiontypeAdd);
-		Date tempDate = new Date();
-		tempQ.setCreatedDate(tempDate);
+		tempQ.setCreatedDate(getDate());
 		tempQ.setName(questionNameNew);
 		tempQ.setDeleted(false);
 		// thang diem
 		if (questiontypeAdd.getId() == 2) {
-			if ("".equals(answersNew[0])) {
+			if (StringUtils.isEmpty(answersNew[0])) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 						"Vui lòng nhập đán án!.");
 				PrimeFaces.current().dialog().showMessageDynamic(message);
 				return;
 			}
-			tempQ = questionService.create(tempQ);
+			tempQ = QUESTION_SERVICE.create(tempQ);
 			for (int i = 0; i < answersNew.length; i++) {
-				if (!answersNew[i].equals("") && answersNew[i] != null) {
+				if (StringUtils.isNotEmpty(answersNew[i])) {
 					Rating tempRating = new Rating();
-					tempRating.setCreatedDate(tempDate);
+					tempRating.setCreatedDate(getDate());
 					tempRating.setDeleted(false);
 					tempRating.setName(answersNew[i]);
 					tempRating.setQuestion(tempQ);
-					ratingService.create(tempRating);
+					RATING_SERVICE.create(tempRating);
 				}
-
 			}
 			answersNew = new String[5];
 			setofquestionsSelected1 = new Setofquestions();
 			questiontypeAdd = new QuestionType();
 			questionNameNew = null;
-
+			notifyAddSuccess();
+			return;
 		}
 		// Lay y kien
 		if (questiontypeAdd.getId() == 1) {
-			questionService.create(tempQ);
+			QUESTION_SERVICE.create(tempQ);
 			setofquestionsSelected1 = new Setofquestions();
 			questiontypeAdd = new QuestionType();
 			questionNameNew = null;
+			notifyAddSuccess();
+			return;
 		}
 		// Co dap an
 		if (questiontypeAdd.getId() == 3) {
-			if ("".equals(answersNew[0])) {
+			if (StringUtils.isEmpty(answersNew[0])) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 						"Vui lòng nhập đán án.");
 				PrimeFaces.current().dialog().showMessageDynamic(message);
 				return;
 			}
-			tempQ = questionService.create(tempQ);
+			tempQ = QUESTION_SERVICE.create(tempQ);
 			for (int i = 0; i < answersNew.length; i++) {
-				if (!answersNew[i].equals("") && answersNew[i] != null) {
+				if (StringUtils.isNotEmpty(answersNew[i])) {
 					Answer tempAnswer = new Answer();
-					tempAnswer.setCreatedDate(tempDate);
+					tempAnswer.setCreatedDate(getDate());
 					tempAnswer.setDeleted(false);
 					tempAnswer.setName(answersNew[i]);
 					tempAnswer.setQuestion(tempQ);
-					answerService.create(tempAnswer);
+					ANSWER_SERVICE.create(tempAnswer);
 				}
 			}
 			answersNew = new String[5];
 			setofquestionsSelected1 = new Setofquestions();
 			questiontypeAdd = new QuestionType();
 			questionNameNew = null;
+			notifyAddSuccess();
+			return;
 		}
-
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Thêm thành công.");
-		PrimeFaces.current().dialog().showMessageDynamic(message);
 	}
-
-//Sua cau hoi
+	// Sua cau hoi
 	public void updateQuesion() {
-		Date newDate = super.getDate();
-		questionUpdated.setModifiedDate(newDate);
-		questionService.update(questionUpdated);
+		questionUpdated.setModifiedDate(getDate());
+		QUESTION_SERVICE.update(questionUpdated);
 		PrimeFaces.current().executeScript("PF('dialogUpdateQuest').hide()");
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Cập nhật thành công!");
-		PrimeFaces.current().dialog().showMessageDynamic(message);
+		notifyUpdateSuccess();
 	}
-
-//sua cau tra loi
+	// sua cau tra loi
 	public void updateAnswer() {
-		Date newDate = super.getDate();
-		answerUpdated.setModifiedDate(newDate);
-		answerService.update(answerUpdated);
+		answerUpdated.setModifiedDate(getDate());
+		ANSWER_SERVICE.update(answerUpdated);
 		PrimeFaces.current().executeScript("PF('dialogUpdateAns').hide()");
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Cập nhật thành công!");
-		PrimeFaces.current().dialog().showMessageDynamic(message);
+		notifyUpdateSuccess();
 	}
-
 	public void updateRating() {
-		Date newDate = super.getDate();
-		ratingUpdated.setModifiedDate(newDate);
-		ratingService.update(ratingUpdated);
+		ratingUpdated.setModifiedDate(getDate());
+		RATING_SERVICE.update(ratingUpdated);
 		PrimeFaces.current().executeScript("PF('dialogUpdateRati').hide()");
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Cập nhật thành công!");
-		PrimeFaces.current().dialog().showMessageDynamic(message);
+		notifyUpdateSuccess();
 	}
-
-//ket thuc sua cau tra loi
-//Xoa Cau hoi
+	// Xoa Cau hoi
 	public void deleteQuestion() {
-
+		notifyDeleteSuccess();
 	}
 
 	public void cancelDelete() {
 		PrimeFaces.current().executeScript("PF('dialogDelete').hide()");
 	}
+// KET THUC THEM XOA SUA
 
 //Autocomplete
 	public List<QuestionType> completeQuestionType(String input) {
@@ -526,14 +503,6 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 
 	public void setKetquaPhan3(String[] ketquaPhan3) {
 		this.ketquaPhan3 = ketquaPhan3;
-	}
-
-	public String getSetofquestionNameNew() {
-		return setofquestionNameNew;
-	}
-
-	public void setSetofquestionNameNew(String setofquestionNameNew) {
-		this.setofquestionNameNew = setofquestionNameNew;
 	}
 
 	public String getQuestionNameNew() {
@@ -712,4 +681,19 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		this.users = users;
 	}
 
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 }
