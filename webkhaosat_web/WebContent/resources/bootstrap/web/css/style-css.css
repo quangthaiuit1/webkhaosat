@@ -1,3 +1,60 @@
+/* CSS WEB KHAO SAT */
+
+.ui-button-text-icon-left .ui-button-text {
+	padding: .3em 1em .3em 2.1em;
+	background-color: #208eb6;
+	border-color: #208eb6;
+}
+
+.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-icon-left{
+	margin-right:auto;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default,
+	.ui-widget-header .ui-state-default {
+	border: 1px solid #a6a2a2;
+	background: #fefefe;
+	font-weight: normal;
+	color: black;
+}
+
+.ui-state-default .ui-icon {
+	background-image: none;
+}
+
+body .ui-radiobutton .ui-radiobutton-box.ui-state-active {
+	border-color: #007ad9;
+	background-color: #007ad9;
+	color: #fff;
+}
+
+.ui-g div {
+	background-color: white;
+	border: 1px solid #eee;
+}
+
+.row {
+	margin-left: 0px;
+	margin-right: 0px
+}
+
+.centered {
+	margin: 0px auto;
+	vertical-align: middle;
+}
+
+.group-name {
+	color: #1F83D9;
+	font-size: 20px;
+	line-height: 35px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}
+
+.ui-button {
+	margin: 0 auto;
+}
+/* END WEB KHAO SAT */
 .white-button.ui-button.ui-state-default:enabled:hover, .white-button.ui-button.ui-state-default:focus
 	{
 	background-color: #f2f2f2;
@@ -7,34 +64,38 @@
 	border-color: var(- -input-hover-border-color, #ccc);
 }
 
-box-sizing: content-box;
+box-sizing
+:
+ 
+content-box
+;
+
+
 }
 .nest-bf-in-pf .form-group {
-    margin-bottom:0px;
+	margin-bottom: 0px;
 }
+
 .bg-dark {
-    background-color: white!important;
+	background-color: white !important;
 }
 
 .navbar-dark .navbar-nav .nav-link {
-    color: black!important;
+	color: black !important;
 }
 
-
-.ui-inputtext{
-	border-radius: 5px!important;
+.ui-inputtext {
+	border-radius: 5px !important;
 }
-.ui-autocomplete-input{
-		padding: 10px!important;
-		border-radius: 5px!important;
 
+.ui-autocomplete-input {
+	padding: 10px !important;
+	border-radius: 5px !important;
 }
 
 /* Chinh size nút  */
-
-
 .ui-button-text-only .ui-button-text {
-	padding: 10px!important;
+	padding: 10px !important;
 }
 
 .ui-panelgrid.showcase-text-align-center .ui-grid-responsive .ui-panelgrid-cell

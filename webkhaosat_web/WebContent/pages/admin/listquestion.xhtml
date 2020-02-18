@@ -25,7 +25,8 @@
 				<div class="row"
 					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 					<div class="row" style="width: 100%">
-						<span class="group-name" style="margin: 0 auto; color: black;margin-top: 20px">DANH
+						<span class="group-name"
+							style="margin: 0 auto; color: black; margin-top: 20px">DANH
 							SÁCH CÁC KỲ KHẢO SÁT</span> <span class="group-description"><p
 								style="text-align: center; margin-left: 5px"></p></span> <br />
 					</div>
@@ -86,13 +87,14 @@
 								<div class="row" style="width: 50%; margin: 0 auto">
 									<div class="col-sm-12 col-md-6 col-lg-6">
 										<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
-											style=" margin-left: 0%;"
+											style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545;"
 											oncomplete="PF('dialogUpdateSetof').hide();" />
 									</div>
 									<div class="col-sm-12 col-md-6 col-lg-6">
 										<p:commandButton update="createQuestion:listSetofquestions"
 											icon="fa fa-check" value="Cập nhật"
-											action="#{questionsBean.updateSetofquestions}" />
+											action="#{questionsBean.updateSetofquestions}"
+											style="color: #fff;background-color: #28a745;border-color:#28a745" />
 									</div>
 								</div>
 							</p:outputPanel>
@@ -167,12 +169,14 @@
 									</div>
 									<div class="row" style="width: 50%; margin: 0 auto">
 										<div class="col-sm-12 col-md-6 col-lg-6">
-											<p:commandButton icon="fa fa-remove" value="Hủy bỏ" style=" margin-left: 0%;"
+											<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
+												style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545"
 												oncomplete="PF('dialogUpdateQuest').hide();" />
 										</div>
 										<div class="col-sm-12 col-md-6 col-lg-6">
-											<p:commandButton icon="fa fa-check" update="createQuestion:listQuestions"
-												value="Cập nhật" style=""
+											<p:commandButton icon="fa fa-check"
+												update="createQuestion:listQuestions" value="Cập nhật"
+												style="color: #fff;background-color: #28a745;border-color:#28a745"
 												action="#{questionsBean.updateQuesion}" />
 										</div>
 									</div>
@@ -245,12 +249,14 @@
 									</div>
 									<div class="row" style="width: 50%; margin: 0 auto">
 										<div class="col-sm-12 col-md-6 col-lg-6">
-											<p:commandButton icon="fa fa-remove" value="Hủy bỏ" style=" margin-left: 0%;"
+											<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
+												style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545"
 												oncomplete="PF('dialogUpdateAns').hide();" />
 										</div>
 										<div class="col-sm-12 col-md-6 col-lg-6">
-											<p:commandButton icon="fa fa-check" update="createQuestion:listAnswers"
-												value="Cập nhật" style=""
+											<p:commandButton icon="fa fa-check"
+												update="createQuestion:listAnswers" value="Cập nhật"
+												style="color: #fff;background-color: #28a745;border-color:#28a745"
 												action="#{questionsBean.updateAnswer}" />
 										</div>
 									</div>
@@ -310,12 +316,14 @@
 									</div>
 									<div class="row" style="width: 50%; margin: 0 auto">
 										<div class="col-sm-12 col-md-6 col-lg-6">
-											<p:commandButton icon="fa fa-remove" value="Hủy bỏ" style=" margin-left: 0%;"
+											<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
+												style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545"
 												oncomplete="PF('dialogUpdateRati').hide();" />
 										</div>
 										<div class="col-sm-12 col-md-6 col-lg-6">
-											<p:commandButton icon="fa fa-check" update="createQuestion:listRatings"
-												value="Cập nhật" style=""
+											<p:commandButton icon="fa fa-check"
+												update="createQuestion:listRatings" value="Cập nhật"
+												style="color: #fff;background-color: #28a745;border-color:#28a745"
 												action="#{questionsBean.updateRating}" />
 										</div>
 									</div>

@@ -217,13 +217,13 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		// Thang diem
 		if (questionSelected.getQuestiontype().getId() == 2) {
 			listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId());
-			// Reset lai ds dap ap cua loai cau hoi co dap an de update ben view
+			// Reset ds dap ap cua loai cau hoi
 			listAnswersByQuestion = new ArrayList<>();
 		}
 		// Co dap an
 		if (questionSelected.getQuestiontype().getId() == 3) {
 			listAnswersByQuestion = ANSWER_SERVICE.find(questionSelected.getId());
-			// Reset lai ds dap ap cua loai cau hoi thang diem -> update ben view
+			// Reset ds dap ap cua loai cau hoi thang diem
 			listRatingByQuestion = new ArrayList<>();
 		}
 		// Lay y kien
@@ -237,7 +237,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	}
 //Chon bo cau hoi se dien ra
 	public void SetofquestionSelected() {
-		// try catch de xu ly neu nguoi dung nhap sai format
+		// try catch de xu ly-> nhap sai format
 		try {
 			if (setOfquestionsSelected3.getId() == 0) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
