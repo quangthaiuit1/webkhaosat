@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
 
 import lixco.com.entities.Answer;
+import lixco.com.entities.Department;
 import lixco.com.entities.Question;
 import lixco.com.entities.QuestionAndAnswer;
 import lixco.com.entities.QuestionAndRating;
@@ -34,10 +35,12 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 //Da hoan thanh	
 	// Cau hoi lay y kien
 	private List<Question> questionsType1;
-	// Cau hoi thang diem
+	// Cau hoi danh gia
 	private List<Question> questionsType2;
 	// Cau hoi co dap an
 	private List<Question> questionsType3;
+	// Cau hoi thang diem
+	private List<Question> questionsType4;
 	// Danh sach bo cau hoi phan 2
 	private List<QuestionAndAnswer> questionAndAnswer2;
 	// Danh sach bo cau hoi phan 1
@@ -69,6 +72,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	private List<Setofquestions> setofquestions1;
 	// Hung gia tri bo cau hoi khi user chon them
 	private Setofquestions setofquestionsSelected1;
+	private String answerAddNew;
 	//// Hung gia tri bo cau hoi de xoa va sua
 	private Setofquestions setofquestionSelected2;
 	// Hung gia tri khi cau hoi duoc chon
@@ -92,10 +96,16 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	private List<User> users;
 	// Toan bo bang ket qua khao sat
 	private List<User_Result> userResult1;
+	//List sau filter
+	private List<User_Result> userResult2;
 	
 	//CAC BIEN HUNG GIA TRI TAM THOI
 	private Date startDate;
 	private Date endDate;
+	private int rate1;
+	private String[] setofquestions;
+	//Toan bo phong ban
+	private List<Department> departments1;
 
 	// Bo ca hoi dang dien ra
 	private Setofquestions setofquestionsplaying;
@@ -119,10 +129,17 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		// Toan bo user
 		users = USER_SERVICE.findAllByFilter();
 		userResult1 = USER_RESULT_SERVICE.findAllByFilter();
+		departments1 = DEPARTMENT_SERVICE.findAllByFilter();
 
 		// END
 		// Danh sach toan bo cau hoi tu DB
 		setofquestions1 = SETOFQUESTION_SERVICE.findAllByFilter();
+	//Test thoi
+		setofquestions = new String[setofquestions1.size()];
+		for(int i = 0; i < setofquestions1.size(); i++) {
+			setofquestions[i] = setofquestions1.get(i).getName();
+		}
+	//End test
 		// Duyet danh sach bo cau hoi thu bo nao dang dien ra
 		for (Setofquestions set : setofquestions1) {
 			if (set.getStatus().equals("ON")) {
@@ -132,12 +149,21 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		// Danh sach loai cau hoi truy van tu DB
 		questionTypeList1 = QUESTIONTYPE_SERVICE.findAllByFilter();
 		setofquestionNew = new Setofquestions();
-		// Lay y kien
-		questionsType1 = QUESTION_SERVICE.find(1L, setofquestionsplaying.getId());
-		// thang diem
-		questionsType2 = QUESTION_SERVICE.find(2L, setofquestionsplaying.getId());
-		// co dap an
-		questionsType3 = QUESTION_SERVICE.find(3L, setofquestionsplaying.getId());
+		try {
+			// Lay y kien
+			questionsType1 = QUESTION_SERVICE.find(1L, setofquestionsplaying.getId());
+			// Danh gia
+			questionsType2 = QUESTION_SERVICE.find(2L, setofquestionsplaying.getId());
+			//Thang diem 100-> Gop thang diem 100 vao cau hoi lay y kien
+			questionsType4 = QUESTION_SERVICE.find(4L, setofquestionsplaying.getId());
+			for(Question q : questionsType4) {
+				questionsType2.add(q);
+			}
+			// co dap an
+			questionsType3 = QUESTION_SERVICE.find(3L, setofquestionsplaying.getId());
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		// tao bien hung ket qua phan 1
 		ketquaPhan1 = new String[questionsType2.size() + 1];
 		ketquaPhan2 = new String[questionsType3.size() + 1];
@@ -195,37 +221,39 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		
 		List<String> resultList = new ArrayList<>();
 		List<Question> questionList = new ArrayList<>();
-		if(questionsType2.get(0) == null && questionsType3.get(0) == null && questionsType1.get(0) == null ) {
-			System.out.println("khong co cau hoi");
+		try {
+			for(Question questTemp : questionsType2) {
+				questionList.add(questTemp);
+			}
+			for(Question questTemp1 : questionsType3) {
+				questionList.add(questTemp1);
+			}
+			for(Question questTemp3 : questionsType1) {
+				questionList.add(questTemp3);
+			}
+		
+			for(String a : ketquaPhan1) {
+				if(StringUtils.isNotEmpty(a)) {
+					resultList.add(a);
+				}
+			}
+			for(String b : ketquaPhan2) {
+				if(StringUtils.isNotEmpty(b)) {
+					resultList.add(b);
+				}
+			}
+			for(String c : ketquaPhan3) {
+				if(StringUtils.isNotEmpty(c)) {
+					resultList.add(c);
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if(resultList.size() != questionList.size()) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng hoàn thành tất cả khảo sát!");
+			PrimeFaces.current().dialog().showMessageDynamic(message);
 			return;
-		}
-		for(Question questTemp : questionsType2) {
-			questionList.add(questTemp);
-		}
-		for(Question questTemp1 : questionsType3) {
-			questionList.add(questTemp1);
-		}
-		for(Question questTemp3 : questionsType1) {
-			questionList.add(questTemp3);
-		}
-		if(StringUtils.isEmpty(ketquaPhan1[1])) {
-			System.out.println("Khong co dap an");
-			return;
-		}
-		for(String a : ketquaPhan1) {
-			if(a != null) {
-				resultList.add(a);
-			}
-		}
-		for(String b : ketquaPhan2) {
-			if(b != null) {
-				resultList.add(b);
-			}
-		}
-		for(String c : ketquaPhan3) {
-			if(c != null) {
-				resultList.add(c);
-			}
 		}
 		User userTemp = new User();
 		userTemp = USER_SERVICE.findById(2L);
@@ -265,7 +293,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 //Cau hoi duoc chon -> danh sach dap an theo cau hoi neu co
 	public void selectedQuestion() {
 		// Danh sach cau tra loi theo id cau hoi
-		// Thang diem
+		// Danh gia
 		if (questionSelected.getQuestiontype().getId() == 2) {
 			listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId());
 			// Reset ds dap ap cua loai cau hoi
@@ -371,7 +399,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		tempQ.setCreatedDate(getDate());
 		tempQ.setName(questionNameNew);
 		tempQ.setDeleted(false);
-		// thang diem
+		// Danh gia
 		if (questiontypeAdd.getId() == 2) {
 			if (StringUtils.isEmpty(answersNew[0])) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
@@ -391,6 +419,23 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 				}
 			}
 			answersNew = new String[5];
+			setofquestionsSelected1 = new Setofquestions();
+			questiontypeAdd = new QuestionType();
+			questionNameNew = null;
+			notifyAddSuccess();
+			return;
+		}
+		//Thang diem 100
+		if (questiontypeAdd.getId() == 4) {
+			tempQ = QUESTION_SERVICE.create(tempQ);
+			
+			Rating tempRating = new Rating();
+			tempRating.setCreatedDate(getDate());
+			tempRating.setDeleted(false);
+			tempRating.setName("100");
+			tempRating.setQuestion(tempQ);
+			RATING_SERVICE.create(tempRating);
+			
 			setofquestionsSelected1 = new Setofquestions();
 			questiontypeAdd = new QuestionType();
 			questionNameNew = null;
@@ -432,6 +477,12 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			notifyAddSuccess();
 			return;
 		}
+	}
+	//Bo sung dap an
+	public void addAnswerNew(){
+		System.out.println("da vao addAnswerNew");
+		System.out.println(questionSelected.getName());
+		System.out.println(answerAddNew);
 	}
 	// Sua cau hoi
 	public void updateQuesion() {
@@ -475,7 +526,8 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		return setofquestions1.stream().filter(t -> t.getName().toLowerCase().startsWith(queryLowerCase))
 				.collect(Collectors.toList());
 	}
-
+	
+	
 	public List<Question> getQuestionsType1() {
 		return questionsType1;
 	}
@@ -752,6 +804,36 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	}
 	public void setUserResult1(List<User_Result> userResult1) {
 		this.userResult1 = userResult1;
+	}
+	public int getRate1() {
+		return rate1;
+	}
+	public void setRate1(int rate1) {
+		this.rate1 = rate1;
+	}
+	public String getAnswerAddNew() {
+		return answerAddNew;
+	}
+	public void setAnswerAddNew(String answerAddNew) {
+		this.answerAddNew = answerAddNew;
+	}
+	public List<User_Result> getUserResult2() {
+		return userResult2;
+	}
+	public void setUserResult2(List<User_Result> userResult2) {
+		this.userResult2 = userResult2;
+	}
+	public String[] getSetofquestions() {
+		return setofquestions;
+	}
+	public void setSetofquestions(String[] setofquestions) {
+		this.setofquestions = setofquestions;
+	}
+	public List<Department> getDepartments1() {
+		return departments1;
+	}
+	public void setDepartments1(List<Department> departments1) {
+		this.departments1 = departments1;
 	}
 	
 }

@@ -1,3 +1,4 @@
+			
 			<div class="row"
 				style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 				<span class="group-name" style="margin: 0 auto">PHẦN 2: TRẢ
@@ -183,5 +184,48 @@
 											target="#{questionsBean.questionDeleteSelected}" />
 									</p:commandButton>
 								</p:column>
-		
+								
+		<!-- Form them cau hoi co dap an -->
+		<h:form id="aghhjj">
+							<div style="width: 20%">
+								<p:commandButton
+									update="createQuestion:listAnswers"
+									icon="fa fa-plus"
+									style="width:100%;color: #fff;background-color: #007bff"
+									value="Thêm mới" oncomplete="PF('dialogAddAns').show();" />
+							</div>
+							</h:form>
+	<!--ket thuc  -->
+	
+	<!--Danh sach ket qua ky khao sats  -->
+		<p:dataTable id="dtLoadResult" var="set1"
+							value="#{questionsBean.userResult1}" sortBy="#{set1.user.name}" expandableRowGroups="true">
+							<p:headerRow>
+								<p:column colspan="6">
+									<h:outputText value="#{set1.user.name}" />
+								</p:column>
+							</p:headerRow>
+							<p:column headerText="ID" style="text-align: center" priority="6">
+								<h:outputText value="#{set1.id}" />
+							</p:column>
+							<p:column headerText="Tên User" style="">
+								<h:outputText value="#{set1.user.name}" />
+							</p:column>
+							<p:column headerText="Tên Câu hỏi" style="">
+								<h:outputText value="#{set1.question.name}" />
+							</p:column>
+							<p:column headerText="Loại câu hỏi" style="">
+								<h:outputText value="#{set1.question.questiontype.name}" />
+							</p:column>
+							<p:column headerText="Đáp án" style="">
+								<h:outputText value="#{set1.result}" />
+							</p:column>
+							<p:column headerText="Ngày tạo" style="" priority="4">
+								<h:outputText value="#{set1.createdDate}">
+									<f:convertDateTime pattern="dd.MM.yyyy" />
+								</h:outputText>
+							</p:column>
+						
+						</p:dataTable>
+	<!--Ket thuc  -->
 		

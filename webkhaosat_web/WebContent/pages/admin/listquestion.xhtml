@@ -24,7 +24,8 @@
 				<!-- Them bo cau hoi -->
 				<div class="row"
 					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
-					<div class="row" style="width: 100%">
+					<div class="row"
+						style="width: 100%; margin-bottom: 45px; font-weight: bold">
 						<span class="group-name"
 							style="margin: 0 auto; color: black; margin-top: 20px">DANH
 							SÁCH CÁC KỲ KHẢO SÁT</span> <span class="group-description"><p
@@ -54,14 +55,16 @@
 									<f:convertDateTime pattern="dd.MM.yyyy" />
 								</h:outputText>
 							</p:column>
-							<p:column headerText="Sửa" style="text-align: center" priority="2">
+							<p:column headerText="Sửa" style="text-align: center"
+								priority="2">
 								<p:commandButton update="createQuestion:updateSetof"
 									icon="fa fa-edit" oncomplete="PF('dialogUpdateSetof').show();">
 									<f:setPropertyActionListener value="#{set1}"
 										target="#{questionsBean.setofquestionsUpdated}" />
 								</p:commandButton>
 							</p:column>
-							<p:column headerText="Xóa" style="text-align: center" priority="3">
+							<p:column headerText="Xóa" style="text-align: center"
+								priority="3">
 								<p:commandButton update="createQuestion:listSetofquestions"
 									icon="fa fa-trash" oncomplete="PF('dialogDelete').show();">
 									<f:setPropertyActionListener value="#{set1}"
@@ -108,8 +111,9 @@
 					<div class="row"
 						style="width: 100%; margin-left: 0px; margin: 0 auto">
 						<div class="col-sm-12 col-md-8 col-lg-7">
-							<h5 style="color: black; text-align: center">Danh sách câu
-								hỏi</h5>
+							<h5
+								style="color: black; text-align: center; margin-bottom: 35px; font-weight: bold">Danh
+								sách câu hỏi</h5>
 							<p:dataTable id="listQuestions" var="question1"
 								value="#{questionsBean.listQuestionBySet}"
 								rowKey="#{question1.id}"
@@ -196,9 +200,10 @@
 							</p:dialog>
 						</div>
 						<div class="col-sm-12 col-md-4 col-lg-5">
-							<h5 style="color: black; text-align: center">Danh sách câu
-								trả lời có đáp án</h5>
-
+							<h5
+								style="color: black; text-align: center; margin-bottom: 35px; font-weight: bold">Danh
+								sách câu trả lời có đáp án</h5>
+							
 							<p:dataTable id="listAnswers" var="answer1"
 								value="#{questionsBean.listAnswersByQuestion}">
 								<p:column headerText="ID" style="width: 7%;text-align: center">
@@ -263,8 +268,9 @@
 								</p:outputPanel>
 							</p:dialog>
 							<!--Ket thuc DIALOG update  -->
-							<h5 style="color: black; text-align: center">Danh sách câu
-								trả lời câu hỏi thang điểm</h5>
+							<h5
+								style="color: black; text-align: center; margin-bottom: 35px; font-weight: bold">Danh
+								sách câu trả lời câu hỏi thang điểm</h5>
 
 							<p:dataTable id="listRatings" var="answer2"
 								value="#{questionsBean.listRatingByQuestion}">

@@ -1,6 +1,7 @@
 package lixco.com.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -9,6 +10,9 @@ public class User extends AbstractEntities{
 	private String username;
 	private String password;
 	private String name;
+
+	@OneToOne
+	private Department department;
 	
 	public String getName() {
 		return name;
@@ -32,6 +36,14 @@ public class User extends AbstractEntities{
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 	@Override

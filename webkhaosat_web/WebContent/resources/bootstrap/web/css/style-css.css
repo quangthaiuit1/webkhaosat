@@ -1,4 +1,7 @@
 /* CSS WEB KHAO SAT */
+span.ui-slider-handle.ui-corner-all.ui-state-default{
+	background-color: #1f83d9;
+}
 
 .ui-button-text-icon-left .ui-button-text {
 	padding: .3em 1em .3em 2.1em;

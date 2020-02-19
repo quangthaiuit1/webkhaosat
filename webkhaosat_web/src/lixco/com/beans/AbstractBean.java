@@ -8,7 +8,9 @@ import javax.inject.Inject;
 
 import org.primefaces.PrimeFaces;
 
+import lixco.com.entities.Department;
 import lixco.com.services.AnswerService;
+import lixco.com.services.DepartmentService;
 import lixco.com.services.QuestionService;
 import lixco.com.services.QuestiontypeService;
 import lixco.com.services.RatingService;
@@ -37,6 +39,9 @@ public class AbstractBean {
 	
 	@Inject
 	protected UserResultService USER_RESULT_SERVICE;
+	
+	@Inject
+	protected DepartmentService DEPARTMENT_SERVICE;
 	
 	@PostConstruct
 	public void init() {

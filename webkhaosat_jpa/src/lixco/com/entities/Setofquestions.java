@@ -10,8 +10,18 @@ import javax.persistence.Table;
 public class Setofquestions extends AbstractEntities{
 	private String name;
 	private String listusers;
+	private String description;
 	private Timestamp starttime;
 	private Timestamp endtime;
+	
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public String getName() {
 		return name;
@@ -44,4 +54,6 @@ public class Setofquestions extends AbstractEntities{
 	public void setEndtime(Timestamp endtime) {
 		this.endtime = endtime;
 	}
+
+
 }

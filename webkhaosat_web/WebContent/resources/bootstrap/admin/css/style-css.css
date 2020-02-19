@@ -11,7 +11,7 @@
     background-color: #17a2b8;
 }
 .ui-datatable tr{
-	background-color: #ccc
+	background-color: none;
 }
 .ui-datatable th, .ui-datatable td, .ui-datatable tr {
 	border-color: #cbcbcb;

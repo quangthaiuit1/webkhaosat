@@ -23,44 +23,73 @@
 			<h:form id="loadResult">
 				<!-- Them bo cau hoi -->
 				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
-					<div class="row" style="width: 100%">
+					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px">
+					<div class="row" style="width: 100%; margin-bottom: 35px" >
 						<span class="group-name"
-							style="margin: 0 auto; color: black; margin-top: 20px">KẾT
+							style="margin: 0 auto; color: black; margin-top: 20px;font-weight: bold">KẾT
 							QUẢ KỲ KHẢO SÁT</span> <span class="group-description"><p
 								style="text-align: center; margin-left: 5px"></p></span> <br />
 					</div>
 					<div class="row"
 						style="width: 60%; margin-left: 0px; margin: 0 auto">
-						<p:dataTable id="dtLoadResult" var="set1"
-							value="#{questionsBean.userResult1}" sortBy="#{set1.user.name}" expandableRowGroups="true">
-							<p:headerRow>
-								<p:column colspan="6">
-									<h:outputText value="#{set1.user.name}" />
-								</p:column>
-							</p:headerRow>
-							<p:column headerText="ID" style="text-align: center" priority="6">
-								<h:outputText value="#{set1.id}" />
+						<!-- TEST -->
+						<p:dataTable var="user" value="#{questionsBean.userResult1}"
+							widgetVar="userResult1" emptyMessage="Không tìm thấy"
+							filteredValue="#{questionsBean.userResult2}" paginator="true" rows="10">
+							<f:facet name="header">
+								<p:outputPanel style="margin-right: 5px">
+									<h:outputText value="Tìm kiếm:" />
+									<i class="pi pi-search"></i>
+									<p:inputText id="globalFilter"
+										onkeyup="PF('userResult1').filter()" style="width:30%;"
+										placeholder="Nhập từ khóa" />
+								</p:outputPanel>
+							</f:facet>
+							<p:column headerText="Id" style="width: 5%">
+								<h:outputText value="#{user.id}" />
 							</p:column>
-							<p:column headerText="Tên User" style="">
-								<h:outputText value="#{set1.user.name}" />
+							<p:column filterBy="#{user.question.setofquestions.name}"
+								headerText="Kỳ khảo sát" filterMatchMode="exact"
+								style="width: 20%">
+								<f:facet name="filter">
+									<p:selectOneMenu onchange="PF('userResult1').filter()"
+										styleClass="custom-filter">
+										<f:selectItem itemLabel="Chọn kỳ khảo sát" itemValue="#{null}"
+											noSelectionOption="true" />
+										<f:selectItems value="#{questionsBean.setofquestions1}"
+											var="setof" itemLabel="#{setof.name}"
+											itemValue="#{setof.name}" />
+									</p:selectOneMenu>
+								</f:facet>
+								<h:outputText value="#{user.question.setofquestions.name}" />
 							</p:column>
-							<p:column headerText="Tên Câu hỏi" style="">
-								<h:outputText value="#{set1.question.name}" />
+							<p:column filterBy="#{user.user.department.name}"
+								headerText="Phòng ban" filterMatchMode="exact" style="width: 15%">
+								<f:facet name="filter">
+									<p:selectOneMenu onchange="PF('userResult1').filter()"
+										styleClass="custom-filter">
+										<f:selectItem itemLabel="Chọn phòng ban" itemValue="#{null}"
+											noSelectionOption="true" />
+										<f:selectItems value="#{questionsBean.departments1}"
+											var="depart1" itemLabel="#{depart1.name}"
+											itemValue="#{depart1.name}" />
+									</p:selectOneMenu>
+								</f:facet>
+								<h:outputText value="#{user.user.department.name}" />
 							</p:column>
-							<p:column headerText="Loại câu hỏi" style="">
-								<h:outputText value="#{set1.question.questiontype.name}" />
+							<p:column filterBy="#{user.user.name}" headerText="Tên nhân viên"
+								filterMatchMode="contains" style="width: 15%">
+								<h:outputText value="#{user.user.name}" />
 							</p:column>
-							<p:column headerText="Đáp án" style="">
-								<h:outputText value="#{set1.result}" />
+							<p:column headerText="Tên câu hỏi" style="width: 35%">
+								<h:outputText value="#{user.question.name}" />
 							</p:column>
-							<p:column headerText="Ngày tạo" style="" priority="4">
-								<h:outputText value="#{set1.createdDate}">
-									<f:convertDateTime pattern="dd.MM.yyyy" />
-								</h:outputText>
+							<p:column headerText="Đáp án" style="width: 10%">
+								<h:outputText value="#{user.result}" />
 							</p:column>
-						
+
 						</p:dataTable>
+						<!-- END TEST -->
 					</div>
 				</div>
 			</h:form>
