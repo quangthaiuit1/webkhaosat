@@ -168,4 +168,20 @@
 				</div>
 		<!-- 	het phan 1 -->
 		
+		<!--Xoa trong bang danh sach nguoi dung theo bo cau hoi  -->
+		<p:column headerText="Sửa" style="width:5%;text-align: center">
+									<p:commandButton update="createQuestion:updateQuest"
+										icon="fa fa-edit" oncomplete="PF('dialogUpdateQuest').show();">
+										<f:setPropertyActionListener value="#{question1}"
+											target="#{questionsBean.questionUpdated}" />
+									</p:commandButton>
+								</p:column>
+								<p:column headerText="Xóa" style="width: 5%;text-align: center">
+									<p:commandButton update="createQuestion:listUsers"
+										icon="fa fa-trash" oncomplete="PF('dialogDelete').show();">
+										<f:setPropertyActionListener value="#{question1}"
+											target="#{questionsBean.questionDeleteSelected}" />
+									</p:commandButton>
+								</p:column>
+		
 		

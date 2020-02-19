@@ -1,6 +1,18 @@
 /*  WEB KHAO SAT */
 
-
+.ui-widget-content {
+    border: 1px solid #a6c9e2;
+    color: #222222;
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+    border: none ;
+    background: none;
+    color: white;
+    background-color: #17a2b8;
+}
+.ui-datatable tr{
+	background-color: #ccc
+}
 .ui-datatable th, .ui-datatable td, .ui-datatable tr {
 	border-color: #cbcbcb;
 }
@@ -60,5 +72,9 @@ button.ui-autocomplete-dropdown.ui-button.ui-widget.ui-state-default.ui-corner-r
 .ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td,
 	.ui-datatable tfoot th {
 	padding: 4px 4px;
+}
+
+.ui-inputfield {
+	color:#ba3030;
 }
 /* END WEB KHAO SAT */

@@ -110,11 +110,13 @@
 							<h5 style="color: black; text-align: center">Danh sách người
 								dùng</h5>
 							<p:dataTable id="listUsers" var="user1"
-								value="#{questionsBean.listusersBySetofquestion}">
+								value="#{questionsBean.users}"  rowKey="#{user1.id}" 
+								selection="#{questionsBean.listusersBySetofquestion}">
+								<p:column selectionMode="multiple" style="width:5%;text-align:center"/>
 								<p:column headerText="ID" style="width: 5%;text-align: center">
 									<h:outputText value="#{user1.id}" />
 								</p:column>
-								<p:column headerText="Tên người dùng" style="width:55%">
+								<p:column headerText="Tên người dùng" style="width:50%">
 									<h:outputText value="#{user1.name}" />
 								</p:column>
 								<p:column headerText="Ngày tạo" style="width:10%">
@@ -127,20 +129,7 @@
 										<f:convertDateTime pattern="dd.MM.yyyy" />
 									</h:outputText>
 								</p:column>
-								<p:column headerText="Sửa" style="width:5%;text-align: center">
-									<p:commandButton update="createQuestion:updateQuest"
-										icon="fa fa-edit" oncomplete="PF('dialogUpdateQuest').show();">
-										<f:setPropertyActionListener value="#{question1}"
-											target="#{questionsBean.questionUpdated}" />
-									</p:commandButton>
-								</p:column>
-								<p:column headerText="Xóa" style="width: 5%;text-align: center">
-									<p:commandButton update="createQuestion:listUsers"
-										icon="fa fa-trash" oncomplete="PF('dialogDelete').show();">
-										<f:setPropertyActionListener value="#{question1}"
-											target="#{questionsBean.questionDeleteSelected}" />
-									</p:commandButton>
-								</p:column>
+								
 							</p:dataTable>
 							<!-- DIALOG cap nhat cau hoi -->
 							<p:dialog header="Cập nhật" id="updateQuest" width="600"

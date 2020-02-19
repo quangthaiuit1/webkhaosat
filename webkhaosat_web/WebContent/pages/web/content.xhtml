@@ -66,8 +66,6 @@
 									<c:forEach items="#{question1.ratings}" var="r">
 										<f:selectItem itemLabel="#{r.name}" itemValue="#{r.name}" />
 									</c:forEach>
-									<p:ajax event="valueChange"
-										listener="#{questionsBean.checkcau1()}" />
 								</p:selectOneRadio>
 							</h:panelGrid>
 
@@ -100,13 +98,11 @@
 							<h:panelGrid columns="1" style="margin-bottom:10px"
 								cellpadding="5">
 								<p:selectOneRadio id="id2_#{evenCount2}"
-									value="#{questionsBean.ketquaPhan2[evenCount2]}" layout="grid"
+									value="#{questionsBean.ketquaPhan2[evenCount2-evenCount]}" layout="grid"
 									columns="1">
 									<c:forEach items="#{question2.answers}" var="a">
 										<f:selectItem itemLabel="#{a.name}" itemValue="#{a.name}" />
 									</c:forEach>
-									<p:ajax event="valueChange"
-										listener="#{questionsBean.checkcau2()}" />
 								</p:selectOneRadio>
 							</h:panelGrid>
 
@@ -136,9 +132,9 @@
 						</p>
 						<br />
 
-						<p:inputTextarea
+						<p:inputTextarea id="id3_#{evenCount3}"
 							style="margin-left: 10px;margin-bottom: 5px;width: 80%" rows="6"
-							cols="33" value="#{questionsBean.ketquaPhan3[evenCount3]}" />
+							cols="33" value="#{questionsBean.ketquaPhan3[evenCount3-evenCount2]}" />
 						<br />
 
 					</c:forEach>
@@ -146,48 +142,9 @@
 				<!-- Het phan 3 -->
 				<div class="row"
 					style="margin: 0 auto; margin-bottom: 30px; margin-top: 10px;">
-					<p:commandButton style="color: white" value="Hoàn thành" update="output"
-						icon="fa fa-check" oncomplete="PF('dlg').show()" />
+					<p:commandButton style="color: white" value="Hoàn thành" update="total"
+						icon="fa fa-check" action="#{questionsBean.completeSurvey}"/>
 				</div>
-
-				<p:dialog header="Values" resizable="false" showEffect="fade"
-					widgetVar="dlg">
-					<p:panelGrid id="output" columns="1" columnClasses="label, value">
-						<h:outputText value="Câu 1:" />
-						<h:outputText value="#{questionsBean.ketquaPhan1[1]}" />
-
-						<h:outputText value="Câu 2:" />
-						<h:outputText value="#{questionsBean.ketquaPhan1[2]}" />
-
-						<h:outputText value="Câu 3:" />
-						<h:outputText value="#{questionsBean.ketquaPhan1[3]}" />
-
-						<h:outputText value="Câu 4:" />
-						<h:outputText value="#{questionsBean.ketquaPhan1[4]}" />
-
-						<h:outputText value="Câu 5:" />
-						<h:outputText value="#{questionsBean.ketquaPhan1[5]}" />
-
-						<h:outputText value="Câu 6:" />
-						<h:outputText value="#{questionsBean.ketquaPhan2[1]}" />
-
-						<h:outputText value="Câu 7:" />
-						<h:outputText value="#{questionsBean.ketquaPhan2[2]}" />
-
-						<h:outputText value="Câu 8:" />
-						<h:outputText value="#{questionsBean.ketquaPhan2[3]}" />
-
-						<h:outputText value="Câu 9:" />
-						<h:outputText value="#{questionsBean.ketquaPhan2[4]}" />
-
-						<h:outputText value="Câu 10:" />
-						<h:outputText value="#{questionsBean.ketquaPhan3[1]}" />
-
-						<h:outputText value="Câu 11:" />
-						<h:outputText value="#{questionsBean.ketquaPhan3[2]}" />
-
-					</p:panelGrid>
-				</p:dialog>
 			</h:form>
 		</div>
 

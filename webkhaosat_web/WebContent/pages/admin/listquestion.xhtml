@@ -38,30 +38,30 @@
 							selectionMode="single">
 							<p:ajax event="rowSelect" update="createQuestion:listQuestions"
 								listener="#{questionsBean.selectedSetofquestion()}" />
-							<p:column headerText="ID" style="width: 5%;text-align: center">
+							<p:column headerText="ID" style="text-align: center" priority="6">
 								<h:outputText value="#{set1.id}" />
 							</p:column>
-							<p:column headerText="Tên bộ câu hỏi" style="width:60%">
+							<p:column headerText="Tên bộ câu hỏi" style="">
 								<h:outputText value="#{set1.name}" />
 							</p:column>
-							<p:column headerText="Ngày tạo" style="width:15%">
+							<p:column headerText="Ngày tạo" style="" priority="4">
 								<h:outputText value="#{set1.createdDate}">
 									<f:convertDateTime pattern="dd.MM.yyyy" />
 								</h:outputText>
 							</p:column>
-							<p:column headerText="Ngày sửa" style="width:15%">
+							<p:column headerText="Ngày sửa" style="width:15%" priority="5">
 								<h:outputText value="#{set1.modifiedDate}">
 									<f:convertDateTime pattern="dd.MM.yyyy" />
 								</h:outputText>
 							</p:column>
-							<p:column headerText="Sửa" style="width:7.5%;text-align: center">
+							<p:column headerText="Sửa" style="text-align: center" priority="2">
 								<p:commandButton update="createQuestion:updateSetof"
 									icon="fa fa-edit" oncomplete="PF('dialogUpdateSetof').show();">
 									<f:setPropertyActionListener value="#{set1}"
 										target="#{questionsBean.setofquestionsUpdated}" />
 								</p:commandButton>
 							</p:column>
-							<p:column headerText="Xóa" style="width: 7.5%;text-align: center">
+							<p:column headerText="Xóa" style="text-align: center" priority="3">
 								<p:commandButton update="createQuestion:listSetofquestions"
 									icon="fa fa-trash" oncomplete="PF('dialogDelete').show();">
 									<f:setPropertyActionListener value="#{set1}"

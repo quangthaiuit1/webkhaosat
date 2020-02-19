@@ -13,6 +13,7 @@ import lixco.com.services.QuestionService;
 import lixco.com.services.QuestiontypeService;
 import lixco.com.services.RatingService;
 import lixco.com.services.SetofquestionService;
+import lixco.com.services.UserResultService;
 import lixco.com.services.UserService;
 
 public class AbstractBean {
@@ -33,6 +34,9 @@ public class AbstractBean {
 	
 	@Inject 
 	protected UserService USER_SERVICE;
+	
+	@Inject
+	protected UserResultService USER_RESULT_SERVICE;
 	
 	@PostConstruct
 	public void init() {

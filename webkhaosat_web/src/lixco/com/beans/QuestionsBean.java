@@ -23,6 +23,7 @@ import lixco.com.entities.QuestionType;
 import lixco.com.entities.Rating;
 import lixco.com.entities.Setofquestions;
 import lixco.com.entities.User;
+import lixco.com.entities.User_Result;
 
 @ManagedBean
 @ViewScoped
@@ -89,6 +90,8 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	private List<User> listusersBySetofquestion;
 	// Danh sach toan bo user
 	private List<User> users;
+	// Toan bo bang ket qua khao sat
+	private List<User_Result> userResult1;
 	
 	//CAC BIEN HUNG GIA TRI TAM THOI
 	private Date startDate;
@@ -115,6 +118,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		setofquestionsUpdated = new Setofquestions();
 		// Toan bo user
 		users = USER_SERVICE.findAllByFilter();
+		userResult1 = USER_RESULT_SERVICE.findAllByFilter();
 
 		// END
 		// Danh sach toan bo cau hoi tu DB
@@ -173,23 +177,70 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			questionAndAnswer2.add(tempQA);
 		}
 	}
-
+// Ham test
 	public void checkcau1() {
-		System.out.println("Đã vào check 1");
-//		System.out.println(ketquaPhan1[1].toString());
-
-//		System.out.println(Arrays.toString(ketquaPhan1));
-
+		for(String b : ketquaPhan1) {
+			System.out.println(b);
+		}
+		for(String a:ketquaPhan2) {
+			System.out.println(a);
+		}
+		for(String c: ketquaPhan3) {
+			System.out.println(c);
+		}
 	}
-
-	public void checkcau2() {
-		System.out.println("Đã vào check 2");
-
-//		System.out.println(Arrays.toString(ketquaPhan1));
-//		System.out.println(Arrays.toString(ketquaPhan2));
-
+// Ham luu ket qua 
+	public void completeSurvey() {
+		User_Result userResultTemp;
+		
+		List<String> resultList = new ArrayList<>();
+		List<Question> questionList = new ArrayList<>();
+		if(questionsType2.get(0) == null && questionsType3.get(0) == null && questionsType1.get(0) == null ) {
+			System.out.println("khong co cau hoi");
+			return;
+		}
+		for(Question questTemp : questionsType2) {
+			questionList.add(questTemp);
+		}
+		for(Question questTemp1 : questionsType3) {
+			questionList.add(questTemp1);
+		}
+		for(Question questTemp3 : questionsType1) {
+			questionList.add(questTemp3);
+		}
+		if(StringUtils.isEmpty(ketquaPhan1[1])) {
+			System.out.println("Khong co dap an");
+			return;
+		}
+		for(String a : ketquaPhan1) {
+			if(a != null) {
+				resultList.add(a);
+			}
+		}
+		for(String b : ketquaPhan2) {
+			if(b != null) {
+				resultList.add(b);
+			}
+		}
+		for(String c : ketquaPhan3) {
+			if(c != null) {
+				resultList.add(c);
+			}
+		}
+		User userTemp = new User();
+		userTemp = USER_SERVICE.findById(2L);
+		for(int i = 0; i < questionList.size(); i++) {
+			userResultTemp =  new User_Result();
+			userResultTemp.setCreatedDate(getDate());
+			userResultTemp.setResult(resultList.get(i));
+			userResultTemp.setQuestion(questionList.get(i));
+			userResultTemp.setUser(userTemp);
+			USER_RESULT_SERVICE.create(userResultTemp);
+		}
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Bạn đã hoàn thành khảo sát!");
+		PrimeFaces.current().dialog().showMessageDynamic(message);
 	}
-
+	
 // Khi bo cau hoi duoc chon -> danh sach cac cau hoi theo bo
 	public void selectedSetofquestion() {
 		listQuestionBySet = QUESTION_SERVICE.find(null, this.setofquestionSelected2.getId());
@@ -235,13 +286,13 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			PrimeFaces.current().dialog().showMessageDynamic(message);
 		}
 	}
-//Chon bo cau hoi se dien ra
+//Chon bo cau hoi
 	public void SetofquestionSelected() {
 		// try catch de xu ly-> nhap sai format
 		try {
 			if (setOfquestionsSelected3.getId() == 0) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-						"Vui lòng chọn bộ câu hỏi!");
+						"Vui lòng chọn kỳ khảo sát!");
 				PrimeFaces.current().dialog().showMessageDynamic(message);
 			} else {
 				setofquestions1 = SETOFQUESTION_SERVICE.findAllByFilter();
@@ -696,4 +747,11 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
+	public List<User_Result> getUserResult1() {
+		return userResult1;
+	}
+	public void setUserResult1(List<User_Result> userResult1) {
+		this.userResult1 = userResult1;
+	}
+	
 }
