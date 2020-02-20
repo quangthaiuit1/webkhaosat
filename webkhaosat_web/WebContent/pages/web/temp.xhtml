@@ -1,231 +1,179 @@
-			
-			<div class="row"
-				style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
-				<span class="group-name" style="margin: 0 auto">PHẦN 2: TRẢ
-					LỜI</span> <span class="group-description"><p
-						style="text-align: center; margin-left: 5px">
-						#{questionsBean.questionsType1.get(0).name} <strong>vào ô
-						</strong> dưới đây:<strong> </strong>
-					</p></span> <br />
-
-				<c:set var="evenCount2" value="${0}" />
-				<p:dataTable id="table" value="#{questionsBean.questionAndAnswer}"
-					var="QA">
-					<p:column>
-
-						<ui:repeat var="#{questionsBean.questionAndAnswer}" value="temp">
-							<c:set var="evenCount2" value="${evenCount2+1}" />
-							<h:outputText value="Câu #{evenCount2+5}: #{QA.question.name}"
-								style="font-size: 16px" />
-							<br />
-
-
-							<h:form id="phan2_#{evenCount}">
-								<h:panelGrid columns="1" style="margin-bottom:10px"
-									cellpadding="5">
-
-
-									<p:selectOneRadio id="id2_#{evenCount2}"
-										value="#{questionsBean.ketquaPhan2[evenCount2]}">
-
-										<f:selectItems value="#{QA.answers}" var="c"
-											itemLabel="#{a.name}" itemValue="#{a}" />
-
-										<p:ajax event="change" listener="#{questionsBean.checkcau2()}" />
-									</p:selectOneRadio>
-
-								</h:panelGrid>
-							</h:form>
-
-						</ui:repeat>
-					</p:column>
-				</p:dataTable>
-			</div>
-
-			
-			
-			
-			
-							<!-- phan 2  -->
+			<!-- phan 2  -->
 				<div class="row"
 					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px;">
-					<span class="group-name" style="margin: 0 auto">PHẦN 2: TRẢ
-						LỜI</span> <span class="group-description"><p
-							style="text-align: center; margin-left: 5px">
-							#{questionsBean.questionsType1.get(0).name} <strong> </strong>
-							dưới đây:<strong> </strong>
-						</p></span> <br />
+					<div class="row" style="width: 100%">
+						<span class="group-name" style="margin: 0 auto;margin-bottom: 15px">PHẦN 2: TRẢ
+							LỜI</span> <span class="group-description"><p
+								style="text-align: center; margin-left: 5px"></p></span> <br />
+					</div>
 
-					<c:set var="evenCount2" value="${0}" />
-					<c:forEach items="#{questionsBean.questionAndAnswer}"
+					<c:set var="evenCount2" value="${evenCount}" />
+					<c:forEach items="#{questionsBean.questionAndAnswer2}"
 						var="question2">
 						<c:set var="evenCount2" value="${evenCount2+1}" />
 						<div class="row" style="width: 100%">
 							<p>
-								<h:outputText value="Câu #{evenCount2+5}"
-									style="margin-left: 5px" />
+								<h:outputText value="Câu #{evenCount2}" style="margin-left: 5px" />
 								: #{question2.question.name}
 							</p>
 						</div>
 						<div class="row" style="width: 100%; margin-left: 10px">
-							<h:form id="phan2_#{evenCount2}">
-								<h:panelGrid columns="1" style="margin-bottom:10px"
-									cellpadding="5">
-									<p:selectOneRadio id="id2_#{evenCount2}"
-										value="#{questionsBean.ketquaPhan2[evenCount2]}" layout="grid"
-										columns="1">
-										<c:forEach items="#{question2.answers}" var="a">
-											<f:selectItem itemLabel="#{a.name}" itemValue="#{a.name}" />
-										</c:forEach>
-										<p:ajax event="valueChange"
-											listener="#{questionsBean.checkcau2()}" />
-									</p:selectOneRadio>
-								</h:panelGrid>
-							</h:form>
-						</div>
-					</c:forEach>
-
-				</div>
-				<!-- phan 3 -->
-				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
-					<div class="row" style="width: 100%">
-						<span class="group-name" style="margin: 0 auto">PHẦN 3: LẤY
-							Ý KIẾN</span> <span class="group-description"><p
-								style="text-align: center; margin-left: 5px"></p></span> <br />
-					</div>
-					<c:set var="evenCount3" value="${0}" />
-					<c:forEach items="#{questionsBean.questionsType1}" var="question3">
-
-						<h:form id="phan3_#{evenCount3}">
-							<c:set var="evenCount3" value="${evenCount3+1}" />
-							<p>
-								<h:outputText value="Câu #{evenCount3+9}: " />
-								#{question3.name}
-							</p>
-							<br />
-							<div class="row">
-								<p:inputTextarea style="margin-left: 10px;margin-bottom: 5px;"
-									rows="6" cols="33"
-									value="#{questionsBean.ketquaPhan3[evenCount3]}" />
-
-							</div>
-						</h:form>
-
-					</c:forEach>
-				</div>
-				
-	<!-- Phan 1 thang diem nhu DH CNTT -->
-	
-				<!-- phan 1  -->
-				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
-					<span class="group-name" style="margin: 0 auto">PHẦN 1: ĐÁNH
-						GIÁ</span> <span class="group-description"><p
-							style="text-align: center;">
-							Anh/Chị vui lòng cho ý kiến nhận xét của mình về môn học bằng
-							cách đánh dấu chọn vào ô tương ứng cho từng mục trong tất cả các
-							<strong>lĩnh vực</strong> dưới đây:<strong> </strong>
-						</p>
-						<p style="text-align: center;">
-							<strong>Thang điểm:</strong><strong>&nbsp; <span
-								style="color: #ff0000;">1</span>&nbsp;
-							</strong>
-							<h:graphicImage library="images" name="arrow2.png" />
-							<span style="color: #ff0000;"><strong> 4</strong></span>
-						</p>
-						<p style="text-align: center;">
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<strong>Chưa tốt/hài lòng</strong>&nbsp;&nbsp;&nbsp;&nbsp;
-							<h:graphicImage library="images" name="arrow1.png" />
-							<strong>Rất tốt/hài lòng</strong>
-						</p> </span>
-					<c:set var="evenCount" value="${0}" />
-					<c:forEach items="#{questionsBean.questionsType2}" var="question1">
-						<c:set var="evenCount" value="${evenCount+1}" />
-						<div class="col-sm-9 col-md-9 col-lg-9">
-							<p>
-								<h:outputText value="Câu #{evenCount}" />
-								: #{question1.name}
-							</p>
-						</div>
-						<div class="col-sm-3 col-md-3 col-lg-3">
 
 							<h:panelGrid columns="1" style="margin-bottom:10px"
 								cellpadding="5">
-								<p:selectOneRadio id="id_#{evenCount}"
-									value="#{questionsBean.ketquaPhan1[evenCount]}">
-									<f:selectItem itemValue="1" />
-									<f:selectItem itemValue="2" />
-									<f:selectItem itemValue="3" />
-									<f:selectItem itemValue="4" />
-									<p:ajax event="valueChange"
-										listener="#{questionsBean.checkcau1()}" />
+								<p:selectOneRadio id="id2_#{evenCount2}"
+									value="#{questionsBean.ketquaPhan2[evenCount2-evenCount]}"
+									layout="grid" columns="1">
+									<c:forEach items="#{question2.answers}" var="a">
+										<f:selectItem itemLabel="#{a.name}" itemValue="#{a.name}" />
+									</c:forEach>
 								</p:selectOneRadio>
 							</h:panelGrid>
 
 						</div>
 					</c:forEach>
+
 				</div>
-		<!-- 	het phan 1 -->
-		
-		<!--Xoa trong bang danh sach nguoi dung theo bo cau hoi  -->
-		<p:column headerText="Sửa" style="width:5%;text-align: center">
-									<p:commandButton update="createQuestion:updateQuest"
-										icon="fa fa-edit" oncomplete="PF('dialogUpdateQuest').show();">
-										<f:setPropertyActionListener value="#{question1}"
-											target="#{questionsBean.questionUpdated}" />
-									</p:commandButton>
-								</p:column>
-								<p:column headerText="Xóa" style="width: 5%;text-align: center">
-									<p:commandButton update="createQuestion:listUsers"
-										icon="fa fa-trash" oncomplete="PF('dialogDelete').show();">
-										<f:setPropertyActionListener value="#{question1}"
-											target="#{questionsBean.questionDeleteSelected}" />
-									</p:commandButton>
-								</p:column>
-								
-		<!-- Form them cau hoi co dap an -->
-		<h:form id="aghhjj">
-							<div style="width: 20%">
-								<p:commandButton
-									update="createQuestion:listAnswers"
-									icon="fa fa-plus"
-									style="width:100%;color: #fff;background-color: #007bff"
-									value="Thêm mới" oncomplete="PF('dialogAddAns').show();" />
-							</div>
+				<!-- het phan 2 -->
+				
+				
+				<h5
+								style="color: black; text-align: center; margin-bottom: 35px; font-weight: bold">
+								Danh sách câu trả lời <span
+									style="font-style: italic; font-weight: normal; font-size: 17px;">(Loại
+									câu hỏi có đáp án)</span>
+							</h5>
+							<h:form id="formAddNewAnswer">
+								<div style="width: 100%; margin-bottom: 10px">
+									<div style="width: 20%; margin-left: 80%">
+										<p:commandButton icon="fa fa-plus"
+											style="width:100%;color: #fff;background-color: #007bff"
+											value="Thêm mới" oncomplete="PF('dialogAddNewAnswer').show()" />
+									</div>
+								</div>
 							</h:form>
-	<!--ket thuc  -->
-	
-	<!--Danh sach ket qua ky khao sats  -->
-		<p:dataTable id="dtLoadResult" var="set1"
-							value="#{questionsBean.userResult1}" sortBy="#{set1.user.name}" expandableRowGroups="true">
-							<p:headerRow>
-								<p:column colspan="6">
-									<h:outputText value="#{set1.user.name}" />
+							<!--ket thuc  -->
+							<p:dataTable id="listAnswers" var="answer1"
+								value="#{questionsBean.listAnswersByQuestion}">
+								<p:column headerText="ID" style="width: 7%;text-align: center">
+									<h:outputText value="#{answer1.id}" />
 								</p:column>
-							</p:headerRow>
-							<p:column headerText="ID" style="text-align: center" priority="6">
-								<h:outputText value="#{set1.id}" />
-							</p:column>
-							<p:column headerText="Tên User" style="">
-								<h:outputText value="#{set1.user.name}" />
-							</p:column>
-							<p:column headerText="Tên Câu hỏi" style="">
-								<h:outputText value="#{set1.question.name}" />
-							</p:column>
-							<p:column headerText="Loại câu hỏi" style="">
-								<h:outputText value="#{set1.question.questiontype.name}" />
-							</p:column>
-							<p:column headerText="Đáp án" style="">
-								<h:outputText value="#{set1.result}" />
-							</p:column>
-							<p:column headerText="Ngày tạo" style="" priority="4">
-								<h:outputText value="#{set1.createdDate}">
-									<f:convertDateTime pattern="dd.MM.yyyy" />
-								</h:outputText>
-							</p:column>
-						
-						</p:dataTable>
-	<!--Ket thuc  -->
-		
+								<p:column headerText="Tên câu trả lời" style="width:48%">
+									<h:outputText value="#{answer1.name}" />
+								</p:column>
+								<p:column headerText="Ngày tạo" style="width:15%">
+									<h:outputText value="#{answer1.createdDate}">
+										<f:convertDateTime pattern="dd.MM.yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Ngày sửa" style="width:15%">
+									<h:outputText value="#{answer1.modifiedDate}">
+										<f:convertDateTime pattern="dd.MM.yyyy" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Sửa" style="width:7.5%;text-align: center">
+									<p:commandButton update="createQuestion:updateAns"
+										icon="fa fa-edit" oncomplete="PF('dialogUpdateAns').show();">
+										<f:setPropertyActionListener value="#{answer1}"
+											target="#{questionsBean.answerUpdated}" />
+									</p:commandButton>
+								</p:column>
+								<p:column headerText="Xóa"
+									style="width: 7.5%;text-align: center">
+									<p:commandButton icon="fa fa-trash"
+										oncomplete="PF('dialogDeleteAns').show();">
+										<f:setPropertyActionListener value="#{answer1}"
+											target="#{questionsBean.answerDeleted}" />
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+							<!-- DIALOG cap nhat ANSWER -->
+							<p:dialog header="Cập nhật" id="updateAns" width="600"
+								widgetVar="dialogUpdateAns" modal="true" showEffect="fade"
+								hideEffect="fade" resizable="false">
+								<p:outputPanel id="editAns" style="text-align:center;">
+									<div class="row" style="margin-bottom: 15px">
+										<div class="col-sm-12 col-md-4 col-lg-3">
+											<h:outputText value="Tên câu hỏi" />
+										</div>
+										<div class="col-sm-12 col-md-8 col-lg-9">
+											<p:inputText
+												style="width: 100%!important;color: black!important"
+												id="inputEditAnsName"
+												value="#{questionsBean.answerUpdated.name}" />
+										</div>
+									</div>
+									<div class="row" style="width: 50%; margin: 0 auto">
+										<div class="col-sm-12 col-md-6 col-lg-6">
+											<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
+												style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545"
+												oncomplete="PF('dialogUpdateAns').hide();" />
+										</div>
+										<div class="col-sm-12 col-md-6 col-lg-6">
+											<p:commandButton icon="fa fa-check"
+												update="createQuestion:listAnswers" value="Cập nhật"
+												style="color: #fff;background-color: #28a745;border-color:#28a745"
+												action="#{questionsBean.updateAnswer}" />
+										</div>
+									</div>
+								</p:outputPanel>
+							</p:dialog>
+							<!--Ket thuc DIALOG update  -->
+							<!--Dialog xoa ANSWER  -->
+							<p:dialog header="Delete" widgetVar="dialogDeleteAns"
+								modal="true" showEffect="fade" hideEffect="fade"
+								resizable="false">
+								<p:outputPanel id="panelDeleteAns" style="text-align:center;">
+									<div class="row" style="width: 100%; margin: 0 auto">
+										<div style="width: 48%; margin-right: 5px">
+											<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
+												style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545"
+												oncomplete="PF('dialogDeleteAns').hide();" />
+										</div>
+										<div style="width: 48%">
+											<p:commandButton icon="fa fa-check" value="Đồng ý"
+												update="createQuestion:listAnswers"
+												style="color: #fff;background-color: #28a745;border-color:#28a745"
+												action="#{questionsBean.deleteAnswer}" />
+										</div>
+									</div>
+								</p:outputPanel>
+							</p:dialog>
+							<!--Ket thuc  -->
+							<!-- Dialog Them cau tra loi moi _ co dap an -->
+							<p:dialog header="Cập nhật" id="AddNewAnswer" width="600"
+								widgetVar="dialogAddNewAnswer" modal="true" showEffect="fade"
+								hideEffect="fade" resizable="false">
+								<p:outputPanel id="editAddNewAns" style="text-align:center;">
+									<div class="row" style="margin-bottom: 15px">
+										<p:inputText
+											style="width: 80%!important;color: black!important;margin:0 auto"
+											id="inputAddnewAnswer" value="#{questionsBean.newAnswer1}" />
+									</div>
+									<div class="row" style="width: 50%; margin: 0 auto">
+										<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
+											style=" margin-left: 25%;color: #fff;background-color: #dc3545;border-color: #dc3545;margin-right: 5px"
+											oncomplete="PF('dialogAddNewAnswer').hide();" />
+
+										<p:commandButton icon="fa fa-check" value="Thêm mới"
+											update="createQuestion:listAnswers inputAddnewAnswer"
+											style="color: #fff;background-color: #28a745;border-color:#28a745"
+											action="#{questionsBean.addNewAnswer}" />
+									</div>
+								</p:outputPanel>
+							</p:dialog>
+							<!-- Ket thuc -->
+							
+							<!--Autocomplete loai cau hoi -->
+							<div class="row"
+								style="width: 100%; margin: 0 auto; margin-bottom: 10px">
+								<p:autoComplete id="loaicongviecId" dropdown="true"
+									value="#{questionsBean.questionTypeTemp}"
+									completeMethod="#{questionsBean.completeQuestionType}" var="abc"
+									itemLabel="#{abc.name}" itemValue="#{abc}"
+									placeholder="Loại câu hỏi"
+									style="margin-right: 5%;margin: 0 auto;margin-bottom:0px"
+									inputStyle="width: 100%" converter="#{themeConverter}"
+									forceSelection="true" required="true" />
+							</div>
+							<!-- ket thuc -->

@@ -19,52 +19,50 @@
 </h:head>
 <h:body>
 	<ui:composition template="common.xhtml">
+		<ui:define name="header"></ui:define>
 		<ui:define name="content">
 			<h:form id="loadResult">
 				<!-- Them bo cau hoi -->
 				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px">
-					<div class="row" style="width: 100%; margin-bottom: 35px" >
+					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 20px">
+					<div class="row" style="width: 100%">
 						<span class="group-name"
-							style="margin: 0 auto; color: black; margin-top: 20px;font-weight: bold">KẾT
+							style="margin-left: 1%; color: black; font-weight: bold; margin-top: 10px; font-size: 20px"><p:linkButton
+								icon="fa fa-home" outcome="index"
+								value="Trang chủ" style="background-color: #007bff">
+
+							</p:linkButton></span>
+					</div>
+					<div class="row" style="width: 100%; margin-bottom: 35px">
+						<span class="group-name"
+							style="margin: 0 auto; color: black; margin-top: 20px; font-weight: bold">KẾT
 							QUẢ KỲ KHẢO SÁT</span> <span class="group-description"><p
 								style="text-align: center; margin-left: 5px"></p></span> <br />
 					</div>
 					<div class="row"
-						style="width: 60%; margin-left: 0px; margin: 0 auto">
+						style="width: 90%; margin-left: 0px; margin: 0 auto">
 						<!-- TEST -->
 						<p:dataTable var="user" value="#{questionsBean.userResult1}"
 							widgetVar="userResult1" emptyMessage="Không tìm thấy"
-							filteredValue="#{questionsBean.userResult2}" paginator="true" rows="10">
+							filteredValue="#{questionsBean.userResult2}" paginator="true"
+							rows="20">
 							<f:facet name="header">
 								<p:outputPanel style="margin-right: 5px">
 									<h:outputText value="Tìm kiếm:" />
 									<i class="pi pi-search"></i>
 									<p:inputText id="globalFilter"
-										onkeyup="PF('userResult1').filter()" style="width:30%;"
+										onkeyup="PF('userResult1').filter()"
+										style="width:30%;background-color: white;color: black"
 										placeholder="Nhập từ khóa" />
 								</p:outputPanel>
 							</f:facet>
-							<p:column headerText="Id" style="width: 5%">
-								<h:outputText value="#{user.id}" />
+							<p:column headerText="Id" style="width: 5%;text-align: center">
+								<h:outputText value="#{user.id}" style="" />
 							</p:column>
-							<p:column filterBy="#{user.question.setofquestions.name}"
-								headerText="Kỳ khảo sát" filterMatchMode="exact"
-								style="width: 20%">
-								<f:facet name="filter">
-									<p:selectOneMenu onchange="PF('userResult1').filter()"
-										styleClass="custom-filter">
-										<f:selectItem itemLabel="Chọn kỳ khảo sát" itemValue="#{null}"
-											noSelectionOption="true" />
-										<f:selectItems value="#{questionsBean.setofquestions1}"
-											var="setof" itemLabel="#{setof.name}"
-											itemValue="#{setof.name}" />
-									</p:selectOneMenu>
-								</f:facet>
-								<h:outputText value="#{user.question.setofquestions.name}" />
-							</p:column>
+							
 							<p:column filterBy="#{user.user.department.name}"
-								headerText="Phòng ban" filterMatchMode="exact" style="width: 15%">
+								headerText="Phòng ban" filterMatchMode="exact"
+								style="width: 15%">
 								<f:facet name="filter">
 									<p:selectOneMenu onchange="PF('userResult1').filter()"
 										styleClass="custom-filter">
@@ -78,13 +76,13 @@
 								<h:outputText value="#{user.user.department.name}" />
 							</p:column>
 							<p:column filterBy="#{user.user.name}" headerText="Tên nhân viên"
-								filterMatchMode="contains" style="width: 15%">
+								filterMatchMode="contains" style="width: 15%;">
 								<h:outputText value="#{user.user.name}" />
 							</p:column>
-							<p:column headerText="Tên câu hỏi" style="width: 35%">
+							<p:column headerText="Tên câu hỏi" style="width: 40%">
 								<h:outputText value="#{user.question.name}" />
 							</p:column>
-							<p:column headerText="Đáp án" style="width: 10%">
+							<p:column headerText="Đáp án" style="width: 25%">
 								<h:outputText value="#{user.result}" />
 							</p:column>
 

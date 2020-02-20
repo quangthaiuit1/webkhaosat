@@ -1,6 +1,6 @@
 package lixco.com.entities;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,8 +11,8 @@ public class Setofquestions extends AbstractEntities{
 	private String name;
 	private String listusers;
 	private String description;
-	private Timestamp starttime;
-	private Timestamp endtime;
+	private Date starttime;
+	private Date endtime;
 	
 	
 	public String getDescription() {
@@ -39,21 +39,19 @@ public class Setofquestions extends AbstractEntities{
 		this.listusers = listusers;
 	}
 
-	public Timestamp getStarttime() {
+	public Date getStarttime() {
 		return starttime;
 	}
 
-	public void setStarttime(Timestamp starttime) {
+	public void setStarttime(Date starttime) {
 		this.starttime = starttime;
 	}
 
-	public Timestamp getEndtime() {
+	public Date getEndtime() {
 		return endtime;
 	}
 
-	public void setEndtime(Timestamp endtime) {
+	public void setEndtime(Date endtime) {
 		this.endtime = endtime;
 	}
-
-
 }

@@ -1,18 +1,50 @@
-/*  WEB KHAO SAT */
-
+/* WEB KHAO SAT */
+tr {
+	background-color: #626262;
+}
+.ui-datatable .ui-column-filter {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: auto;
+    background-color: white;
+}
 .ui-widget-content {
-    border: 1px solid #a6c9e2;
-    color: #222222;
+	border: 1px solid #a6c9e2;
+	color: #222222;
 }
-.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
-    border: none ;
+
+.ui-widget-content .ui-inputfield {
+	color: #222222!important;
+}
+.ui-widget-header {
+    border: 1px solid #17a2b8;
     background: none;
-    color: white;
     background-color: #17a2b8;
+	
+    color: #eaf5f7;
+    font-weight: bold;
 }
-.ui-datatable tr{
+
+.ui-state-default, .ui-widget-content .ui-state-default,
+	.ui-widget-header .ui-state-default {
+	border: 1px solid #329a8b;
+	background: none;
+	font-weight: normal;
+	color: #ffffff;
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight,
+	.ui-widget-header .ui-state-highlight {
+	border: none;
+	background: none;
+	color: white;
+	background-color: #17a2b8;
+}
+
+.ui-datatable tr {
 	background-color: none;
 }
+
 .ui-datatable th, .ui-datatable td, .ui-datatable tr {
 	border-color: #cbcbcb;
 }
@@ -20,21 +52,24 @@
 span.ui-button-icon-left.ui-icon.ui-c.fa.fa-trash {
 	color: red;
 }
-
+span.ui-button-icon-left.ui-icon.ui-c.fa.fa-list-alt {
+	color: #876a6a;
+}
+span.ui-button-icon-left.ui-icon.ui-c.fa.fa-navicon {
+	color: #353535;
+}
+span.ui-button-icon-left.ui-icon.ui-c.fa-search-plus{
+	color:#2b5fa2;
+}
 span.ui-button-icon-left.ui-icon.ui-c.fa.fa-edit {
 	color: #268537;
 }
 
-.ui-state-default, .ui-widget-content .ui-state-default,
-	.ui-widget-header .ui-state-default {
-	border: 1px solid #cbcbcb;
-	background: none;
-	font-weight: normal;
-	color: black;
-}
-button.ui-autocomplete-dropdown.ui-button.ui-widget.ui-state-default.ui-corner-right.ui-button-icon-only{
+button.ui-autocomplete-dropdown.ui-button.ui-widget.ui-state-default.ui-corner-right.ui-button-icon-only
+	{
 	background-color: #007bff;
 }
+
 .ui-datatable table {
 	border-collapse: collapse;
 	width: 100%;
@@ -68,13 +103,13 @@ button.ui-autocomplete-dropdown.ui-button.ui-widget.ui-state-default.ui-corner-r
 .ui-widget {
 	font-size: 13px;
 }
-/* Chinh cac row padding 0 */
-.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td,
-	.ui-datatable tfoot th {
+
+Chinh cac row padding 0 .ui-datatable thead th, .ui-datatable tbody td,
+	.ui-datatable tfoot td, .ui-datatable tfoot th {
 	padding: 4px 4px;
 }
 
 .ui-inputfield {
-	color:#ba3030;
+	color: #ba3030;
 }
 /* END WEB KHAO SAT */

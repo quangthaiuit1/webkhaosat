@@ -22,26 +22,14 @@
 				<!-- phan 1  -->
 				<div class="row"
 					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
-					<span class="group-name" style="margin: 0 auto">PHẦN 1: ĐÁNH
+					<span class="group-name" style="margin: 0 auto;margin-bottom: 15px">PHẦN 1: ĐÁNH
 						GIÁ</span> <span class="group-description"><p
 							style="text-align: center;">
 							Anh/Chị vui lòng cho ý kiến nhận xét của mình về môn học bằng
 							cách đánh dấu chọn vào ô tương ứng cho từng mục trong tất cả các
 							<strong>lĩnh vực</strong> dưới đây:<strong> </strong>
 						</p>
-						<p style="text-align: center;">
-							<strong>Thang điểm:</strong><strong>&nbsp; <span
-								style="color: #ff0000;">1</span>&nbsp;
-							</strong>
-							<h:graphicImage library="images" name="arrow2.png" />
-							<span style="color: #ff0000;"><strong> 4</strong></span>
-						</p>
-						<p style="text-align: center;">
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<strong>Chưa tốt/hài lòng</strong>&nbsp;&nbsp;&nbsp;&nbsp;
-							<h:graphicImage library="images" name="arrow1.png" />
-							<strong>Rất tốt/hài lòng</strong>
-						</p> </span>
+						</span>
 					<c:set var="evenCount" value="${0}" />
 					<c:forEach items="#{questionsBean.questionAndAnswer1}"
 						var="question1">
@@ -78,68 +66,30 @@
 				</div>
 				<!-- 	het phan 1 -->
 
-				<!-- phan 2  -->
-				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px;">
-					<div class="row" style="width: 100%">
-						<span class="group-name" style="margin: 0 auto">PHẦN 2: TRẢ
-							LỜI</span> <span class="group-description"><p
-								style="text-align: center; margin-left: 5px"></p></span> <br />
-					</div>
-
-					<c:set var="evenCount2" value="${evenCount}" />
-					<c:forEach items="#{questionsBean.questionAndAnswer2}"
-						var="question2">
-						<c:set var="evenCount2" value="${evenCount2+1}" />
-						<div class="row" style="width: 100%">
-							<p>
-								<h:outputText value="Câu #{evenCount2}" style="margin-left: 5px" />
-								: #{question2.question.name}
-							</p>
-						</div>
-						<div class="row" style="width: 100%; margin-left: 10px">
-
-							<h:panelGrid columns="1" style="margin-bottom:10px"
-								cellpadding="5">
-								<p:selectOneRadio id="id2_#{evenCount2}"
-									value="#{questionsBean.ketquaPhan2[evenCount2-evenCount]}"
-									layout="grid" columns="1">
-									<c:forEach items="#{question2.answers}" var="a">
-										<f:selectItem itemLabel="#{a.name}" itemValue="#{a.name}" />
-									</c:forEach>
-								</p:selectOneRadio>
-							</h:panelGrid>
-
-						</div>
-					</c:forEach>
-
-				</div>
-				<!-- het phan 2 -->
-
 				<!-- phan 3 -->
 				<div class="row"
 					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 					<div class="row" style="width: 100%">
-						<span class="group-name" style="margin: 0 auto">PHẦN 3: LẤY
+						<span class="group-name" style="margin: 0 auto;margin-bottom: 15px">PHẦN 2: LẤY
 							Ý KIẾN</span> <span class="group-description"><p
 								style="text-align: center; margin-left: 5px"></p></span> <br />
 					</div>
-					<c:set var="evenCount3" value="${evenCount2}" />
+					<c:set var="evenCount2" value="${evenCount}" />
 					<c:forEach items="#{questionsBean.questionsType1}" var="question3">
 
 
-						<c:set var="evenCount3" value="${evenCount3+1}" />
+						<c:set var="evenCount2" value="${evenCount2+1}" />
 						<p>
-							<h:outputText value="Câu #{evenCount3}: "
+							<h:outputText value="Câu #{evenCount2}: "
 								style="margin-left: 5px" />
 							#{question3.name}
 						</p>
 						<br />
 
-						<p:inputTextarea id="id3_#{evenCount3}"
+						<p:inputTextarea id="id2_#{evenCount2}"
 							style="margin-left: 10px;margin-bottom: 5px;width: 80%" rows="6"
 							cols="33"
-							value="#{questionsBean.ketquaPhan3[evenCount3-evenCount2]}" />
+							value="#{questionsBean.ketquaPhan2[evenCount2-evenCount]}" />
 						<br />
 
 					</c:forEach>

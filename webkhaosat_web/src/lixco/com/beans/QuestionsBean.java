@@ -11,6 +11,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
@@ -33,82 +35,56 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 //Da hoan thanh	
-	// Cau hoi lay y kien
-	private List<Question> questionsType1;
-	// Cau hoi danh gia
-	private List<Question> questionsType2;
-	// Cau hoi co dap an
-	private List<Question> questionsType3;
-	// Cau hoi thang diem
-	private List<Question> questionsType4;
-	// Danh sach bo cau hoi phan 2
-	private List<QuestionAndAnswer> questionAndAnswer2;
-	// Danh sach bo cau hoi phan 1
-	private List<QuestionAndRating> questionAndAnswer1;
-	// Danh sach dap an phan 1
-	private String[] ketquaPhan1;
-
-	// Danh sach dap an phan 2
-	private String[] ketquaPhan2;
-	// Danh sach dap an phan 3
-	private String[] ketquaPhan3;
-
-	// Toan bo cau tra loi cua phan 3
-	private List<Answer> answers2;
-	// Toan bo cau tra loi cua phan 1
-	private List<Rating> answers1;
-	// Danh sach loai cau hoi tu DB
-	private List<QuestionType> questionTypeList1;
-	// Giu gia tri loai cau hoi khi tao
-	private QuestionType questiontypeAdd;
-	// Danh sach cau hoi thuoc 1 bo
-	private List<Question> listQuestionBySet;
-	// Danh sach bien hung gia tri
-	private String questionNameNew;
+	private List<Question> questionsType1; // Cau hoi lay y kien
+	private List<Question> questionsType2; // Cau hoi danh gia
+	private List<Question> questionsType3; // Cau hoi co dap an
+	private List<Question> questionsType4; // Cau hoi thang diem
+	private List<QuestionAndAnswer> questionAndAnswer2;// Danh sach bo cau hoi phan 2
+	private List<QuestionAndRating> questionAndAnswer1; // Danh sach bo cau hoi phan 1
+	private String[] ketquaPhan1; // Danh sach dap an phan 1
+	private String[] ketquaPhan2; // Danh sach dap an phan 2
+	private String[] ketquaPhan3; // Danh sach dap an phan 3
+	private List<Answer> answers2; // Toan bo cau tra loi cua phan 3
+	private List<Rating> answers1; // Toan bo cau tra loi cua phan 1
+	private List<QuestionType> questionTypeList1; // toan bo loai cau hoi
+	private QuestionType questionTypeSelected;
+	private QuestionType questionTypeTemp;//giu loai cau hoi khi them cau hoi
+	private List<Question> listQuestionBySet; // Danh sach cau hoi thuoc 1 bo
+	private String questionNameNew; // Danh sach bien hung gia tri
 	private Setofquestions setofquestionNew;
-	// Bien hung dap an khi tao moi
-	private String[] answersNew;
-	// Danh sach bo cau hoi
-	private List<Setofquestions> setofquestions1;
-	// Hung gia tri bo cau hoi khi user chon them
-	private Setofquestions setofquestionsSelected1;
+	private String[] answersNew; // Bien hung dap an khi tao moi
+	private List<Setofquestions> setofquestions1; // Danh sach bo cau hoi
+	private Setofquestions setofquestionsSelected1; // Hung gia tri bo cau hoi khi user chon them
 	private String answerAddNew;
-	//// Hung gia tri bo cau hoi de xoa va sua
-	private Setofquestions setofquestionSelected2;
-	// Hung gia tri khi cau hoi duoc chon
-	private Question questionSelected;
-	// Bien hung gia tri bo cau hoi se dien ra
-	private Setofquestions setOfquestionsSelected3;
-	// Danh sach bien hung gia tri update
+	private Setofquestions setofquestionSelected2; //// Hung gia tri bo cau hoi de xoa va sua
+	private Question questionSelected; // Hung gia tri khi cau hoi duoc chon
+	private Setofquestions setOfquestionsSelected3; // hung gia tri bo cau hoi se dien ra
+	// update and delete
 	private Setofquestions setofquestionsUpdated;
+	private Setofquestions setofquestionsDeleted;
 	private Question questionUpdated;
+	private Question questionDeleted;
 	private Answer answerUpdated;
+	private Answer answerDeleted;
 	private Rating ratingUpdated;
+	private Rating ratingDeleted;
 	// Danh sach cau tra loi theo tung cau hoi
 	private List<Answer> listAnswersByQuestion;
 	private List<Rating> listRatingByQuestion;
-	private Question questionDeleteSelected;
-	// Hung gia tri bo cau hoi de set user
-	private Setofquestions setofquestionsSelected4;
-	// Danh sach nguoi dung theo bo cau hoi
-	private List<User> listusersBySetofquestion;
-	// Danh sach toan bo user
-	private List<User> users;
-	// Toan bo bang ket qua khao sat
-	private List<User_Result> userResult1;
-	//List sau filter
-	private List<User_Result> userResult2;
-	
-	//CAC BIEN HUNG GIA TRI TAM THOI
+	private Setofquestions setofquestionsSelected4; // Hung gia tri bo cau hoi de set user
+	private List<User> listusersBySetofquestion; // Danh sach nguoi dung theo bo cau hoi
+	private List<User> users; // Danh sach toan bo user
+	private List<User_Result> userResult1; // ket qua khao sat theo id bo khao sat
+	private List<User_Result> userResult2; // List sau filter
+	// CAC BIEN HUNG GIA TRI TAM THOI
 	private Date startDate;
 	private Date endDate;
-	private int rate1;
-	private String[] setofquestions;
-	//Toan bo phong ban
-	private List<Department> departments1;
-
-	// Bo ca hoi dang dien ra
-	private Setofquestions setofquestionsplaying;
+	
+	private String newAnswer1;
+	private String newAnswer2;
+	private long setofId; //Bien hung ket qua get param setof
+	private List<Department> departments1; // Toan bo phong ban
+	private Setofquestions setofquestionsPlaying; // Bo ca hoi dang dien ra
 
 	@PostConstruct
 	public void init() {
@@ -116,34 +92,38 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		setofquestionsSelected1 = new Setofquestions();
 		setOfquestionsSelected3 = new Setofquestions();
 		setofquestionsSelected4 = new Setofquestions();
-		questiontypeAdd = new QuestionType();
+		questionTypeTemp = new QuestionType();
 		listQuestionBySet = new ArrayList<>();
+		try {
+			getParam();
+			listQuestionBySet = QUESTION_SERVICE.find(null, setofId);
+			userResult1 = USER_RESULT_SERVICE.find(setofId);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		listAnswersByQuestion = new ArrayList<>();
 		listRatingByQuestion = new ArrayList<>();
 		listusersBySetofquestion = new ArrayList<>();
 		// ?? Tai sao lai phai khoi tao
 		questionUpdated = new Question();
+		questionDeleted = new Question();
 		answerUpdated = new Answer();
+		answerDeleted = new Answer();
 		ratingUpdated = new Rating();
+		ratingDeleted = new Rating();
 		setofquestionsUpdated = new Setofquestions();
+		setofquestionsDeleted = new Setofquestions();
 		// Toan bo user
 		users = USER_SERVICE.findAllByFilter();
-		userResult1 = USER_RESULT_SERVICE.findAllByFilter();
 		departments1 = DEPARTMENT_SERVICE.findAllByFilter();
 
 		// END
 		// Danh sach toan bo cau hoi tu DB
 		setofquestions1 = SETOFQUESTION_SERVICE.findAllByFilter();
-	//Test thoi
-		setofquestions = new String[setofquestions1.size()];
-		for(int i = 0; i < setofquestions1.size(); i++) {
-			setofquestions[i] = setofquestions1.get(i).getName();
-		}
-	//End test
 		// Duyet danh sach bo cau hoi thu bo nao dang dien ra
 		for (Setofquestions set : setofquestions1) {
 			if (set.getStatus().equals("ON")) {
-				setofquestionsplaying = set;
+				setofquestionsPlaying = set;
 			}
 		}
 		// Danh sach loai cau hoi truy van tu DB
@@ -151,16 +131,16 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		setofquestionNew = new Setofquestions();
 		try {
 			// Lay y kien
-			questionsType1 = QUESTION_SERVICE.find(1L, setofquestionsplaying.getId());
+			questionsType1 = QUESTION_SERVICE.find(1L, setofquestionsPlaying.getId());
 			// Danh gia
-			questionsType2 = QUESTION_SERVICE.find(2L, setofquestionsplaying.getId());
-			//Thang diem 100-> Gop thang diem 100 vao cau hoi lay y kien
-			questionsType4 = QUESTION_SERVICE.find(4L, setofquestionsplaying.getId());
-			for(Question q : questionsType4) {
+			questionsType2 = QUESTION_SERVICE.find(2L, setofquestionsPlaying.getId());
+			// Thang diem 100-> Gop thang diem 100 vao cau hoi lay y kien
+			questionsType4 = QUESTION_SERVICE.find(4L, setofquestionsPlaying.getId());
+			for (Question q : questionsType4) {
 				questionsType2.add(q);
 			}
 			// co dap an
-			questionsType3 = QUESTION_SERVICE.find(3L, setofquestionsplaying.getId());
+			questionsType3 = QUESTION_SERVICE.find(3L, setofquestionsPlaying.getId());
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -203,62 +183,61 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			questionAndAnswer2.add(tempQA);
 		}
 	}
-// Ham test
-	public void checkcau1() {
-		for(String b : ketquaPhan1) {
-			System.out.println(b);
+	
+
+// Get param from URL
+		public void getParam() {
+			HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+					.getRequest();
+			String setofIdTemp = request.getParameter("setofid");
+			setofId = Long.parseLong(setofIdTemp);
 		}
-		for(String a:ketquaPhan2) {
-			System.out.println(a);
-		}
-		for(String c: ketquaPhan3) {
-			System.out.println(c);
-		}
-	}
+
 // Ham luu ket qua 
 	public void completeSurvey() {
 		User_Result userResultTemp;
-		
+
 		List<String> resultList = new ArrayList<>();
 		List<Question> questionList = new ArrayList<>();
 		try {
-			for(Question questTemp : questionsType2) {
+			for (Question questTemp : questionsType2) {
 				questionList.add(questTemp);
 			}
-			for(Question questTemp1 : questionsType3) {
+			for (Question questTemp1 : questionsType3) {
 				questionList.add(questTemp1);
 			}
-			for(Question questTemp3 : questionsType1) {
+			for (Question questTemp3 : questionsType1) {
 				questionList.add(questTemp3);
 			}
-		
-			for(String a : ketquaPhan1) {
-				if(StringUtils.isNotEmpty(a)) {
+
+			for (String a : ketquaPhan1) {
+				if (StringUtils.isNotEmpty(a)) {
 					resultList.add(a);
 				}
 			}
-			for(String b : ketquaPhan2) {
-				if(StringUtils.isNotEmpty(b)) {
+			for (String b : ketquaPhan2) {
+				if (StringUtils.isNotEmpty(b)) {
 					resultList.add(b);
 				}
 			}
-			for(String c : ketquaPhan3) {
-				if(StringUtils.isNotEmpty(c)) {
+			for (String c : ketquaPhan3) {
+				if (StringUtils.isNotEmpty(c)) {
 					resultList.add(c);
 				}
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		if(resultList.size() != questionList.size()) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng hoàn thành tất cả khảo sát!");
+		if (resultList.size() != questionList.size()) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
+					"Vui lòng hoàn thành tất cả khảo sát!");
 			PrimeFaces.current().dialog().showMessageDynamic(message);
 			return;
 		}
 		User userTemp = new User();
-		userTemp = USER_SERVICE.findById(2L);
-		for(int i = 0; i < questionList.size(); i++) {
-			userResultTemp =  new User_Result();
+		userTemp = USER_SERVICE.findById(3L);
+		for (int i = 0; i < questionList.size(); i++) {
+			userResultTemp = new User_Result();
 			userResultTemp.setCreatedDate(getDate());
 			userResultTemp.setResult(resultList.get(i));
 			userResultTemp.setQuestion(questionList.get(i));
@@ -268,29 +247,37 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Bạn đã hoàn thành khảo sát!");
 		PrimeFaces.current().dialog().showMessageDynamic(message);
 	}
-	
-// Khi bo cau hoi duoc chon -> danh sach cac cau hoi theo bo
+
+// 	Ky khao sat duoc chon
 	public void selectedSetofquestion() {
-		listQuestionBySet = QUESTION_SERVICE.find(null, this.setofquestionSelected2.getId());
+		try {
+			listQuestionBySet = QUESTION_SERVICE.find(null, this.setofquestionSelected2.getId());
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
-// Danh sach user theo bo cau hoi khi bo cau hoi duoc chon
+// list user -> bo cau hoi duoc chon
 	public void handleListuserBySetof() {
-		listusersBySetofquestion = new ArrayList<>();
-		String[] parts = setofquestionsSelected4.getListusers().split(",");
-		long[] longs = new long[parts.length];
-		for (int i = 0; i < parts.length; i++) {
-			longs[i] = Long.parseLong(parts[i]);
+		try {
+			listusersBySetofquestion = new ArrayList<>();
+			String[] parts = setofquestionsSelected4.getListusers().split(",");
+			long[] longs = new long[parts.length];
+			for (int i = 0; i < parts.length; i++) {
+				longs[i] = Long.parseLong(parts[i]);
+			}
+			// Them nguoi dung thuoc bo cau hoi vao danh sach
+			for (int i = 0; i < longs.length; i++) {
+				User userTemp = USER_SERVICE.findById(longs[i]);
+				listusersBySetofquestion.add(userTemp);
+			}
+			setofquestionsSelected4 = new Setofquestions();
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
-		// Them nguoi dung thuoc bo cau hoi vao danh sach
-		for (int i = 0; i < longs.length; i++) {
-			User userTemp = USER_SERVICE.findById(longs[i]);
-			listusersBySetofquestion.add(userTemp);
-		}
-		setofquestionsSelected4 = new Setofquestions();
 	}
 
-//Cau hoi duoc chon -> danh sach dap an theo cau hoi neu co
+//Cau hoi duoc chon
 	public void selectedQuestion() {
 		// Danh sach cau tra loi theo id cau hoi
 		// Danh gia
@@ -306,15 +293,16 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			listRatingByQuestion = new ArrayList<>();
 		}
 		// Lay y kien
-		if (questionSelected.getQuestiontype().getId() == 1) {
+		if (questionSelected.getQuestiontype().getId() == 1 || questionSelected.getQuestiontype().getId() == 4) {
 			listAnswersByQuestion = new ArrayList<>();
 			listRatingByQuestion = new ArrayList<>();
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-					"Câu hỏi lấy ý kiến không có đáp án!.");
+					"Loại câu hỏi không có đáp án!.");
 			PrimeFaces.current().dialog().showMessageDynamic(message);
 		}
 	}
-//Chon bo cau hoi
+
+//Chon ky khao sat
 	public void SetofquestionSelected() {
 		// try catch de xu ly-> nhap sai format
 		try {
@@ -336,7 +324,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 						SETOFQUESTION_SERVICE.update(setOfquestionsSelected3);
 					}
 				}
-				setofquestionsplaying = setOfquestionsSelected3;
+				setofquestionsPlaying = setOfquestionsSelected3;
 				setOfquestionsSelected3 = new Setofquestions();
 				notifySuccess();
 			}
@@ -346,12 +334,12 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	}
 // BO THEM XOA SUA 
 
-	// Them bo cau hoi
+	// Them ky khao sat
 	public void createSetofquestion() {
 		try {
 			setofquestionNew.setDeleted(false);
 			setofquestionNew.setCreatedDate(getDate());
-			java.sql.Timestamp temp = new java.sql.Timestamp(startDate.getTime());		
+			java.sql.Timestamp temp = new java.sql.Timestamp(startDate.getTime());
 			setofquestionNew.setStarttime(temp);
 			temp = new Timestamp(endDate.getTime());
 			setofquestionNew.setEndtime(temp);
@@ -364,43 +352,41 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			// TODO: handle exception
 		}
 	}
-	// sua bo cau hoi
+
+	// sua ky khao sat
 	public void updateSetofquestions() {
-		Date newDate = super.getDate();
-		setofquestionsUpdated.setModifiedDate(newDate);
+		setofquestionsUpdated.setModifiedDate(getDate());
 		SETOFQUESTION_SERVICE.update(setofquestionsUpdated);
 		PrimeFaces.current().executeScript("PF('dialogUpdateSetof').hide()");
 		notifyUpdateSuccess();
 	}
+	//Xoa ky khao sat
+	public void deleteSetofquestion() {
+		SETOFQUESTION_SERVICE.delete(setofquestionsDeleted);
+		setofquestions1 = SETOFQUESTION_SERVICE.findAllByFilter();
+		PrimeFaces.current().executeScript("PF('dialogDeleteSetof').hide()");
+		notifyDeleteSuccess();
+	}
+
 	// Them cau hoi
 	public void createQuestion() {
 		FacesMessage messageError;
-		// Khong nhap gi ca
-		if (setofquestionsSelected1.getName() == null && questiontypeAdd.getName() == null) {
-			messageError = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng nhập đầy đủ thông tin!");
-			PrimeFaces.current().dialog().showMessageDynamic(messageError);
-			return;
-		}
-		// khong nhap bo cau hoi
-		if (setofquestionsSelected1.getName() == null) {
-			messageError = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng chọn bộ câu hỏi!.");
-			PrimeFaces.current().dialog().showMessageDynamic(messageError);
-			return;
-		}
 		// khong nhap loai cau hoi
-		if (questiontypeAdd.getName() == null) {
+		if (questionTypeTemp.getName() == null) {
 			messageError = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng chọn loại câu hỏi!.");
 			PrimeFaces.current().dialog().showMessageDynamic(messageError);
 			return;
 		}
 		Question tempQ = new Question();
-		tempQ.setSetofquestions(setofquestionsSelected1);
-		tempQ.setQuestiontype(questiontypeAdd);
+		Setofquestions tempSet = new Setofquestions();
+		tempSet = SETOFQUESTION_SERVICE.findById(setofId);
+		tempQ.setSetofquestions(tempSet);
+		tempQ.setQuestiontype(questionTypeTemp);
 		tempQ.setCreatedDate(getDate());
 		tempQ.setName(questionNameNew);
 		tempQ.setDeleted(false);
 		// Danh gia
-		if (questiontypeAdd.getId() == 2) {
+		if (questionTypeTemp.getId() == 2) {
 			if (StringUtils.isEmpty(answersNew[0])) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 						"Vui lòng nhập đán án!.");
@@ -420,39 +406,39 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			}
 			answersNew = new String[5];
 			setofquestionsSelected1 = new Setofquestions();
-			questiontypeAdd = new QuestionType();
+			questionTypeTemp = new QuestionType();
 			questionNameNew = null;
 			notifyAddSuccess();
 			return;
 		}
-		//Thang diem 100
-		if (questiontypeAdd.getId() == 4) {
+		// Thang diem 100
+		if (questionTypeTemp.getId() == 4) {
 			tempQ = QUESTION_SERVICE.create(tempQ);
-			
+
 			Rating tempRating = new Rating();
 			tempRating.setCreatedDate(getDate());
 			tempRating.setDeleted(false);
 			tempRating.setName("100");
 			tempRating.setQuestion(tempQ);
 			RATING_SERVICE.create(tempRating);
-			
+
 			setofquestionsSelected1 = new Setofquestions();
-			questiontypeAdd = new QuestionType();
+			questionTypeTemp = new QuestionType();
 			questionNameNew = null;
 			notifyAddSuccess();
 			return;
 		}
 		// Lay y kien
-		if (questiontypeAdd.getId() == 1) {
+		if (questionTypeTemp.getId() == 1) {
 			QUESTION_SERVICE.create(tempQ);
 			setofquestionsSelected1 = new Setofquestions();
-			questiontypeAdd = new QuestionType();
+			questionTypeTemp = new QuestionType();
 			questionNameNew = null;
 			notifyAddSuccess();
 			return;
 		}
 		// Co dap an
-		if (questiontypeAdd.getId() == 3) {
+		if (questionTypeTemp.getId() == 3) {
 			if (StringUtils.isEmpty(answersNew[0])) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 						"Vui lòng nhập đán án.");
@@ -472,18 +458,58 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			}
 			answersNew = new String[5];
 			setofquestionsSelected1 = new Setofquestions();
-			questiontypeAdd = new QuestionType();
+			questionTypeTemp = new QuestionType();
 			questionNameNew = null;
 			notifyAddSuccess();
 			return;
 		}
 	}
-	//Bo sung dap an
-	public void addAnswerNew(){
-		System.out.println("da vao addAnswerNew");
-		System.out.println(questionSelected.getName());
-		System.out.println(answerAddNew);
+	public void selectedQuestionType() {
+		System.out.println(questionTypeSelected.getId());
 	}
+	// Bo sung them dap an
+	public void addNewAnswer() {
+		try {
+			if (questionSelected.getName() != null && StringUtils.isNotEmpty(newAnswer1)
+					&& questionSelected.getQuestiontype().getId() == 3) {
+				Answer newAnswer = new Answer();
+				newAnswer.setCreatedDate(getDate());
+				newAnswer.setDeleted(false);
+				newAnswer.setName(newAnswer1);
+				newAnswer.setQuestion(questionSelected);
+				ANSWER_SERVICE.create(newAnswer);
+				newAnswer1 = "";
+				listAnswersByQuestion = ANSWER_SERVICE.find(questionSelected.getId());
+				PrimeFaces.current().executeScript("PF('dialogAddNewAnswer').hide()");
+				notifyAddSuccess();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+	}
+
+	public void addNewRating() {
+		try {
+			if (questionSelected.getName() != null && StringUtils.isNotEmpty(newAnswer2)
+					&& questionSelected.getQuestiontype().getId() == 2) {
+				Rating newRating = new Rating();
+				newRating.setCreatedDate(getDate());
+				newRating.setDeleted(false);
+				newRating.setName(newAnswer2);
+				newRating.setQuestion(questionSelected);
+				RATING_SERVICE.create(newRating);
+				newAnswer2 = "";
+				listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId());
+				PrimeFaces.current().executeScript("PF('dialogAddNewRating').hide()");
+				notifyAddSuccess();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+	}
+
 	// Sua cau hoi
 	public void updateQuesion() {
 		questionUpdated.setModifiedDate(getDate());
@@ -491,6 +517,8 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		PrimeFaces.current().executeScript("PF('dialogUpdateQuest').hide()");
 		notifyUpdateSuccess();
 	}
+
+
 	// sua cau tra loi
 	public void updateAnswer() {
 		answerUpdated.setModifiedDate(getDate());
@@ -498,14 +526,32 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		PrimeFaces.current().executeScript("PF('dialogUpdateAns').hide()");
 		notifyUpdateSuccess();
 	}
+	public void deleteAnswer() {
+		ANSWER_SERVICE.delete(answerDeleted);
+		listAnswersByQuestion = ANSWER_SERVICE.find(questionSelected.getId());
+		PrimeFaces.current().executeScript("PF('dialogDeleteAns').hide()");
+		notifyDeleteSuccess();
+	}
+
 	public void updateRating() {
 		ratingUpdated.setModifiedDate(getDate());
 		RATING_SERVICE.update(ratingUpdated);
 		PrimeFaces.current().executeScript("PF('dialogUpdateRati').hide()");
 		notifyUpdateSuccess();
 	}
+	
+	public void deleteRating() {
+		RATING_SERVICE.delete(ratingDeleted);
+		listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId());
+		PrimeFaces.current().executeScript("PF('dialogDeleteRati').hide()");
+		notifyDeleteSuccess();
+	}
+
 	// Xoa Cau hoi
 	public void deleteQuestion() {
+		QUESTION_SERVICE.delete(questionDeleted);
+		listQuestionBySet = QUESTION_SERVICE.findAllByFilter();
+		PrimeFaces.current().executeScript("PF('dialogDeleteQuest').hide()");
 		notifyDeleteSuccess();
 	}
 
@@ -513,7 +559,9 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		PrimeFaces.current().executeScript("PF('dialogDelete').hide()");
 	}
 // KET THUC THEM XOA SUA
-
+	public void test() {
+		System.out.println("vao roi");
+	}
 //Autocomplete
 	public List<QuestionType> completeQuestionType(String input) {
 		String queryLowerCase = input.toLowerCase();
@@ -526,8 +574,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		return setofquestions1.stream().filter(t -> t.getName().toLowerCase().startsWith(queryLowerCase))
 				.collect(Collectors.toList());
 	}
-	
-	
+
 	public List<Question> getQuestionsType1() {
 		return questionsType1;
 	}
@@ -631,14 +678,15 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	public void setQuestionTypeList1(List<QuestionType> questionTypeList1) {
 		this.questionTypeList1 = questionTypeList1;
 	}
-
-	public QuestionType getQuestiontypeAdd() {
-		return questiontypeAdd;
+	
+	public QuestionType getQuestionTypeTemp() {
+		return questionTypeTemp;
 	}
 
-	public void setQuestiontypeAdd(QuestionType questiontypeAdd) {
-		this.questiontypeAdd = questiontypeAdd;
+	public void setQuestionTypeTemp(QuestionType questionTypeTemp) {
+		this.questionTypeTemp = questionTypeTemp;
 	}
+
 
 	public String[] getAnswersNew() {
 		return answersNew;
@@ -686,14 +734,6 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 
 	public void setQuestionSelected(Question questionSelected) {
 		this.questionSelected = questionSelected;
-	}
-
-	public Question getQuestionDeleteSelected() {
-		return questionDeleteSelected;
-	}
-
-	public void setQuestionDeleteSelected(Question questionDeleteSelected) {
-		this.questionDeleteSelected = questionDeleteSelected;
 	}
 
 	public List<Answer> getListAnswersByQuestion() {
@@ -767,14 +807,15 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	public void setListusersBySetofquestion(List<User> listusersBySetofquestion) {
 		this.listusersBySetofquestion = listusersBySetofquestion;
 	}
-
-	public Setofquestions getSetofquestionsplaying() {
-		return setofquestionsplaying;
+	
+	public Setofquestions getSetofquestionsPlaying() {
+		return setofquestionsPlaying;
 	}
 
-	public void setSetofquestionsplaying(Setofquestions setofquestionsplaying) {
-		this.setofquestionsplaying = setofquestionsplaying;
+	public void setSetofquestionsPlaying(Setofquestions setofquestionsPlaying) {
+		this.setofquestionsPlaying = setofquestionsPlaying;
 	}
+
 
 	public List<User> getUsers() {
 		return users;
@@ -799,41 +840,103 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
+
 	public List<User_Result> getUserResult1() {
 		return userResult1;
 	}
+
 	public void setUserResult1(List<User_Result> userResult1) {
 		this.userResult1 = userResult1;
 	}
-	public int getRate1() {
-		return rate1;
-	}
-	public void setRate1(int rate1) {
-		this.rate1 = rate1;
-	}
+
 	public String getAnswerAddNew() {
 		return answerAddNew;
 	}
+
 	public void setAnswerAddNew(String answerAddNew) {
 		this.answerAddNew = answerAddNew;
 	}
+
 	public List<User_Result> getUserResult2() {
 		return userResult2;
 	}
+
 	public void setUserResult2(List<User_Result> userResult2) {
 		this.userResult2 = userResult2;
 	}
-	public String[] getSetofquestions() {
-		return setofquestions;
-	}
-	public void setSetofquestions(String[] setofquestions) {
-		this.setofquestions = setofquestions;
-	}
+
 	public List<Department> getDepartments1() {
 		return departments1;
 	}
+
 	public void setDepartments1(List<Department> departments1) {
 		this.departments1 = departments1;
+	}
+
+	public String getNewAnswer1() {
+		return newAnswer1;
+	}
+
+	public void setNewAnswer1(String newAnswer1) {
+		this.newAnswer1 = newAnswer1;
+	}
+
+	public String getNewAnswer2() {
+		return newAnswer2;
+	}
+
+	public void setNewAnswer2(String newAnswer2) {
+		this.newAnswer2 = newAnswer2;
+	}
+
+	public Setofquestions getSetofquestionsDeleted() {
+		return setofquestionsDeleted;
+	}
+
+	public void setSetofquestionsDeleted(Setofquestions setofquestionsDeleted) {
+		this.setofquestionsDeleted = setofquestionsDeleted;
+	}
+
+	public Question getQuestionDeleted() {
+		return questionDeleted;
+	}
+
+	public void setQuestionDeleted(Question questionDeleted) {
+		this.questionDeleted = questionDeleted;
+	}
+
+	public Answer getAnswerDeleted() {
+		return answerDeleted;
+	}
+
+	public void setAnswerDeleted(Answer answerDeleted) {
+		this.answerDeleted = answerDeleted;
+	}
+
+	public Rating getRatingDeleted() {
+		return ratingDeleted;
+	}
+
+	public void setRatingDeleted(Rating ratingDeleted) {
+		this.ratingDeleted = ratingDeleted;
+	}
+
+
+	public long getSetofId() {
+		return setofId;
+	}
+
+	public void setSetofId(long setofId) {
+		this.setofId = setofId;
+	}
+
+
+	public QuestionType getQuestionTypeSelected() {
+		return questionTypeSelected;
+	}
+
+	public void setQuestionTypeSelected(QuestionType questionTypeSelected) {
+		this.questionTypeSelected = questionTypeSelected;
 	}
 	
 }

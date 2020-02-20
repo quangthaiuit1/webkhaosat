@@ -19,33 +19,41 @@
 </h:head>
 <h:body>
 	<ui:composition template="common.xhtml">
+		<ui:define name="header">
+		</ui:define>
 		<ui:define name="content">
 			<h:form id="createSetofquestion">
 				<!-- Them bo cau hoi -->
 				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #000; margin: 0 auto; margin-bottom: 5px; border-radius: 5px">
-					<div class="row" style="width: 100%;margin-bottom: 45px">
+					style="width: 90%; box-shadow: 0px 0px 5px #000; margin: 0 auto; margin-bottom: 5px; border-radius: 5px; margin-top: 20px">
+					<div class="row" style="width: 100%">
 						<span class="group-name"
-							style="margin: 0 auto; color: black; margin-bottom: 10px; margin-top: 20px;font-weight: bold">TẠO
+							style="margin-left: 1%; color: black; font-weight: bold; margin-top: 10px; font-size: 20px"><p:linkButton
+								icon="fa fa-home" outcome="index"
+								value="Trang chủ" style="background-color: #007bff">
+
+							</p:linkButton></span>
+					</div>
+					<div class="row" style="width: 100%; margin-bottom: 45px">
+						<span class="group-name"
+							style="margin: 0 auto; color: black; margin-bottom: 10px; margin-top: 20px; font-weight: bold">TẠO
 							KỲ KHẢO SÁT MỚI</span> <span class="group-description"><p
 								style="text-align: center; margin-left: 5px"></p></span> <br />
 					</div>
 					<div class="row" style="width: 100%">
 						<div class="row" style="width: 100%; margin-bottom: 10px">
-							<div style="width: 100%;text-align: center">
+							<div style="width: 100%; text-align: center">
 								<h:outputText value="Mô tả ngắn về kỳ khảo sát: "
 									style="color: black;" />
 							</div>
 							<div style="width: 100%">
-								<p:message for="id_describe"
-									style="width: 40%;margin:0 auto" />
+								<p:message for="id_describe" style="width: 40%;margin:0 auto" />
 							</div>
 
 							<p:inputTextarea id="id_describe"
-								style="margin:0 auto;margin-bottom: 5px;width: 50%"
-								rows="6" cols="33"
-								value="#{questionsBean.setofquestionNew.description}" 
-								required="true" requiredMessage="Vui lòng nhập mô tả"/>
+								style="margin:0 auto;margin-bottom: 5px;width: 50%" rows="6"
+								cols="33" value="#{questionsBean.setofquestionNew.description}"
+								required="true" requiredMessage="Vui lòng nhập mô tả" />
 						</div>
 						<div class="row" style="width: 100%; margin-bottom: 10px">
 							<div style="width: 100%">

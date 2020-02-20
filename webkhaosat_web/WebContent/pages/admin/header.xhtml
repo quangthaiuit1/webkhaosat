@@ -11,77 +11,243 @@
 	<ui:composition>
 		<h:form id="headerCustom">
 			<div class="row"
-				style="width: 90%; box-shadow: 0px 0px 5px #888; margin: 0 auto; margin-bottom: 15px; margin-top: 20px; border-radius: 5px">
+				style="width: 90%; box-shadow: 0px 0px 5px #888; margin: 0 auto; margin-bottom: 15px; margin-top: 20px; border-radius: 5px; background-color: #e4e4e4">
 				<div class="row" style="width: 100%">
 					<span class="group-name"
-						style="margin-left: 1%; color: black; font-weight: bold; margin-top: 10px; font-size: 20px"><a style="text-decoration: none" href="http://192.168.0.132:8380/webkhaosat_web/pages/admin/index.jsf">Kỳ
-						khảo sát</a></span>
+						style="margin-left: 1%; color: black; font-weight: bold; margin-top: 10px; font-size: 20px"><p:linkButton
+							icon="fa fa-home" outcome="index" value="Trang chủ"
+							style="background-color: #007bff">
+
+						</p:linkButton></span>
 				</div>
 				<hr width="97%" style="border-top: 1px solid #9c7e7e" />
-				<div class="row" style="width: 100%; color: black">
-					<div class="col-sm-12 col-md-4 col-lg-3" style="margin-bottom: 5px">
-						<h:outputText value="Tên kỳ khảo sát: " />
-						<p:inputText value="#{questionsBean.setofquestionsplaying.name}"
-							readonly="true" />
+
+				<div class="row"
+					style="width: 100%; margin-bottom: 45px; font-weight: bold">
+					<span class="group-name"
+						style="margin: 0 auto; color: black; margin-top: 20px">DANH
+						SÁCH CÁC KỲ KHẢO SÁT</span> <span class="group-description"><p
+							style="text-align: center; margin-left: 5px"></p></span> <br />
+				</div>
+				<div class="row"
+					style="width: 80%; margin-left: 0px; margin: 0 auto">
+					<div class="row" style="width: 12%; margin-left: 88%">
+						<p:linkButton outcome="createsetofquestions" icon="fa fa-plus"
+							value="Thêm mới"
+							style="width:100%;color: #fff;background-color: #007bff">
+
+						</p:linkButton>
 					</div>
-					<div class="col-sm-12 col-md-2 col-lg-3" style="margin-bottom: 5px">
-						<h:outputText value="Ngày bắt đầu: " />
-						<p:inputText
-							value="#{questionsBean.setofquestionsplaying.starttime}"
-							readonly="true">
-							<f:convertDateTime pattern="dd.MM.yyyy" />
-						</p:inputText>
-						<br />
-						<hr width="96%" />
-						<h:outputText value="Ngày kết thúc: " />
-						<p:inputText
-							value="#{questionsBean.setofquestionsplaying.endtime}"
-							readonly="true">
-							<f:convertDateTime pattern="dd.MM.yyyy" />
-						</p:inputText>
-					</div>
-					<div class="col-sm-12 col-md-3 col-lg-6" style="margin-bottom: 5px">
-						<div class="row" style="width: 100%">
-							<div class="col-4">
-								<p:linkButton outcome="createsetofquestions" icon="fa fa-plus"
-									value="Thêm mới" style="width:100%;color: #fff;background-color: #007bff">
-
-								</p:linkButton>
-
+					<p:dataTable id="listSetofquestions" var="set1"
+						value="#{questionsBean.setofquestions1}" rowKey="#{set1.id}"
+						selection="#{questionsBean.setofquestionsSelected4}"
+						selectionMode="single">
+						<p:ajax event="rowSelect" update="headerCustom:listUsers"
+							listener="#{questionsBean.handleListuserBySetof()}" />
+						<p:column headerText="ID" style="text-align: center">
+							<h:outputText value="#{set1.id}" />
+						</p:column>
+						<p:column headerText="Tên bộ câu hỏi" style="">
+							<h:outputText value="#{set1.name}" />
+						</p:column>
+						<p:column headerText="Ngày tạo" style="">
+							<h:outputText value="#{set1.createdDate}">
+								<f:convertDateTime pattern="dd.MM.yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Ngày bắt đầu" style="">
+							<h:outputText value="#{set1.starttime}">
+								<f:convertDateTime pattern="dd.MM.yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Ngày kết thúc" style="">
+							<h:outputText value="#{set1.endtime}">
+								<f:convertDateTime pattern="dd.MM.yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Chi tiết" style="text-align: center"
+							priority="3">
+							<p:linkButton icon="fa fa-search-plus" outcome="listquestion">
+								<f:param name="setofid" value="#{set1.id}" />
+							</p:linkButton>
+						</p:column>
+						<p:column headerText="Kết quả" style="text-align: center"
+							priority="3">
+							<p:linkButton icon="fa fa-list-alt" outcome="loadresult">
+								<f:param name="setofid" value="#{set1.id}" />
+							</p:linkButton>
+						</p:column>
+						<p:column headerText="Sửa" style="text-align: center">
+							<p:commandButton update="headerCustom:updateSetof"
+								icon="fa fa-edit" oncomplete="PF('dialogUpdateSetof').show();">
+								<f:setPropertyActionListener value="#{set1}"
+									target="#{questionsBean.setofquestionsUpdated}" />
+							</p:commandButton>
+						</p:column>
+						<p:column headerText="Xóa" style="text-align: center">
+							<p:commandButton update="headerCustom:listSetofquestions"
+								icon="fa fa-trash" oncomplete="PF('dialogDeleteSetof').show();">
+								<f:setPropertyActionListener value="#{set1}"
+									target="#{questionsBean.setofquestionsDeleted}" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+					<!-- DIALOG cap nhat ky khao sat -->
+					<p:dialog header="Cập nhật" id="updateSetof" width="600"
+						widgetVar="dialogUpdateSetof" modal="true" showEffect="fade"
+						hideEffect="fade" resizable="false">
+						<p:outputPanel id="editSetof" style="text-align:center;">
+							<div class="row" style="margin-bottom: 15px">
+								<div class="col-sm-12 col-md-4 col-lg-3">
+									<h:outputText value="Mô tả ngắn: " />
+								</div>
+								<div class="col-sm-12 col-md-8 col-lg-9">
+									<p:inputTextarea
+										style="width: 100%!important;color: black!important"
+										id="inputEditSetofDescription"
+										value="#{questionsBean.setofquestionsUpdated.description}" />
+								</div>
 							</div>
-							<div class="col-4">
-								<p:linkButton outcome="setofquestionsloading" icon="fa fa-check"
-									value="Chọn kỳ khảo sát" style="width: 100%;margin-right:20px;background-color:#28a745;color:#fff">
+							<div class="row" style="margin-bottom: 15px">
+								<div class="col-sm-12 col-md-4 col-lg-3">
+									<h:outputText value="Tên câu hỏi" />
+								</div>
+								<div class="col-sm-12 col-md-8 col-lg-9">
+									<p:inputText
+										style="width: 100%!important;color: black!important"
+										id="inputEditSetofName"
+										value="#{questionsBean.setofquestionsUpdated.name}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 15px">
+								<div class="col-sm-12 col-md-4 col-lg-3">
+									<h:outputText value="Ngày bắt đầu:" />
+								</div>
+								<div class="col-sm-12 col-md-8 col-lg-9">
+									<p:calendar id="calendarUpdateStartTime"
+										style="margin-left: 5%;color: #222222!important"
+										value="#{questionsBean.setofquestionsUpdated.starttime}"
+										locale="de" pattern="dd.MM.yyyy HH:mm" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 15px">
+								<div class="col-sm-12 col-md-4 col-lg-3">
+									<h:outputText value="Ngày kết thúc:" />
+								</div>
+								<div class="col-sm-12 col-md-8 col-lg-9">
+									<p:calendar id="calendarUpdateEndTime"
+										style="margin-left: 5%;color: #222222"
+										value="#{questionsBean.setofquestionsUpdated.endtime}"
+										locale="de" pattern="dd.MM.yyyy HH:mm" />
+								</div>
+							</div>
+							<div class="row" style="width: 50%; margin: 0 auto">
+								<div class="col-sm-12 col-md-6 col-lg-6">
+									<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
+										style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545;"
+										oncomplete="PF('dialogUpdateSetof').hide();" />
+								</div>
+								<div class="col-sm-12 col-md-6 col-lg-6">
+									<p:commandButton icon="fa fa-check" value="Cập nhật"
+										update="headerCustom:listSetofquestions"
+										style="color: #fff;background-color: #28a745;border-color:#28a745"
+										action="#{questionsBean.updateSetofquestions}" />
+								</div>
+							</div>
+						</p:outputPanel>
 
-								</p:linkButton>
+					</p:dialog>
+					<!--Ket thuc DIALOG update  -->
+					<!--Dialog xoa ky khao sat  -->
+					<p:dialog header="Delete" widgetVar="dialogDeleteSetof"
+						modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+						<p:outputPanel id="panelDeleteSetof" style="text-align:center;">
+							<div class="row" style="width: 100%; margin: 0 auto">
+								<div style="width: 48%; margin-right: 5px">
+									<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
+										style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545"
+										oncomplete="PF('dialogDeleteSetof').hide();" />
+								</div>
+								<div style="width: 48%">
+									<p:commandButton icon="fa fa-check" value="Đồng ý"
+										update="headerCustom:listSetofquestions"
+										style="color: #fff;background-color: #28a745;border-color:#28a745"
+										action="#{questionsBean.deleteSetofquestion}" />
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:dialog>
+					<!--Ket thuc  -->
+				</div>
+			</div>
 
-							</div>
-							<div class="col-4">
-								<p:linkButton outcome="createquestion" icon="fa fa-plus"
-									value="Thêm mới câu hỏi" style="width:100%;color: #fff;background-color: #007bff">
+			<div class="row"
+				style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 
-								</p:linkButton>
+				<div class="row"
+					style="width: 70%; margin-left: 0px; margin: 0 auto">
+					<div class="col-sm-12 col-md-12 col-lg-12">
+						<h5 style="color: black; text-align: center">Danh sách người
+							dùng</h5>
+						<p:dataTable id="listUsers" var="user1"
+							value="#{questionsBean.users}" rowKey="#{user1.id}"
+							selection="#{questionsBean.listusersBySetofquestion}">
+							<p:column selectionMode="multiple"
+								style="width:5%;text-align:center" />
+							<p:column headerText="ID" style="width: 5%;text-align: center">
+								<h:outputText value="#{user1.id}" />
+							</p:column>
+							<p:column headerText="Tên người dùng" style="width:50%">
+								<h:outputText value="#{user1.name}" />
+							</p:column>
+							<p:column headerText="Ngày tạo" style="width:10%">
+								<h:outputText value="#{user1.createdDate}">
+									<f:convertDateTime pattern="dd.MM.yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Ngày sửa" style="width:10%">
+								<h:outputText value="#{user1.modifiedDate}">
+									<f:convertDateTime pattern="dd.MM.yyyy" />
+								</h:outputText>
+							</p:column>
 
-							</div>
-						</div>
-						<hr width="95%" />
-						<div class="row" style="width: 100%">
-							<div class="col-4">
-								<p:linkButton outcome="listquestion" icon="fa fa-navicon"
-									value="Danh sách kỳ khảo sát" style="width: 100%;background-color:#17a2b8;color: white">
-								</p:linkButton>
-							</div>
-							<div class="col-4">
-								<p:linkButton outcome="setofbyuser" icon="fa fa-navicon"
-									value="Danh sách User (theo kỳ KS)" style="width: 100%;margin-right:20px;background-color:#17a2b8;color: white">
-								</p:linkButton>
-							</div>
-							<div class="col-4">
-								<p:linkButton outcome="loadresult" icon="fa fa-navicon"
-									value="Kết quả kỳ khảo sát" style="width: 100%;margin-right:20px;background-color:#17a2b8;color: white">
-								</p:linkButton>
-							</div>
-						</div>
+						</p:dataTable>
+						<!-- DIALOG cap nhat cau hoi -->
+						<p:dialog header="Cập nhật" id="updateQuest" width="600"
+							widgetVar="dialogUpdateQuest" modal="true" showEffect="fade"
+							hideEffect="fade" resizable="false">
+							<p:outputPanel id="editQuest" style="text-align:center;">
+								<div class="row" style="margin-bottom: 15px">
+									<div class="col-sm-12 col-md-4 col-lg-3">
+										<h:outputText value="Tên câu hỏi" />
+									</div>
+									<div class="col-sm-12 col-md-8 col-lg-9">
+										<p:inputText style="width: 100%!important"
+											id="inputEditQuestName"
+											value="#{questionsBean.questionUpdated.name}" />
+									</div>
+								</div>
+								<div class="row" style="width: 50%; margin: 0 auto">
+									<div class="col-sm-12 col-md-6 col-lg-6">
+										<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
+											style=" margin-left: 0%;"
+											oncomplete="PF('dialogUpdateQuest').hide();" />
+									</div>
+									<div class="col-sm-12 col-md-6 col-lg-6">
+										<p:commandButton icon="fa fa-check"
+											update="headerCustom:listUsers" value="Cập nhật" style=""
+											action="#{questionsBean.updateQuesion}" />
+									</div>
+								</div>
+							</p:outputPanel>
+						</p:dialog>
+						<!--Ket thuc DIALOG update  -->
+						<p:dialog header="Delete" widgetVar="dialogDelete" modal="true"
+							showEffect="fade" hideEffect="fade" resizable="false">
+							<p:outputPanel id="postDetailDelete" style="text-align:center;">
+
+							</p:outputPanel>
+						</p:dialog>
 					</div>
 				</div>
 			</div>

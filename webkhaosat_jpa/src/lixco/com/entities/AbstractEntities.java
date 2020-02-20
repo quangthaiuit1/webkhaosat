@@ -23,6 +23,9 @@ public class AbstractEntities {
 	@Column(name = "modify_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date modifiedDate;
+	
+	@Column(name = "created_user")
+	protected String createdUser;
 
 	@Column(name = "isdeleted")
 	protected boolean isDeleted;

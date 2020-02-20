@@ -146,13 +146,6 @@
 			<artifactId>jasperreports</artifactId>
 			<version>6.11.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.jboss/jandex -->
-		<dependency>
-			<groupId>org.jboss</groupId>
-			<artifactId>jandex</artifactId>
-			<version>1.0.3.Final</version>
-		</dependency>
-
 
 	</dependencies>
 </project>
