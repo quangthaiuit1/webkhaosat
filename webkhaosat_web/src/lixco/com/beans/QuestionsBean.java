@@ -1,5 +1,6 @@
 package lixco.com.beans;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -8,11 +9,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
@@ -27,10 +30,14 @@ import lixco.com.entities.Rating;
 import lixco.com.entities.Setofquestions;
 import lixco.com.entities.User;
 import lixco.com.entities.User_Result;
+import trong.lixco.com.account.servicepublics.Account;
+import trong.lixco.com.account.servicepublics.DepartmentServicePublic;
+import trong.lixco.com.account.servicepublics.DepartmentServicePublicProxy;
+import trong.lixco.com.impl.ImplAccount;
 
 @ManagedBean
 @ViewScoped
-public class QuestionsBean extends AbstractBean implements Serializable {
+public class QuestionsBean extends FatherBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -48,7 +55,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	private List<Rating> answers1; // Toan bo cau tra loi cua phan 1
 	private List<QuestionType> questionTypeList1; // toan bo loai cau hoi
 	private QuestionType questionTypeSelected;
-	private QuestionType questionTypeTemp;//giu loai cau hoi khi them cau hoi
+	private QuestionType questionTypeTemp;// giu loai cau hoi khi them cau hoi
 	private List<Question> listQuestionBySet; // Danh sach cau hoi thuoc 1 bo
 	private String questionNameNew; // Danh sach bien hung gia tri
 	private Setofquestions setofquestionNew;
@@ -72,19 +79,23 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	private List<Answer> listAnswersByQuestion;
 	private List<Rating> listRatingByQuestion;
 	private Setofquestions setofquestionsSelected4; // Hung gia tri bo cau hoi de set user
-	private List<User> listusersBySetofquestion; // Danh sach nguoi dung theo bo cau hoi
-	private List<User> users; // Danh sach toan bo user
+	private List<Account> listAccountBySetofquestion; // Danh sach nguoi dung theo bo cau hoi
+	private List<Account> accounts; // Danh sach toan bo user
 	private List<User_Result> userResult1; // ket qua khao sat theo id bo khao sat
 	private List<User_Result> userResult2; // List sau filter
+	private List<User_Result> userResultTest; // test select user
 	// CAC BIEN HUNG GIA TRI TAM THOI
 	private Date startDate;
 	private Date endDate;
-	
+
 	private String newAnswer1;
 	private String newAnswer2;
-	private long setofId; //Bien hung ket qua get param setof
+	private long setofId; // Bien hung ket qua get param setof
 	private List<Department> departments1; // Toan bo phong ban
 	private Setofquestions setofquestionsPlaying; // Bo ca hoi dang dien ra
+	
+	//Trong
+	
 
 	@PostConstruct
 	public void init() {
@@ -103,7 +114,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		}
 		listAnswersByQuestion = new ArrayList<>();
 		listRatingByQuestion = new ArrayList<>();
-		listusersBySetofquestion = new ArrayList<>();
+		listAccountBySetofquestion = new ArrayList<>();
 		// ?? Tai sao lai phai khoi tao
 		questionUpdated = new Question();
 		questionDeleted = new Question();
@@ -114,7 +125,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		setofquestionsUpdated = new Setofquestions();
 		setofquestionsDeleted = new Setofquestions();
 		// Toan bo user
-		users = USER_SERVICE.findAllByFilter();
+		accounts = ;
 		departments1 = DEPARTMENT_SERVICE.findAllByFilter();
 
 		// END
@@ -182,16 +193,22 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			tempQA.setAnswers(tempAnswers);
 			questionAndAnswer2.add(tempQA);
 		}
+		
+		try {
+			DepartmentServicePublic dp = new DepartmentServicePublicProxy();
+			trong.lixco.com.account.servicepublics.Department d = dp.findId(190);
+			System.out.println(d.getName());
+		} catch (Exception e) {
+		}
 	}
-	
 
 // Get param from URL
-		public void getParam() {
-			HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
-					.getRequest();
-			String setofIdTemp = request.getParameter("setofid");
-			setofId = Long.parseLong(setofIdTemp);
-		}
+	public void getParam() {
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+				.getRequest();
+		String setofIdTemp = request.getParameter("setofid");
+		setofId = Long.parseLong(setofIdTemp);
+	}
 
 // Ham luu ket qua 
 	public void completeSurvey() {
@@ -260,7 +277,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 // list user -> bo cau hoi duoc chon
 	public void handleListuserBySetof() {
 		try {
-			listusersBySetofquestion = new ArrayList<>();
+			listAccountBySetofquestion = new ArrayList<>();
 			String[] parts = setofquestionsSelected4.getListusers().split(",");
 			long[] longs = new long[parts.length];
 			for (int i = 0; i < parts.length; i++) {
@@ -268,8 +285,8 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			}
 			// Them nguoi dung thuoc bo cau hoi vao danh sach
 			for (int i = 0; i < longs.length; i++) {
-				User userTemp = USER_SERVICE.findById(longs[i]);
-				listusersBySetofquestion.add(userTemp);
+				Account accountTemp = ac.findById(longs[i]);
+				listAccountBySetofquestion.add(accountTemp);
 			}
 			setofquestionsSelected4 = new Setofquestions();
 		} catch (Exception e) {
@@ -296,9 +313,6 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		if (questionSelected.getQuestiontype().getId() == 1 || questionSelected.getQuestiontype().getId() == 4) {
 			listAnswersByQuestion = new ArrayList<>();
 			listRatingByQuestion = new ArrayList<>();
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-					"Loại câu hỏi không có đáp án!.");
-			PrimeFaces.current().dialog().showMessageDynamic(message);
 		}
 	}
 
@@ -360,7 +374,8 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		PrimeFaces.current().executeScript("PF('dialogUpdateSetof').hide()");
 		notifyUpdateSuccess();
 	}
-	//Xoa ky khao sat
+
+	// Xoa ky khao sat
 	public void deleteSetofquestion() {
 		SETOFQUESTION_SERVICE.delete(setofquestionsDeleted);
 		setofquestions1 = SETOFQUESTION_SERVICE.findAllByFilter();
@@ -464,9 +479,16 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 			return;
 		}
 	}
-	public void selectedQuestionType() {
+
+	public void selectedQuestionType() throws IOException {
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+		HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
 		System.out.println(questionTypeSelected.getId());
+		String path = "/pages/web/createquestion.jsf" + "?setofid=" + setofId;
+		response.sendRedirect(request.getContextPath() + path);
 	}
+
 	// Bo sung them dap an
 	public void addNewAnswer() {
 		try {
@@ -518,7 +540,6 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		notifyUpdateSuccess();
 	}
 
-
 	// sua cau tra loi
 	public void updateAnswer() {
 		answerUpdated.setModifiedDate(getDate());
@@ -526,6 +547,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		PrimeFaces.current().executeScript("PF('dialogUpdateAns').hide()");
 		notifyUpdateSuccess();
 	}
+
 	public void deleteAnswer() {
 		ANSWER_SERVICE.delete(answerDeleted);
 		listAnswersByQuestion = ANSWER_SERVICE.find(questionSelected.getId());
@@ -539,7 +561,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		PrimeFaces.current().executeScript("PF('dialogUpdateRati').hide()");
 		notifyUpdateSuccess();
 	}
-	
+
 	public void deleteRating() {
 		RATING_SERVICE.delete(ratingDeleted);
 		listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId());
@@ -558,10 +580,12 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	public void cancelDelete() {
 		PrimeFaces.current().executeScript("PF('dialogDelete').hide()");
 	}
+
 // KET THUC THEM XOA SUA
 	public void test() {
 		System.out.println("vao roi");
 	}
+
 //Autocomplete
 	public List<QuestionType> completeQuestionType(String input) {
 		String queryLowerCase = input.toLowerCase();
@@ -678,7 +702,7 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	public void setQuestionTypeList1(List<QuestionType> questionTypeList1) {
 		this.questionTypeList1 = questionTypeList1;
 	}
-	
+
 	public QuestionType getQuestionTypeTemp() {
 		return questionTypeTemp;
 	}
@@ -686,7 +710,6 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	public void setQuestionTypeTemp(QuestionType questionTypeTemp) {
 		this.questionTypeTemp = questionTypeTemp;
 	}
-
 
 	public String[] getAnswersNew() {
 		return answersNew;
@@ -799,30 +822,29 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 	public void setSetofquestionsSelected4(Setofquestions setofquestionsSelected4) {
 		this.setofquestionsSelected4 = setofquestionsSelected4;
 	}
-
-	public List<User> getListusersBySetofquestion() {
-		return listusersBySetofquestion;
-	}
-
-	public void setListusersBySetofquestion(List<User> listusersBySetofquestion) {
-		this.listusersBySetofquestion = listusersBySetofquestion;
-	}
 	
+	public List<Account> getListAccountBySetofquestion() {
+		return listAccountBySetofquestion;
+	}
+
+	public void setListAccountBySetofquestion(List<Account> listAccountBySetofquestion) {
+		this.listAccountBySetofquestion = listAccountBySetofquestion;
+	}
+
+	public List<Account> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(List<Account> accounts) {
+		this.accounts = accounts;
+	}
+
 	public Setofquestions getSetofquestionsPlaying() {
 		return setofquestionsPlaying;
 	}
 
 	public void setSetofquestionsPlaying(Setofquestions setofquestionsPlaying) {
 		this.setofquestionsPlaying = setofquestionsPlaying;
-	}
-
-
-	public List<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
 	}
 
 	public Date getStartDate() {
@@ -921,7 +943,6 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		this.ratingDeleted = ratingDeleted;
 	}
 
-
 	public long getSetofId() {
 		return setofId;
 	}
@@ -930,13 +951,20 @@ public class QuestionsBean extends AbstractBean implements Serializable {
 		this.setofId = setofId;
 	}
 
-
 	public QuestionType getQuestionTypeSelected() {
 		return questionTypeSelected;
 	}
 
 	public void setQuestionTypeSelected(QuestionType questionTypeSelected) {
 		this.questionTypeSelected = questionTypeSelected;
+	}
+
+	public List<User_Result> getUserResultTest() {
+		return userResultTest;
+	}
+
+	public void setUserResultTest(List<User_Result> userResultTest) {
+		this.userResultTest = userResultTest;
 	}
 	
 }

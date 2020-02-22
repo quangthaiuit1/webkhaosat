@@ -50,12 +50,12 @@
 								value="#{questionsBean.listQuestionBySet}"
 								rowKey="#{question1.id}"
 								selection="#{questionsBean.questionSelected}"
-								selectionMode="single">
+								selectionMode="single" rowIndexVar="rowIndex">
 								<p:ajax event="rowSelect"
 									update="createQuestion:listRatings"
 									listener="#{questionsBean.selectedQuestion()}" />
-								<p:column headerText="ID" style="width: 5%;text-align: center">
-									<h:outputText value="#{question1.id}" />
+								<p:column headerText="STT" style="width: 5%;text-align: center">
+									<h:outputText value="#{rowIndex+1}" />
 								</p:column>
 								<p:column headerText="Tên câu hỏi" style="width:55%">
 									<h:outputText value="#{question1.name}" />
@@ -161,9 +161,9 @@
 								</div>
 							</h:form>
 							<p:dataTable id="listRatings" var="answer2"
-								value="#{questionsBean.listRatingByQuestion}">
-								<p:column headerText="ID" style="width: 7%;text-align: center">
-									<h:outputText value="#{answer2.id}" />
+								value="#{questionsBean.listRatingByQuestion}" rowIndexVar="rowIndex">
+								<p:column headerText="STT" style="width: 7%;text-align: center">
+									<h:outputText value="#{rowIndex+1}" />
 								</p:column>
 								<p:column headerText="Tên câu trả lời" style="width:48%">
 									<h:outputText value="#{answer2.name}" />

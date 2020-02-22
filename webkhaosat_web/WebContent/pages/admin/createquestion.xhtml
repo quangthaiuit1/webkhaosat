@@ -67,8 +67,8 @@
 							id="inputQuestion" required="true" placeholder="Nhập tên câu hỏi"
 							value="#{questionsBean.questionNameNew}"
 							requiredMessage="Vui lòng nhập tên câu hỏi!" />
-							<h:outputText value="#{questionsBean.questionTypeSelected.id}" />
-						<c:if test="${questionsBean.questionTypeSelected.name =='Đánh giá'}">
+						<h:outputText value="#{questionsBean.questionTypeSelected.id}" />
+						<c:if test="${questionsBean.questionTypeSelected.id==2}">
 							<div class="row"
 								style="width: 100%; margin: 0 auto; margin-bottom: 10px">
 								<p:inputText style="width: 100%!important;margin-bottom: 10px"

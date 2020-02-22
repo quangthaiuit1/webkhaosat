@@ -12,13 +12,11 @@
 		<h:form id="headerCustom">
 			<div class="row"
 				style="width: 90%; box-shadow: 0px 0px 5px #888; margin: 0 auto; margin-bottom: 15px; margin-top: 20px; border-radius: 5px; background-color: #e4e4e4">
+				
 				<div class="row" style="width: 100%">
-					<span class="group-name"
-						style="margin-left: 1%; color: black; font-weight: bold; margin-top: 10px; font-size: 20px"><p:linkButton
-							icon="fa fa-home" outcome="index" value="Trang chủ"
-							style="background-color: #007bff">
-
-						</p:linkButton></span>
+					<a
+								href="http://192.168.0.132:8380/webkhaosat_web/pages/trangchu.jsf" style="margin-left: 20px;"><button
+									type="button" class="btn btn-primary" style="margin-top: 20px;font-size:13px"><i class="fa fa-home"> </i> Trang chủ</button></a>
 				</div>
 				<hr width="97%" style="border-top: 1px solid #9c7e7e" />
 
@@ -41,11 +39,11 @@
 					<p:dataTable id="listSetofquestions" var="set1"
 						value="#{questionsBean.setofquestions1}" rowKey="#{set1.id}"
 						selection="#{questionsBean.setofquestionsSelected4}"
-						selectionMode="single">
+						selectionMode="single" rowIndexVar="rowIndex">
 						<p:ajax event="rowSelect" update="headerCustom:listUsers"
 							listener="#{questionsBean.handleListuserBySetof()}" />
-						<p:column headerText="ID" style="text-align: center">
-							<h:outputText value="#{set1.id}" />
+						<p:column headerText="STT" style="text-align: center">
+							<h:outputText value="#{rowIndex+1}" />
 						</p:column>
 						<p:column headerText="Tên bộ câu hỏi" style="">
 							<h:outputText value="#{set1.name}" />
@@ -191,11 +189,12 @@
 							dùng</h5>
 						<p:dataTable id="listUsers" var="user1"
 							value="#{questionsBean.users}" rowKey="#{user1.id}"
-							selection="#{questionsBean.listusersBySetofquestion}">
+							selection="#{questionsBean.listusersBySetofquestion}"
+							rowIndexVar="rowIndex">
 							<p:column selectionMode="multiple"
 								style="width:5%;text-align:center" />
-							<p:column headerText="ID" style="width: 5%;text-align: center">
-								<h:outputText value="#{user1.id}" />
+							<p:column headerText="STT" style="width: 5%;text-align: center">
+								<h:outputText value="#{rowIndex+1}" />
 							</p:column>
 							<p:column headerText="Tên người dùng" style="width:50%">
 								<h:outputText value="#{user1.name}" />
