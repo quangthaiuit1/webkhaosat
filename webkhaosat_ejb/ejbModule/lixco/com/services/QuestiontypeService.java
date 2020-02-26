@@ -12,7 +12,7 @@ import lixco.com.entities.QuestionType;
 
 @Stateless
 @TransactionManagement(value = TransactionManagementType.CONTAINER)
-public class QuestiontypeService extends AbstractService<QuestionType>{
+public class QuestionTypeService extends AbstractService<QuestionType>{
 	@PersistenceContext
 	private EntityManager em;
 

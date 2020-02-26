@@ -27,17 +27,14 @@
 				<div class="row"
 					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 					<div class="row" style="width: 100%">
-						<span class="group-name"
-							style="margin-left: 1%; color: black; font-weight: bold; margin-top: 10px; font-size: 20px"><p:linkButton
-								icon="fa fa-home" outcome="index" value="Trang chủ"
-								style="background-color: #007bff">
+						<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
+							style="margin-top: 10px;margin-left: 50px">
 
-							</p:linkButton></span> <span class="group-name"
-							style="margin-left: 1%; color: black; font-weight: bold; margin-top: 10px; font-size: 20px"><p:linkButton
-								icon="fa fa-plus" outcome="createquestion"
-								value="Tạo câu hỏi mới" style="background-color: #007bff">
-								<f:param name="setofid" value="#{questionsBean.setofId}" />
-							</p:linkButton></span>
+						</p:menubar>
+
+						<p:commandButton value="Đăng xuất"
+							actionListener="#{loginBean.logout()}"
+							style="margin-right: 10px;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
 					</div>
 					<hr width="97%" style="border-top: 1px solid #9c7e7e" />
 					<div class="row"
@@ -46,14 +43,19 @@
 							<h5
 								style="color: black; text-align: center; margin-bottom: 71px; font-weight: bold">Danh
 								sách câu hỏi</h5>
+							<div style="width: 20%;margin-left:85%;margin-bottom: 5px">
+								<p:linkButton icon="fa fa-plus" outcome="TaoCauHoi"
+									value="Tạo câu hỏi mới" style="background-color: #007bff; margin-right: 10px">
+									<f:param name="setofid" value="#{detailQuestionBean.setofId}" />
+								</p:linkButton>
+							</div>
 							<p:dataTable id="listQuestions" var="question1"
-								value="#{questionsBean.listQuestionBySet}"
+								value="#{detailQuestionBean.listQuestionBySet}"
 								rowKey="#{question1.id}"
-								selection="#{questionsBean.questionSelected}"
+								selection="#{detailQuestionBean.questionSelected}"
 								selectionMode="single" rowIndexVar="rowIndex">
-								<p:ajax event="rowSelect"
-									update="createQuestion:listRatings"
-									listener="#{questionsBean.selectedQuestion()}" />
+								<p:ajax event="rowSelect" update="createQuestion:listRatings"
+									listener="#{detailQuestionBean.selectedQuestion()}" />
 								<p:column headerText="STT" style="width: 5%;text-align: center">
 									<h:outputText value="#{rowIndex+1}" />
 								</p:column>
@@ -71,13 +73,13 @@
 									</h:outputText>
 								</p:column>
 								<p:column headerText="Loại câu hỏi" style="width:10%">
-									<h:outputText value="#{question1.questiontype.name}" />
+									<h:outputText value="#{question1.questionType.name}" />
 								</p:column>
 								<p:column headerText="Sửa" style="width:5%;text-align: center">
 									<p:commandButton update="createQuestion:updateQuest"
 										icon="fa fa-edit" oncomplete="PF('dialogUpdateQuest').show();">
 										<f:setPropertyActionListener value="#{question1}"
-											target="#{questionsBean.questionUpdated}" />
+											target="#{detailQuestionBean.questionUpdated}" />
 									</p:commandButton>
 								</p:column>
 								<p:column headerText="Xóa" style="width: 5%;text-align: center">
@@ -85,7 +87,7 @@
 										icon="fa fa-trash"
 										oncomplete="PF('dialogDeleteQuest').show();">
 										<f:setPropertyActionListener value="#{question1}"
-											target="#{questionsBean.questionDeleted}" />
+											target="#{detailQuestionBean.questionDeleted}" />
 									</p:commandButton>
 								</p:column>
 							</p:dataTable>
@@ -102,7 +104,7 @@
 											<p:inputText
 												style="width: 100%!important;color: black!important"
 												id="inputEditQuestName"
-												value="#{questionsBean.questionUpdated.name}" />
+												value="#{detailQuestionBean.questionUpdated.name}" />
 										</div>
 									</div>
 									<div class="row" style="width: 50%; margin: 0 auto">
@@ -115,7 +117,7 @@
 											<p:commandButton icon="fa fa-check"
 												update="createQuestion:listQuestions" value="Cập nhật"
 												style="color: #fff;background-color: #28a745;border-color:#28a745"
-												action="#{questionsBean.updateQuesion}" />
+												action="#{detailQuestionBean.updateQuesion}" />
 										</div>
 									</div>
 								</p:outputPanel>
@@ -136,7 +138,7 @@
 											<p:commandButton icon="fa fa-check" value="Đồng ý"
 												update="createQuestion:listQuestions"
 												style="color: #fff;background-color: #28a745;border-color:#28a745"
-												action="#{questionsBean.deleteQuestion}" />
+												action="#{detailQuestionBean.deleteQuestion}" />
 										</div>
 									</div>
 								</p:outputPanel>
@@ -144,8 +146,6 @@
 							<!--Ket thuc  -->
 
 						</div>
-						<c:if
-							test="${questionsBean.questionSelected.questiontype.id == 2}"></c:if>
 						<div class="col-sm-12 col-md-4 col-lg-5">
 
 							<h5
@@ -153,15 +153,16 @@
 								Danh sách câu trả lời</h5>
 							<h:form id="formAddNewRating">
 								<div style="width: 100%; margin-bottom: 10px">
-									<div style="width: 20%; margin-left: 80%">
+									<div style="width: 22%; margin-left: 77%">
 										<p:commandButton icon="fa fa-plus"
-											style="width:100%;color: #fff;background-color: #007bff"
-											value="Thêm mới" oncomplete="PF('dialogAddNewRating').show()" />
+											style="width:100%;color: #fff;background-color: #007bff;margin-top:34px"
+											value="Thêm câu trả lời" oncomplete="PF('dialogAddNewRating').show()" />
 									</div>
 								</div>
 							</h:form>
 							<p:dataTable id="listRatings" var="answer2"
-								value="#{questionsBean.listRatingByQuestion}" rowIndexVar="rowIndex">
+								value="#{detailQuestionBean.listRatingByQuestion}"
+								rowIndexVar="rowIndex">
 								<p:column headerText="STT" style="width: 7%;text-align: center">
 									<h:outputText value="#{rowIndex+1}" />
 								</p:column>
@@ -182,7 +183,7 @@
 									<p:commandButton update="createQuestion:updateRati"
 										icon="fa fa-edit" oncomplete="PF('dialogUpdateRati').show();">
 										<f:setPropertyActionListener value="#{answer2}"
-											target="#{questionsBean.ratingUpdated}" />
+											target="#{detailQuestionBean.ratingUpdated}" />
 									</p:commandButton>
 								</p:column>
 								<p:column headerText="Xóa"
@@ -190,7 +191,7 @@
 									<p:commandButton icon="fa fa-trash"
 										oncomplete="PF('dialogDeleteRati').show();">
 										<f:setPropertyActionListener value="#{answer2}"
-											target="#{questionsBean.ratingDeleted}" />
+											target="#{detailQuestionBean.ratingDeleted}" />
 									</p:commandButton>
 								</p:column>
 							</p:dataTable>
@@ -207,7 +208,7 @@
 											<p:inputText
 												style="width: 100%!important;color: black!important"
 												id="inputEditRatiName"
-												value="#{questionsBean.ratingUpdated.name}" />
+												value="#{detailQuestionBean.ratingUpdated.name}" />
 										</div>
 									</div>
 									<div class="row" style="width: 50%; margin: 0 auto">
@@ -220,7 +221,7 @@
 											<p:commandButton icon="fa fa-check"
 												update="createQuestion:listRatings" value="Cập nhật"
 												style="color: #fff;background-color: #28a745;border-color:#28a745"
-												action="#{questionsBean.updateRating}" />
+												action="#{detailQuestionBean.updateRating}" />
 										</div>
 									</div>
 								</p:outputPanel>
@@ -242,13 +243,13 @@
 											<p:commandButton icon="fa fa-check" value="Đồng ý"
 												update="createQuestion:listRatings"
 												style="color: #fff;background-color: #28a745;border-color:#28a745"
-												action="#{questionsBean.deleteRating}" />
+												action="#{detailQuestionBean.deleteRating}" />
 										</div>
 									</div>
 								</p:outputPanel>
 							</p:dialog>
 							<!--Ket thuc  -->
-							
+
 							<!-- Dialog Them cau tra loi moi _ danh gia -->
 							<p:dialog header="Thêm mới" id="AddNewRating" width="600"
 								widgetVar="dialogAddNewRating" modal="true" showEffect="fade"
@@ -257,7 +258,8 @@
 									<div class="row" style="margin-bottom: 15px">
 										<p:inputText
 											style="width: 80%!important;color: black!important;margin:0 auto"
-											id="inputAddnewRating" value="#{questionsBean.newAnswer2}" />
+											id="inputAddnewRating"
+											value="#{detailQuestionBean.newAnswer2}" />
 									</div>
 									<div class="row" style="width: 50%; margin: 0 auto">
 										<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
@@ -267,7 +269,7 @@
 										<p:commandButton icon="fa fa-check" value="Thêm mới"
 											update="createQuestion:listRatings inputAddnewRating"
 											style="color: #fff;background-color: #28a745;border-color:#28a745"
-											action="#{questionsBean.addNewRating}" />
+											action="#{detailQuestionBean.addNewRating}" />
 									</div>
 								</p:outputPanel>
 							</p:dialog>

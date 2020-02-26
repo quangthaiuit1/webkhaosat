@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <h:head>
 
@@ -50,15 +51,15 @@
 				<!--Header  -->
 				<h:form id="headerCustom">
 					<div class="row"
-						style="width: 90%; box-shadow: 0px 0px 5px #888; margin: 0 auto; margin-bottom: 15px; margin-top: 20px; border-radius: 5px; background-color: #e4e4e4">
+						style="width: 60%; box-shadow: 0px 0px 5px #888; margin: 0 auto; margin-bottom: 15px; margin-top: 20px; border-radius: 5px; background-color: #e4e4e4">
 
 						<div class="row" style="width: 100%">
-							<a
-								href="http://192.168.0.132:8380/webkhaosat_web/pages/web/index.jsf" style="margin-left: 20px;"><button
-									type="button" class="btn btn-primary" style="margin-top: 20px;font-size: 13px;"><i class="fa fa-th-list"> </i> Danh sách các cuộc khảo sát</button></a>
-							<a
-								href="http://192.168.0.132:8380/webkhaosat_web/pages/admin/index.jsf" style="margin-left: 20px;"><button
-									type="button" class="btn btn-primary" style="margin-top: 20px;font-size: 13px;"><i class="fa fa-key"> </i> Quản trị</button></a>
+							<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
+								style="margin-top: 10px;margin-left: 50px">
+							</p:menubar>
+							<p:commandButton value="Đăng xuất"
+								actionListener="#{loginBean.logout()}"
+								style="margin-right: 10px;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
 						</div>
 						<hr width="97%" style="border-top: 1px solid #9c7e7e" />
 					</div>

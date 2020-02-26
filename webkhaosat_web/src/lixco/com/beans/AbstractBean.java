@@ -22,19 +22,21 @@ import general.AuthorizationManager;
 import general.PrivateConfig;
 import general.UrlPermission;
 import lixco.com.services.AnswerService;
-import lixco.com.services.DepartmentService;
 import lixco.com.services.QuestionService;
-import lixco.com.services.QuestiontypeService;
+import lixco.com.services.QuestionTypeService;
 import lixco.com.services.RatingService;
-import lixco.com.services.SetofquestionService;
+import lixco.com.services.SurveyService;
 import lixco.com.services.UserResultService;
-import lixco.com.services.UserService;
 import trong.lixco.com.account.servicepublics.Account;
 import trong.lixco.com.account.servicepublics.AccountServicePublic;
 import trong.lixco.com.account.servicepublics.AccountServicePublicProxy;
+import trong.lixco.com.account.servicepublics.DepartmentServicePublic;
+import trong.lixco.com.account.servicepublics.DepartmentServicePublicProxy;
 import trong.lixco.com.account.servicepublics.LockTable;
 import trong.lixco.com.account.servicepublics.LockTableServicePublic;
 import trong.lixco.com.account.servicepublics.LockTableServicePublicProxy;
+import trong.lixco.com.account.servicepublics.MemberServicePublic;
+import trong.lixco.com.account.servicepublics.MemberServicePublicProxy;
 import trong.lixco.com.account.servicepublics.Program;
 
 public abstract class AbstractBean implements Serializable {
@@ -47,6 +49,9 @@ public abstract class AbstractBean implements Serializable {
 
 	private LockTableServicePublic lockTableServicePublic;
 //Thai
+	protected MemberServicePublic EMPLOYEE_SERVICE = new MemberServicePublicProxy();
+	protected DepartmentServicePublic DEPARTMENT_SERVICE = new DepartmentServicePublicProxy();
+	
 	@Inject
 	protected QuestionService QUESTION_SERVICE;
 
@@ -57,19 +62,14 @@ public abstract class AbstractBean implements Serializable {
 	protected RatingService RATING_SERVICE; // RATING_SERVICE
 
 	@Inject
-	protected SetofquestionService SETOFQUESTION_SERVICE;
+	protected SurveyService SURVEY_SERVICE;
 
 	@Inject
-	protected QuestiontypeService QUESTIONTYPE_SERVICE;
-	
-	@Inject 
-	protected UserService USER_SERVICE;
+	protected QuestionTypeService QUESTIONTYPE_SERVICE;
 	
 	@Inject
 	protected UserResultService USER_RESULT_SERVICE;
 	
-	@Inject
-	protected DepartmentService DEPARTMENT_SERVICE;
 	
 	@PostConstruct
 	public void init() {

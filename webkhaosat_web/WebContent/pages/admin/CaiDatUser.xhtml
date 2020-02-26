@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+	<title>LIXCO</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<!-- Bootstrap core CSS -->
+	<h:outputStylesheet library="bootstrap"
+		name="web/css/bootstrap.min.css" />
+	<h:outputStylesheet library="bootstrap" name="web/css/css-search.css" />
+
+</h:head>
+<h:body>
+	<ui:composition template="common.xhtml">
+		<ui:define name="header"></ui:define>
+		<ui:define name="content">
+			<h:form id="formEmployee">
+				<div class="row"
+					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+					<div class="row" style="width: 100%">
+						<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
+							style="margin-top: 10px;margin-left: 50px">
+						</p:menubar>
+						<p:commandButton value="Đăng xuất"
+							actionListener="#{loginBean.logout()}"
+							style="margin-right: 10px;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
+					</div>
+					<hr width="97%" style="border-top: 1px solid #9c7e7e" />
+					<div class="row"
+						style="width: 80%; margin-left: 0px; margin: 0 auto">
+						<div class="col-sm-12 col-md-12 col-lg-12">
+							<h6
+								style="color: black; text-align: center; margin-bottom: 71px;">
+								Danh sách Nhân viên trong kỳ khảo sát: "<span
+									style="font-weight: bold">#{settingUserBean.surveyPlaying.name}</span>"
+							</h6>
+							<div style="width: 20%; margin-left: 85%; margin-bottom: 5px">
+								<p:linkButton icon="fa fa-plus" outcome="ThemUser"
+									value="Thêm nhân viên"
+									style="background-color: #007bff; margin-right: 10px">
+									<f:param name="setofid" value="#{detailQuestionBean.setofId}" />
+								</p:linkButton>
+							</div>
+							<p:dataTable id="dtEmployees" var="employee"
+								widgetVar="filterEmployees1"
+								value="#{settingUserBean.listEmployeeBysurvey}"
+								emptyMessage="Không có dữ liệu"
+								filteredValue="#{settingUserBean.employeesAfterFilter}"
+								rowIndexVar="rowIndex" paginator="true" rows="50">
+								<f:facet name="header">
+									<p:outputPanel style="margin-right: 5px">
+										<h:outputText value="Tìm kiếm:" />
+										<i class="pi pi-search"></i>
+										<p:inputText id="globalFilter"
+											onkeyup="PF('filterEmployees1').filter()"
+											style="width:30%;background-color: white;color: black"
+											placeholder="Nhập từ khóa" />
+									</p:outputPanel>
+								</f:facet>
+								<p:column headerText="STT" style=";text-align: center">
+									<h:outputText value="#{rowIndex+1}" />
+								</p:column>
+								<p:column filterBy="#{employee.department.name}"
+									filterMatchMode="exact">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('filterEmployees1').filter()"
+											styleClass="custom-filter">
+											<f:selectItem itemLabel="Chọn Phòng ban" itemValue="#{null}"
+												noSelectionOption="true" />
+											<f:selectItems value="#{settingUserBean.departmentArrayList}"
+												var="de" itemLabel="#{de.name}" itemValue="#{de.name}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<h:outputText value="#{employee.department.name}" />
+								</p:column>
+								<p:column filterBy="#{employee.name}" filterMatchMode="contains"
+									headerText="Tên nhân viên">
+									<h:outputText value="#{employee.name}" />
+								</p:column>
+								<p:column headerText="Xóa" style="text-align: center">
+									<p:commandButton icon="fa fa-trash"
+										oncomplete="PF('dialogDeleteUser').show();" >
+										<f:setPropertyActionListener value="#{employee}"
+											target="#{settingUserBean.employeeDeleted}" />
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+							<!--Dialog xoa nhan vien  -->
+							<p:dialog header="Delete" widgetVar="dialogDeleteUser"
+								modal="true" showEffect="fade" hideEffect="fade"
+								resizable="false">
+								<p:outputPanel id="panelDeleteUser" style="text-align:center;">
+									<div class="row" style="width: 100%; margin: 0 auto">
+										<div style="width: 48%; margin-right: 5px">
+											<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
+												style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545"
+												oncomplete="PF('dialogDeleteUser').hide();" id="test"/>
+										</div>
+										<div style="width: 48%">
+											<p:commandButton icon="fa fa-check" value="Đồng ý"
+												update="formEmployee:dtEmployees"
+												style="color: #fff;background-color: #28a745;border-color:#28a745"
+												action="#{settingUserBean.deleteEmployee}" />
+										</div>
+									</div>
+								</p:outputPanel>
+							</p:dialog>
+							<!--Ket thuc  -->
+						</div>
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

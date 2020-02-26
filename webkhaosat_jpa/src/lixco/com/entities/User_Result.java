@@ -1,5 +1,6 @@
 package lixco.com.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -10,11 +11,11 @@ public class User_Result extends AbstractEntities{
 
 	private String result;
 	
-	@OneToOne
-	private Question question;
+	@Column(name = "employee_code")
+	private String employeeCode;
 	
 	@OneToOne
-	private User user;
+	private Question question;
 	
 	public String getResult() {
 		return result;
@@ -28,11 +29,12 @@ public class User_Result extends AbstractEntities{
 	public void setQuestion(Question question) {
 		this.question = question;
 	}
-	public User getUser() {
-		return user;
+	public String getEmployeeCode() {
+		return employeeCode;
 	}
-	public void setUser(User user) {
-		this.user = user;
+	public void setEmployeeCode(String employeeCode) {
+		this.employeeCode = employeeCode;
 	}
+	
 }
 

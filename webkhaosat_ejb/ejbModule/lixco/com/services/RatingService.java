@@ -43,7 +43,7 @@ public class RatingService extends AbstractService<Rating>{
 		return ct;
 	}
 	
-	public List<Rating> find(Long questionId) {
+	public List<Rating> find(Long questionId, Long surveyId) {
 
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Rating> cq = cb.createQuery(Rating.class);
@@ -51,9 +51,13 @@ public class RatingService extends AbstractService<Rating>{
 		List<Predicate> queries = new ArrayList<>();
 		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
 		queries.add(deleteQuery);
-		if (questionId != null) {
+		if (questionId != 0) {
 			Predicate answerTypeQuery = cb.equal(root.get("question").get("id"), questionId);
 			queries.add(answerTypeQuery);
+		}
+		if(surveyId != 0) {
+			Predicate surveyIdQuery = cb.equal(root.get("question").get("survey").get("id"), surveyId);
+			queries.add(surveyIdQuery);
 		}
 		Predicate data[] = new Predicate[queries.size()];
 		for (int i = 0; i < queries.size(); i++) {

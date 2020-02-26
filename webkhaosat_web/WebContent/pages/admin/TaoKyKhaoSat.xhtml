@@ -22,17 +22,17 @@
 		<ui:define name="header">
 		</ui:define>
 		<ui:define name="content">
-			<h:form id="createSetofquestion">
+			<h:form id="createSurvey">
 				<!-- Them bo cau hoi -->
 				<div class="row"
 					style="width: 90%; box-shadow: 0px 0px 5px #000; margin: 0 auto; margin-bottom: 5px; border-radius: 5px; margin-top: 20px">
 					<div class="row" style="width: 100%">
-						<span class="group-name"
-							style="margin-left: 1%; color: black; font-weight: bold; margin-top: 10px; font-size: 20px"><p:linkButton
-								icon="fa fa-home" outcome="index"
-								value="Trang chủ" style="background-color: #007bff">
-
-							</p:linkButton></span>
+						<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
+							style="margin-top: 10px;margin-left: 50px">
+						</p:menubar>
+						<p:commandButton value="Đăng xuất"
+							actionListener="#{loginBean.logout()}"
+							style="margin-right: 10px;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
 					</div>
 					<div class="row" style="width: 100%; margin-bottom: 45px">
 						<span class="group-name"
@@ -52,18 +52,16 @@
 
 							<p:inputTextarea id="id_describe"
 								style="margin:0 auto;margin-bottom: 5px;width: 50%" rows="6"
-								cols="33" value="#{questionsBean.setofquestionNew.description}"
+								cols="33" value="#{surveyBean.surveyNew.description}"
 								required="true" requiredMessage="Vui lòng nhập mô tả" />
 						</div>
 						<div class="row" style="width: 100%; margin-bottom: 10px">
 							<div style="width: 100%">
-								<p:message for="inputSetofquestion"
-									style="width: 40%;margin:0 auto" />
+								<p:message for="inputSurvey" style="width: 40%;margin:0 auto" />
 							</div>
 							<p:inputText
 								style="width: 40%!important;margin: 0 auto;margin-bottom: 3px"
-								id="inputSetofquestion"
-								value="#{questionsBean.setofquestionNew.name}"
+								id="inputSurvey" value="#{surveyBean.surveyNew.name}"
 								placeholder="Nhập tên kỳ khảo sát" required="true"
 								requiredMessage="Vui lòng nhập tên kỳ khảo sát" />
 
@@ -75,7 +73,7 @@
 							<h:outputText value="Ngày bắt đầu: "
 								style="color: black;margin-left: 30%" />
 							<p:calendar id="startTime" style="margin-left: 5%"
-								value="#{questionsBean.startDate}" locale="de"
+								value="#{surveyBean.surveyNew.startDate}" locale="de"
 								pattern="dd.MM.yyyy HH:mm" required="true"
 								requiredMessage="Nhập ngày bắt đầu kỳ khảo sát" />
 						</div>
@@ -86,7 +84,7 @@
 							<h:outputText value="Ngày kết thúc: "
 								style="color: black;margin-left: 30%" />
 							<p:calendar id="endTime" style="margin-left: 5%"
-								value="#{questionsBean.endDate}" locale="de"
+								value="#{surveyBean.surveyNew.endDate}" locale="de"
 								pattern="dd.MM.yyyy HH:mm" required="true"
 								requiredMessage="Nhập ngày kết thúc khảo sát" />
 						</div>
@@ -99,10 +97,10 @@
 								</p:linkButton>
 							</div>
 							<div class="col-sm-12 col-md-6 col-lg-6">
-								<p:commandButton value="Thêm mới" update="createSetofquestion"
+								<p:commandButton value="Thêm mới" update="createSurvey"
 									icon="fa fa-plus"
 									style="margin-bottom: 10px;color: #fff;background-color: #007bff;border-color:#007bff"
-									action="#{questionsBean.createSetofquestion}" />
+									action="#{surveyBean.createSurvey()}" />
 							</div>
 						</div>
 					</div>

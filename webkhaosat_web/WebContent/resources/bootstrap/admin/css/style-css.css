@@ -2,6 +2,12 @@
 tr {
 	background-color: #626262;
 }
+.ui-menubar {
+    width: auto;
+    margin-top: 18px;
+    margin-left: 15px;
+}
+
 .ui-datatable .ui-column-filter {
     display: block;
     box-sizing: border-box;
@@ -54,6 +60,9 @@ span.ui-button-icon-left.ui-icon.ui-c.fa.fa-trash {
 }
 span.ui-button-icon-left.ui-icon.ui-c.fa.fa-list-alt {
 	color: #876a6a;
+}
+span.ui-button-icon-left.ui-icon.ui-c.fa.fa-list-ul {
+	color: #377cb0;
 }
 span.ui-button-icon-left.ui-icon.ui-c.fa.fa-navicon {
 	color: #353535;

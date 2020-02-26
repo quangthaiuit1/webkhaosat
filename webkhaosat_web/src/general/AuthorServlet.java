@@ -52,7 +52,7 @@ public class AuthorServlet extends HttpServlet {
 						boolean allow = authorizationManager.isAllowed(account);
 						if (allow) {
 							session.setAttribute("account", account);
-							response.sendRedirect(pathlocal + "/webkhaosat_web/pages/trangchu.jsf");
+							response.sendRedirect(pathlocal + "/webkhaosat_web/pages/TrangChu.jsf");
 						}
 					}
 				} else {

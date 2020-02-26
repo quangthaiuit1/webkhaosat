@@ -16,90 +16,129 @@
 				<h4
 					style="text-align: center; color: #1F83D9; margin-top: 10px; font-weight: bold">PHIẾU
 					KHẢO SÁT</h4>
-				<p>#{questionsBean.questionsType1.get(0).setofquestions.description}</p>
+				<p>#{excuteSurveyBean.surveyPlaying.description}</p>
 			</div>
 			<h:form id="total">
 				<!-- phan 1  -->
-				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
-					<span class="group-name" style="margin: 0 auto;margin-bottom: 15px">PHẦN 1: ĐÁNH
-						GIÁ</span> <span class="group-description"><p
-							style="text-align: center;">
-							Anh/Chị vui lòng cho ý kiến nhận xét của mình về môn học bằng
-							cách đánh dấu chọn vào ô tương ứng cho từng mục trong tất cả các
-							<strong>lĩnh vực</strong> dưới đây:<strong> </strong>
-						</p>
-						</span>
-					<c:set var="evenCount" value="${0}" />
-					<c:forEach items="#{questionsBean.questionAndAnswer1}"
-						var="question1">
-						<c:set var="evenCount" value="${evenCount+1}" />
-						<div class="row" style="width: 100%">
-							<p>
-								<h:outputText value="Câu #{evenCount}" style="margin-left: 5px" />
-								: #{question1.question.name}
-							</p>
-						</div>
-						<div class="row" style="width: 100%; margin-left: 10px">
-							<c:if test="${question1.ratings.get(0) == '100'}">
-								<h:panelGrid columns="1" style="margin-bottom: 10px">
-									<p:spinner id="spinner1" value="#{questionsBean.ketquaPhan1[evenCount]}" min="0"
-										max="100" >
-									</p:spinner>
-									<p:slider for="spinner1" minValue="0" maxValue="100"/>
-								</h:panelGrid>
-							</c:if>
-							<c:if test="${question1.ratings.get(0) != '100'}">
+				<c:if test="#{excuteSurveyBean.checkNullPhan1 eq false}">
+					<div class="row"
+						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+						<span class="group-name"
+							style="margin: 0 auto; margin-bottom: 15px">PHẦN 1: ĐÁNH
+							GIÁ</span> <span class="group-description"><p
+								style="text-align: center;"></p> </span>
+						<div class="row"
+							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.questionsType1.get(0).survey.titleRating}</div>
+						<c:set var="evenCount" value="${0}" />
+						<c:forEach items="#{excuteSurveyBean.questionAndAnswerRating}"
+							var="question1">
+							<c:set var="evenCount" value="${evenCount+1}" />
+							<div class="row" style="width: 100%">
+								<p>
+									<h:outputText value="Câu #{evenCount}" style="margin-left: 5px" />
+									: #{question1.question.name}
+								</p>
+							</div>
+							<div class="row" style="width: 100%; margin-left: 10px">
 								<h:panelGrid columns="1" style="margin-bottom:10px"
 									cellpadding="5">
 									<p:selectOneRadio id="id1_#{evenCount}"
-										value="#{questionsBean.ketquaPhan1[evenCount]}" layout="grid"
-										columns="1">
+										value="#{excuteSurveyBean.ketquaPhanDanhGia[evenCount]}"
+										layout="grid" columns="1">
 										<c:forEach items="#{question1.ratings}" var="r">
 											<f:selectItem itemLabel="#{r.name}" itemValue="#{r.name}" />
 										</c:forEach>
 									</p:selectOneRadio>
 								</h:panelGrid>
-							</c:if>
-						</div>
-					</c:forEach>
-				</div>
+							</div>
+						</c:forEach>
+					</div>
+				</c:if>
 				<!-- 	het phan 1 -->
 
-				<!-- phan 3 -->
-				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
-					<div class="row" style="width: 100%">
-						<span class="group-name" style="margin: 0 auto;margin-bottom: 15px">PHẦN 2: LẤY
-							Ý KIẾN</span> <span class="group-description"><p
-								style="text-align: center; margin-left: 5px"></p></span> <br />
+				<!-- phan 2 -->
+				<c:if test="#{excuteSurveyBean.checkNullPhan2 eq false}">
+					<div class="row"
+						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+						<div class="row" style="width: 100%">
+							<span class="group-name"
+								style="margin: 0 auto; margin-bottom: 15px">PHẦN 2: THANG
+								ĐIỂM</span> <span class="group-description"><p
+									style="text-align: center; margin-left: 5px"></p></span>
+						</div>
+						<div class="row"
+							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.questionsType1.get(0).survey.titleSlider}</div>
+						<c:set var="evenCount2" value="${evenCount}" />
+						<c:forEach items="#{excuteSurveyBean.questionAndAnswerSlider}"
+							var="questionSlider">
+							<c:set var="evenCount2" value="${evenCount2+1}" />
+							<div class="row" style="width: 100%">
+								<p>
+									<h:outputText value="Câu #{evenCount2}: "
+										style="margin-left: 5px" />
+									#{questionSlider.question.name}
+								</p>
+								<br />
+								<div class="row" style="width: 100%">
+									<h:panelGrid columns="1"
+										style="margin-bottom: 10px;margin-left: 20px">
+										<p:spinner id="spinner1_#{evenCount2}"
+											value="#{excuteSurveyBean.ketquaPhanThangDiem[evenCount2-evenCount]}"
+											min="#{questionSlider.min}" max="#{questionSlider.max}">
+										</p:spinner>
+										<p:slider for="spinner1_#{evenCount2}"
+											minValue="#{questionSlider.min}"
+											maxValue="#{questionSlider.max}" />
+									</h:panelGrid>
+									<br />
+								</div>
+							</div>
+						</c:forEach>
 					</div>
-					<c:set var="evenCount2" value="${evenCount}" />
-					<c:forEach items="#{questionsBean.questionsType1}" var="question3">
+				</c:if>
+				<!-- Het phan 2 -->
+
+				<!-- phan 3 -->
+				<c:if test="#{excuteSurveyBean.checkNullPhan3 eq false}">
+					<div class="row"
+						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+						<div class="row" style="width: 100%">
+							<span class="group-name"
+								style="margin: 0 auto; margin-bottom: 15px">PHẦN 3: LẤY Ý
+								KIẾN</span> <span class="group-description"><p
+									style="text-align: center; margin-left: 5px"></p></span>
+						</div>
+						<div class="row"
+							style="width: 100%; margin-bottom: 25px; margin-left: 5px; text-align: center; font-style: italic">#{excuteSurveyBean.questionsType1.get(0).survey.titleFeedback}</div>
+						<c:set var="evenCount3" value="${evenCount2}" />
+						<c:forEach items="#{excuteSurveyBean.questionsType1}"
+							var="question3">
 
 
-						<c:set var="evenCount2" value="${evenCount2+1}" />
-						<p>
-							<h:outputText value="Câu #{evenCount2}: "
-								style="margin-left: 5px" />
-							#{question3.name}
-						</p>
-						<br />
-
-						<p:inputTextarea id="id2_#{evenCount2}"
-							style="margin-left: 10px;margin-bottom: 5px;width: 80%" rows="6"
-							cols="33"
-							value="#{questionsBean.ketquaPhan2[evenCount2-evenCount]}" />
-						<br />
-
-					</c:forEach>
-				</div>
+							<c:set var="evenCount3" value="${evenCount3+1}" />
+							<p>
+								<h:outputText value="Câu #{evenCount3}: "
+									style="margin-left: 5px" />
+								#{question3.name} <span
+									style="font-style: italic; color: #b24d68">(Nếu không có
+									ý kiến vui lòng nhập <span style="font-weight: bold;">"Không"</span>)
+								</span>
+							</p>
+							<br />
+							<p:inputTextarea id="id2_#{evenCount3}"
+								style="margin-left: 10px;margin-bottom: 5px;width: 80%" rows="6"
+								cols="33"
+								value="#{excuteSurveyBean.ketquaPhanLayYKien[evenCount3-evenCount2]}" />
+							<br />
+						</c:forEach>
+					</div>
+				</c:if>
 				<!-- Het phan 3 -->
 				<div class="row"
 					style="margin: 0 auto; margin-bottom: 30px; margin-top: 10px;">
 					<p:commandButton style="color: white" value="Hoàn thành"
 						update="total" icon="fa fa-check"
-						action="#{questionsBean.completeSurvey}" />
+						action="#{excuteSurveyBean.completeSurvey}" />
 				</div>
 			</h:form>
 		</div>

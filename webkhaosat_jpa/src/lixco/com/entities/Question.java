@@ -10,10 +10,10 @@ public class Question extends AbstractEntities{
 	private String name;
 	
 	@OneToOne
-	private Setofquestions setofquestions;
+	private Survey survey;
 	
 	@OneToOne
-	private QuestionType questiontype;
+	private QuestionType questionType;
 
 	public String getName() {
 		return name;
@@ -23,20 +23,20 @@ public class Question extends AbstractEntities{
 		this.name = name;
 	}
 	
-	public Setofquestions getSetofquestions() {
-		return setofquestions;
+	public Survey getSurvey() {
+		return survey;
 	}
 
-	public void setSetofquestions(Setofquestions setofquestions) {
-		this.setofquestions = setofquestions;
+	public void setSurvey(Survey survey) {
+		this.survey = survey;
 	}
 
-	public QuestionType getQuestiontype() {
-		return questiontype;
+	public QuestionType getQuestionType() {
+		return questionType;
 	}
 
-	public void setQuestiontype(QuestionType questiontype) {
-		this.questiontype = questiontype;
+	public void setQuestionType(QuestionType questionType) {
+		this.questionType = questionType;
 	}
-
+	
 }

@@ -18,7 +18,6 @@ import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
 import lixco.com.beans.AbstractBean;
-import lixco.com.beans.FatherBean;
 import trong.lixco.com.account.servicepublics.Menu;
 import trong.lixco.com.account.servicepublics.MenuServicePublic;
 import trong.lixco.com.account.servicepublics.MenuServicePublicProxy;

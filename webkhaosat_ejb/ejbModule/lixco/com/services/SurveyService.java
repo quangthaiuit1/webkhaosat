@@ -16,12 +16,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import lixco.com.entities.User_Result;
+import lixco.com.entities.Survey;
 
 @Stateless
 @TransactionManagement(value = TransactionManagementType.CONTAINER)
-public class UserResultService extends AbstractService<User_Result>{
-
+public class SurveyService extends AbstractService<Survey>{
 	@PersistenceContext
 	private EntityManager em;
 
@@ -29,8 +28,8 @@ public class UserResultService extends AbstractService<User_Result>{
 	private SessionContext ct;
 
 	@Override
-	protected Class<User_Result> getEntityClass() {
-		return User_Result.class;
+	protected Class<Survey> getEntityClass() {
+		return Survey.class;
 	}
 
 	@Override
@@ -42,17 +41,22 @@ public class UserResultService extends AbstractService<User_Result>{
 	protected SessionContext getUt() {
 		return ct;
 	}
-	public List<User_Result> find(Long setOfQuestionId) {
+	public List<Survey> find(String employeeCode, String employeeCodeCompleted) {
 
 		CriteriaBuilder cb = em.getCriteriaBuilder();
-		CriteriaQuery<User_Result> cq = cb.createQuery(User_Result.class);
-		Root<User_Result> root = cq.from(User_Result.class);
+		CriteriaQuery<Survey> cq = cb.createQuery(Survey.class);
+		Root<Survey> root = cq.from(Survey.class);
 		List<Predicate> queries = new ArrayList<>();
 		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
 		queries.add(deleteQuery);
-		if (setOfQuestionId != null) {
-			Predicate answerTypeQuery = cb.equal(root.get("question").get("survey").get("id"), setOfQuestionId);
-			queries.add(answerTypeQuery);
+		//Truy van theo code nhan vien
+		if(employeeCode != null) {
+			Predicate employeeCodeId = cb.like(root.get("listUserOrDeparments"), ("%"  + employeeCode + "%"));
+			queries.add(employeeCodeId);
+		}
+		if(employeeCodeCompleted != null) {
+			Predicate employeeCodeId = cb.like(root.get("listUserCompleted"), ("%"  + employeeCodeCompleted + "%"));
+			queries.add(employeeCodeId);
 		}
 		Predicate data[] = new Predicate[queries.size()];
 		for (int i = 0; i < queries.size(); i++) {
@@ -60,7 +64,8 @@ public class UserResultService extends AbstractService<User_Result>{
 		}
 		Predicate finalPredicate = cb.and(data);
 		cq.where(finalPredicate);
-		TypedQuery<User_Result> query = em.createQuery(cq);
+		TypedQuery<Survey> query = em.createQuery(cq);
+		query.getResultList();
 		return query.getResultList();
 	}
 }

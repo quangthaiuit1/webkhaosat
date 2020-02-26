@@ -69,7 +69,7 @@ public class AuthorizationManager implements Serializable {
 
 		urlPermissions = new ArrayList<UrlPermission>();
 		uriUnprotected = new ArrayList<String>();
-		uriUnprotected.add("/webkhaosat_web/pages/trangchu.jsf");
+		uriUnprotected.add("/webkhaosat_web/pages/TrangChu.jsf");
 	}
 
 	public Program getProgram() {

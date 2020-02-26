@@ -43,7 +43,7 @@ public class QuestionService extends AbstractService<Question>{
 		return ct;
 	}
 	
-	public List<Question> find(Long questionTypeId,Long setofquestionsId) {
+	public List<Question> find(Long questionTypeId,Long surveyId) {
 
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Question> cq = cb.createQuery(Question.class);
@@ -52,12 +52,12 @@ public class QuestionService extends AbstractService<Question>{
 		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
 		queries.add(deleteQuery);
 		if (questionTypeId != null) {
-			Predicate questionTypeQuery = cb.equal(root.get("questiontype").get("id"), questionTypeId);
+			Predicate questionTypeQuery = cb.equal(root.get("questionType").get("id"), questionTypeId);
 			queries.add(questionTypeQuery);
 		}
-		if(setofquestionsId != null) {
-			Predicate setofquestionIdQuery = cb.equal(root.get("setofquestions").get("id"), setofquestionsId);
-			queries.add(setofquestionIdQuery);
+		if(surveyId != null) {
+			Predicate surveyIdQuery = cb.equal(root.get("survey").get("id"), surveyId);
+			queries.add(surveyIdQuery);
 		}
 		Predicate data[] = new Predicate[queries.size()];
 		for (int i = 0; i < queries.size(); i++) {
@@ -66,9 +66,7 @@ public class QuestionService extends AbstractService<Question>{
 		Predicate finalPredicate = cb.and(data);
 		cq.where(finalPredicate);
 		TypedQuery<Question> query = em.createQuery(cq);
-		System.out.println("ahihi");
 		query.getResultList();
 		return query.getResultList();
 	}
-
 }

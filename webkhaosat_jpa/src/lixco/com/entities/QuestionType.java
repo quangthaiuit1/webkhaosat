@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table (name = "questiontype")
+@Table (name = "question_type")
 public class QuestionType extends AbstractEntities{
 	private String name;
 

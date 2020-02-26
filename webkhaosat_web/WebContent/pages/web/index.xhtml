@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <h:head>
 
@@ -16,7 +17,7 @@
 	<meta name="description" content="" />
 	<meta name="author" content="" />
 
-	<title>Admin</title>
+	<title>User</title>
 	<style>
 </style>
 
@@ -53,9 +54,12 @@
 						style="width: 90%; box-shadow: 0px 0px 5px #888; margin: 0 auto; margin-bottom: 15px; margin-top: 20px; border-radius: 5px; background-color: #e4e4e4">
 
 						<div class="row" style="width: 100%">
-							<a
-								href="http://192.168.0.132:8380/webkhaosat_web/pages/trangchu.jsf" style="margin-left: 20px;"><button
-									type="button" class="btn btn-primary" style="margin-top: 20px;">Trang chủ</button></a>
+							<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
+								style="margin-top: 10px;margin-left: 50px">
+							</p:menubar>
+							<p:commandButton value="Đăng xuất"
+								actionListener="#{loginBean.logout()}"
+								style="margin-right: 10px;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
 						</div>
 						<hr width="97%" style="border-top: 1px solid #9c7e7e" />
 
@@ -68,50 +72,46 @@
 						</div>
 						<div class="row"
 							style="width: 80%; margin-left: 0px; margin: 0 auto">
-							
+
 							<p:dataTable id="listSetofquestions" var="set1"
-								value="#{questionsBean.setofquestions1}" rowKey="#{set1.id}"
-								selection="#{questionsBean.setofquestionsSelected4}"
-								selectionMode="single" rowIndexVar="rowIndex">
-								<p:ajax event="rowSelect" 
-									listener="#{questionsBean.handleListuserBySetof()}" />
+								value="#{questionUserBean.managerSurveyUser}"
+								rowIndexVar="rowIndex">
 								<p:column headerText="STT" style="text-align: center">
 									<h:outputText value="#{rowIndex+1}" />
 								</p:column>
 								<p:column headerText="Tên bộ câu hỏi" style="">
-									<h:outputText value="#{set1.name}" />
-								</p:column>
-								<p:column headerText="Ngày tạo" style="">
-									<h:outputText value="#{set1.createdDate}">
-										<f:convertDateTime pattern="dd.MM.yyyy" />
-									</h:outputText>
+									<h:outputText value="#{set1.survey.name}" />
 								</p:column>
 								<p:column headerText="Ngày bắt đầu" style="">
-									<h:outputText value="#{set1.starttime}">
+									<h:outputText value="#{set1.survey.startDate}">
 										<f:convertDateTime pattern="dd.MM.yyyy" />
 									</h:outputText>
 								</p:column>
 								<p:column headerText="Ngày kết thúc" style="">
-									<h:outputText value="#{set1.endtime}">
+									<h:outputText value="#{set1.survey.endDate}">
 										<f:convertDateTime pattern="dd.MM.yyyy" />
 									</h:outputText>
 								</p:column>
-								
-								<p:column headerText="Sửa" style="text-align: center">
-									<p:commandButton 
-										icon="fa fa-edit">
-										<f:setPropertyActionListener value="#{set1}"
-											target="#{questionsBean.setofquestionsUpdated}" />
-									</p:commandButton>
+								<p:column headerText="Chưa khảo sát" style="text-align: center"
+									priority="3">
+									<p:linkButton outcome="KhaoSat" value="Thực hiện"
+										style="color:#201d1f" rendered="#{set1.inCompleted}">
+										<f:param name="setofid" value="#{set1.survey.id}" />
+									</p:linkButton>
 								</p:column>
-								<p:column headerText="Xóa" style="text-align: center">
-									<p:commandButton 
-										icon="fa fa-trash"
-										>
-										<f:setPropertyActionListener value="#{set1}"
-											target="#{questionsBean.setofquestionsDeleted}" />
-									</p:commandButton>
+								<p:column headerText="Đã hoàn thành" style="text-align: center"
+									priority="3">
+									<h:outputText class="fa fa-check"
+										style="font-style: italic;color:blue"
+										rendered="#{set1.completed}" />
 								</p:column>
+
+								<p:column headerText="Đã hết hạn" style="text-align: center"
+									priority="3">
+									<h:outputText class="fa fa-check"
+										style="font-style: italic;color:blue" rendered="#{set1.expired}"/>
+								</p:column>
+
 							</p:dataTable>
 
 						</div>
