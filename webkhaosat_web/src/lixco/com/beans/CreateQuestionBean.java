@@ -8,8 +8,6 @@ import java.util.stream.Collectors;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
@@ -36,22 +34,14 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 	@Override
 	protected void initItem() {
 		try {
-			getParam();
+			setofId = getParamSetOfId();
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		// Danh sach dap an tao moi
 		answersNew = new String[5];
 		// Danh sach loai cau hoi truy van tu DB
 		questionTypeList1 = QUESTIONTYPE_SERVICE.findAllByFilter();
-	}
-
-	// Get param from URL
-	public void getParam() {
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
-				.getRequest();
-		String setofIdTemp = request.getParameter("setofid");
-		setofId = Long.parseLong(setofIdTemp);
 	}
 
 	// Them cau hoi

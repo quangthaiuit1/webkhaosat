@@ -13,6 +13,11 @@
 		<div class="row" style="background-color: white;">
 			<div class="col-sm-12 col-md-12 col-lg-12"
 				style="margin-bottom: 30px">
+				<p:notificationBar id="ahihi" position="top" widgetVar="topBar"
+					styleClass="top" rendered="">
+					<h:outputText value="Đã hoàn thành!"
+						style="color:#FFCC00;font-size:36px;" />
+				</p:notificationBar>
 				<h4
 					style="text-align: center; color: #1F83D9; margin-top: 10px; font-weight: bold">PHIẾU
 					KHẢO SÁT</h4>
@@ -20,12 +25,12 @@
 			</div>
 			<h:form id="total">
 				<!-- phan 1  -->
-				<c:if test="#{excuteSurveyBean.checkNullPhan1 eq false}">
+				<c:if test="#{excuteSurveyBean.checkNullPhan1 == false}">
 					<div class="row"
 						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 						<span class="group-name"
-							style="margin: 0 auto; margin-bottom: 15px">PHẦN 1: ĐÁNH
-							GIÁ</span> <span class="group-description"><p
+							style="margin: 0 auto; margin-bottom: 15px">PHẦN KHẢO SÁT:
+							ĐÁNH GIÁ</span> <span class="group-description"><p
 								style="text-align: center;"></p> </span>
 						<div class="row"
 							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.questionsType1.get(0).survey.titleRating}</div>
@@ -57,13 +62,13 @@
 				<!-- 	het phan 1 -->
 
 				<!-- phan 2 -->
-				<c:if test="#{excuteSurveyBean.checkNullPhan2 eq false}">
+				<c:if test="#{excuteSurveyBean.checkNullPhan2 == false}">
 					<div class="row"
 						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 						<div class="row" style="width: 100%">
 							<span class="group-name"
-								style="margin: 0 auto; margin-bottom: 15px">PHẦN 2: THANG
-								ĐIỂM</span> <span class="group-description"><p
+								style="margin: 0 auto; margin-bottom: 15px">PHẦN KHẢO
+								SÁT: THANG ĐIỂM</span> <span class="group-description"><p
 									style="text-align: center; margin-left: 5px"></p></span>
 						</div>
 						<div class="row"
@@ -99,13 +104,13 @@
 				<!-- Het phan 2 -->
 
 				<!-- phan 3 -->
-				<c:if test="#{excuteSurveyBean.checkNullPhan3 eq false}">
+				<c:if test="#{excuteSurveyBean.checkNullPhan3 == false}">
 					<div class="row"
 						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 						<div class="row" style="width: 100%">
 							<span class="group-name"
-								style="margin: 0 auto; margin-bottom: 15px">PHẦN 3: LẤY Ý
-								KIẾN</span> <span class="group-description"><p
+								style="margin: 0 auto; margin-bottom: 15px">PHẦN KHẢO
+								SÁT: LẤY Ý KIẾN</span> <span class="group-description"><p
 									style="text-align: center; margin-left: 5px"></p></span>
 						</div>
 						<div class="row"
@@ -119,10 +124,7 @@
 							<p>
 								<h:outputText value="Câu #{evenCount3}: "
 									style="margin-left: 5px" />
-								#{question3.name} <span
-									style="font-style: italic; color: #b24d68">(Nếu không có
-									ý kiến vui lòng nhập <span style="font-weight: bold;">"Không"</span>)
-								</span>
+								#{question3.name}
 							</p>
 							<br />
 							<p:inputTextarea id="id2_#{evenCount3}"
@@ -134,15 +136,17 @@
 					</div>
 				</c:if>
 				<!-- Het phan 3 -->
-				<div class="row"
-					style="margin: 0 auto; margin-bottom: 30px; margin-top: 10px;">
-					<p:commandButton style="color: white" value="Hoàn thành"
-						update="total" icon="fa fa-check"
-						action="#{excuteSurveyBean.completeSurvey}" />
-				</div>
+				<c:if test="#{excuteSurveyBean.checkNullAll == false}">
+					<div class="row"
+						style="margin: 0 auto; margin-bottom: 30px; margin-top: 10px;">
+						<p:commandButton style="color: white" value="Hoàn thành"
+							update="total" icon="fa fa-check"
+							action="#{excuteSurveyBean.completeSurvey}" onclick="showMessageSuccess()"/>
+					</div>
+				</c:if>
 			</h:form>
 		</div>
-
+	<h:outputScript library="bootstrap" name="admin/js/custom.js" target="head" />
 	</ui:composition>
 </h:body>
 

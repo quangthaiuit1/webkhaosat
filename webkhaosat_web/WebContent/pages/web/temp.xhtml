@@ -202,3 +202,84 @@
 		</div>
 	</div>
 </div>
+
+<div class="row" style="width: 80%; margin-left: 0px; margin: 0 auto">
+	<div class="col-sm-12 col-md-12 col-lg-12">
+		<h6 style="color: #7d7373; text-align: center">
+			DANH SÁCH NHÂN VIÊN TRONG KỲ KHẢO SÁT: <span
+				style="border: 1px solid #d6d6d6;; background-color: #eee7e7; color: #5a5050; border-radius: 5px; font-weight: bold; padding: 2px; margin-left: 15px">#{statisticalBean.surveyPlaying.name}</span>
+		</h6>
+		<div style="width: 20%; margin-left: 85%; margin-bottom: 5px">
+			<p:linkButton icon="fa fa-plus" outcome="ThemUser"
+				value="Thêm nhân viên"
+				style="background-color: #007bff; margin-right: 10px">
+				<f:param name="setofid" value="#{detailQuestionBean.setofId}" />
+			</p:linkButton>
+		</div>
+		<p:dataTable id="dtEmployees"
+			value="#{settingUserBean.listEmployeeBysurvey}" var="employee"
+			widgetVar="filterEmployees1" emptyMessage="Không có dữ liệu"
+			filteredValue="#{settingUserBean.employeesAfterFilter}"
+			rowIndexVar="rowIndex" paginator="true" rows="50">
+			<f:facet name="header">
+				<p:outputPanel style="margin-right: 5px">
+					<h:outputText value="Tìm kiếm:" />
+					<i class="pi pi-search"></i>
+					<p:inputText id="globalFilter"
+						onkeyup="PF('filterEmployees1').filter()"
+						style="width:30%;background-color: white;color: black"
+						placeholder="Nhập từ khóa" />
+				</p:outputPanel>
+			</f:facet>
+			<p:column headerText="STT" style=";text-align: center">
+				<h:outputText value="#{rowIndex+1}" />
+			</p:column>
+			<p:column filterBy="#{employee.department.name}"
+				filterMatchMode="exact">
+				<f:facet name="filter">
+					<p:selectOneMenu onchange="PF('filterEmployees1').filter()"
+						styleClass="custom-filter">
+						<f:selectItem itemLabel="Chọn Phòng ban" itemValue="#{null}"
+							noSelectionOption="true" />
+						<f:selectItems value="#{settingUserBean.departmentArrayList}"
+							var="de" itemLabel="#{de.name}" itemValue="#{de.name}" />
+					</p:selectOneMenu>
+				</f:facet>
+				<h:outputText value="#{employee.department.name}" />
+			</p:column>
+			<p:column filterBy="#{employee.name}" filterMatchMode="contains"
+				headerText="Tên nhân viên">
+				<h:outputText value="#{employee.name}" />
+			</p:column>
+			<p:column headerText="Xóa" style="text-align: center">
+				<p:commandButton icon="fa fa-trash"
+					update="formEmployee:panelDeleteUser"
+					oncomplete="PF('dialogDeleteUser').show();">
+					<f:setPropertyActionListener value="#{employee}"
+						target="#{settingUserBean.employeeSelected}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+
+		<!--Dialog xoa nhan vien  -->
+		<p:dialog header="Delete" widgetVar="dialogDeleteUser" modal="true"
+			showEffect="fade" hideEffect="fade" resizable="false">
+			<p:outputPanel id="panelDeleteUser" style="text-align:center;">
+				<div class="row" style="width: 100%; margin: 0 auto">
+					<div style="width: 48%; margin-right: 5px">
+						<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
+							style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545"
+							oncomplete="PF('dialogDeleteUser').hide();" id="test" />
+					</div>
+					<div style="width: 48%">
+						<p:commandButton icon="fa fa-check" value="Đồng ý"
+							update="formEmployee:dtEmployees"
+							style="color: #fff;background-color: #28a745;border-color:#28a745"
+							action="#{settingUserBean.deleteEmployee}" />
+					</div>
+				</div>
+			</p:outputPanel>
+		</p:dialog>
+		<!--Ket thuc  -->
+	</div>
+</div>

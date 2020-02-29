@@ -49,10 +49,9 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 		ratingDeleted = new Rating();
 		listAnswersByQuestion = new ArrayList<>();
 		listRatingByQuestion = new ArrayList<>();
-
 		try {
-			getParam();
-			listQuestionBySet = QUESTION_SERVICE.find(null, setofId);
+			setofId = getParamSetOfId();
+			listQuestionBySet = QUESTION_SERVICE.find(null,setofId,null);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -69,7 +68,7 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 	// Xoa Cau hoi
 	public void deleteQuestion() {
 		QUESTION_SERVICE.delete(questionDeleted);
-		listQuestionBySet = QUESTION_SERVICE.find(null, setofId);
+		listQuestionBySet = QUESTION_SERVICE.find(null, setofId,null);
 		PrimeFaces.current().executeScript("PF('dialogDeleteQuest').hide()");
 		notifyDeleteSuccess();
 	}

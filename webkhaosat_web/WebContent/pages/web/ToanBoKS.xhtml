@@ -67,19 +67,30 @@
 							style="width: 100%; font-weight: bold">
 							<span class="group-name"
 								style="margin: 0 auto; color: black; margin-top: 20px">DANH
-								SÁCH CÁC KỲ KHẢO SÁT</span> <span class="group-description"><p
+								SÁCH TOÀN BỘ KỲ KHẢO SÁT</span> <span class="group-description"><p
 									style="text-align: center; margin-left: 5px"></p></span> <br />
 						</div>
 						<div class="row"
 							style="width: 98%; margin-left: 0px; margin: 0 auto">
 
 							<p:dataTable id="listSetofquestions" var="set1"
-								value="#{questionUserBean.surveysIncomplete}"
-								rowIndexVar="rowIndex">
+							widgetVar="wgDTSurvey" emptyMessage="Không có dữ liệu"
+								value="#{questionUserBean.managerSurveyUser}"
+								rowIndexVar="rowIndex" paginator="true" rows="10">
+								<f:facet name="header">
+									<p:outputPanel style="margin-right: 5px">
+										<h:outputText value="Tìm kiếm:" />
+										<i class="pi pi-search"></i>
+										<p:inputText id="globalFilter"
+											onkeyup="PF('wgDTSurvey').filter()"
+											style="width:30%;background-color: white;color: black"
+											placeholder="Nhập từ khóa" />
+									</p:outputPanel>
+								</f:facet>
 								<p:column headerText="STT" style="text-align: center;width: 5%">
 									<h:outputText value="#{rowIndex+1}" />
 								</p:column>
-								<p:column headerText="Tên bộ câu hỏi" style="">
+								<p:column headerText="Tên kỳ khảo sát" filterBy="#{set1.survey.name}" filterMatchMode="contains">
 									<h:outputText value="#{set1.survey.name}" />
 								</p:column>
 								<p:column headerText="Ngày bắt đầu" style="width: 15%">
@@ -98,10 +109,20 @@
 								</p:column>
 								<p:column headerText="Chưa khảo sát" style="text-align: center;width: 10%"
 									priority="3">
-									<p:linkButton outcome="KhaoSat" value="Thực hiện"
-										style="color:#ffffff;background-color: #1a9e3d" rendered="#{set1.inCompleted}">
-										<f:param name="setofid" value="#{set1.survey.id}" />
-									</p:linkButton>
+									<h:outputText value="Chưa hoàn thành" style="font-style: italic;color:#3daa97;font-size:12px"
+										rendered="#{set1.inCompleted}"/>
+								</p:column>
+								<p:column headerText="Đã hoàn thành" style="text-align: center;width: 10%"
+									priority="3">
+									<h:outputText value="Đã hoàn thành"
+										style="font-style: italic;color:#61cf12;font-size:12px"
+										rendered="#{set1.completed}" />
+								</p:column>
+
+								<p:column headerText="Đã hết hạn" style="text-align: center;width: 10%"
+									priority="3">
+									<h:outputText value="Đã hết hạn"
+										style="font-style: italic;color:red;font-size:12px" rendered="#{set1.expired}"/>
 								</p:column>
 							</p:dataTable>
 

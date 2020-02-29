@@ -12,6 +12,8 @@ public class Survey extends AbstractEntities{
 	private String name;
 	@Column(name = "list_user_or_department")
 	private String listUserOrDeparments;
+	@Column(name = "employees_json")
+	private String listEmployeesJson;
 	@Column(name = "target_type")
 	private String targetType;
 	private String description; 
@@ -25,16 +27,14 @@ public class Survey extends AbstractEntities{
 	private String titleSlider;
 	@Column(name="title_feedback")
 	private String titleFeedback;
-	@Column(name="list_user_completed")
-	private String listUserCompleted;
 	
 	
-	public String getListUserCompleted() {
-		return listUserCompleted;
+	public String getListEmployeesJson() {
+		return listEmployeesJson;
 	}
 
-	public void setListUserCompleted(String listUserCompleted) {
-		this.listUserCompleted = listUserCompleted;
+	public void setListEmployeesJson(String listEmployeesJson) {
+		this.listEmployeesJson = listEmployeesJson;
 	}
 
 	public String getDescription() {

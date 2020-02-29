@@ -1,6 +1,5 @@
 package lixco.com.beans;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
@@ -45,6 +43,8 @@ public class ExcuteSurveyBean extends AbstractBean {
 	private boolean checkNullPhan1;
 	private boolean checkNullPhan2;
 	private boolean checkNullPhan3;
+	private boolean checkNullAll;
+	private boolean notifyComplete;
 	private Account accountLogin;
 
 	@Override
@@ -59,16 +59,18 @@ public class ExcuteSurveyBean extends AbstractBean {
 			// Thang diem
 			questionsType4 = getListQuestionByType(4L, setofId);
 			// Kiem tra null de check view
-			if (questionsType2 == null) {
+			if (questionsType2.isEmpty()) {
 				checkNullPhan1 = true;
 			}
-			if (questionsType4 == null) {
+			if (questionsType4.isEmpty()) {
 				checkNullPhan2 = true;
 			}
-			if (questionsType1 == null) {
+			if (questionsType1.isEmpty()) {
 				checkNullPhan3 = true;
 			}
-
+			if (checkNullPhan1 == true && checkNullPhan2 == true && checkNullPhan3 == true) {
+				checkNullAll = true;
+			}
 			ketquaPhanDanhGia = new String[questionsType2.size() + 1];
 			ketquaPhanThangDiem = new String[questionsType4.size() + 1];
 			ketquaPhanLayYKien = new String[questionsType1.size() + 1];
@@ -93,17 +95,14 @@ public class ExcuteSurveyBean extends AbstractBean {
 		return accountTemp;
 	}
 
-// Get param from URL
-	public long getParamSetOfId() {
-		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
-				.getRequest();
-		String setofIdTemp = request.getParameter("setofid");
-		return Long.parseLong(setofIdTemp);
+//Update view 
+	public void test() {
+		PrimeFaces.current().ajax().update("total:OkFine");
 	}
 
 //DS cau hoi theo tung loai
 	public List<Question> getListQuestionByType(long questionTypeId, Long setOfId) {
-		return QUESTION_SERVICE.find(questionTypeId, setOfId);
+		return QUESTION_SERVICE.find(questionTypeId, setOfId, null);
 	}
 
 //Tao bo cau hoi theo tung loai
@@ -161,8 +160,17 @@ public class ExcuteSurveyBean extends AbstractBean {
 			for (Question questTemp1 : questionsType4) {
 				questionList.add(questTemp1);
 			}
-			for (Question questTemp3 : questionsType1) {
-				questionList.add(questTemp3);
+			boolean layYKienNull = false;
+			for (int i = 1; i <= ketquaPhanLayYKien.length; i++) {
+				if (StringUtils.isEmpty(ketquaPhanLayYKien[i])) {
+					layYKienNull = true;
+					break;
+				}
+			}
+			if (layYKienNull != true) {
+				for (Question questTemp3 : questionsType1) {
+					questionList.add(questTemp3);
+				}
 			}
 
 			for (String a : ketquaPhanDanhGia) {
@@ -175,9 +183,11 @@ public class ExcuteSurveyBean extends AbstractBean {
 					resultList.add(b);
 				}
 			}
-			for (String c : ketquaPhanLayYKien) {
-				if (StringUtils.isNotEmpty(c)) {
-					resultList.add(c);
+			if (layYKienNull != true) {
+				for (String c : ketquaPhanLayYKien) {
+					if (StringUtils.isNotEmpty(c)) {
+						resultList.add(c);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -190,11 +200,10 @@ public class ExcuteSurveyBean extends AbstractBean {
 			return;
 		}
 		accountLogin = getSession();
-		if(accountLogin != null) {
-			Survey temp = SURVEY_SERVICE.findById(setofId);
-			String checkComplete = accountLogin.getMember().getCode() + ",";
-			//kiem tra da khao sat chua
-			if(temp.getListUserCompleted().contains(checkComplete)) {
+		if (accountLogin != null) {
+			List<User_Result> checkComplete = USER_RESULT_SERVICE.find(0L, 0L, accountLogin.getMember().getCode());
+			// kiem tra da khao sat chua
+			if (!checkComplete.isEmpty()) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 						"Không được khảo sát lại!");
 				PrimeFaces.current().dialog().showMessageDynamic(message);
@@ -208,25 +217,16 @@ public class ExcuteSurveyBean extends AbstractBean {
 				userResultTemp.setEmployeeCode(accountLogin.getMember().getCode());
 				USER_RESULT_SERVICE.create(userResultTemp);
 			}
-			//kiem tra danh sach rong hay khong
-			StringBuffer idEmployees = new StringBuffer();
-			if (StringUtils.isNotEmpty(temp.getListUserCompleted()) && temp.getListUserCompleted() != null) {
-				idEmployees.append(temp.getListUserCompleted());
-				idEmployees.append(checkComplete);
-				String a = idEmployees.toString();
-				temp.setListUserCompleted(a);
-				SURVEY_SERVICE.update(temp);
-			}else {
-				idEmployees.append(checkComplete);
-				String a = idEmployees.toString();
-				temp.setListUserCompleted(a);
-				SURVEY_SERVICE.update(temp);
-			}
-			FacesContext.getCurrentInstance().getExternalContext().redirect("http://192.168.0.132:8380/webkhaosat_web/pages/web/index.jsf");
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Bạn đã hoàn thành khảo sát!");
+			// kiem tra danh sach rong hay khong
+			notifyComplete = true;
+//			PrimeFaces.current().ajax().update("ahihi");
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
+					"Bạn đã hoàn thành khảo sát!");
 			PrimeFaces.current().dialog().showMessageDynamic(message);
+			FacesContext.getCurrentInstance().getExternalContext()
+					.redirect("http://192.168.0.132:8380/webkhaosat_web/pages/web/ToanBoKS.jsf");
 		}
-		
+
 	}
 
 //GET AND SET
@@ -349,13 +349,21 @@ public class ExcuteSurveyBean extends AbstractBean {
 	public void setCheckNullPhan3(boolean checkNullPhan3) {
 		this.checkNullPhan3 = checkNullPhan3;
 	}
-	
+
 	public Account getAccountLogin() {
 		return accountLogin;
 	}
 
 	public void setAccountLogin(Account accountLogin) {
 		this.accountLogin = accountLogin;
+	}
+
+	public boolean isCheckNullAll() {
+		return checkNullAll;
+	}
+
+	public void setCheckNullAll(boolean checkNullAll) {
+		this.checkNullAll = checkNullAll;
 	}
 
 	@Override

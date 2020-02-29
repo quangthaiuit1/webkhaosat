@@ -6,8 +6,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 
@@ -38,7 +36,6 @@ public class LoginBean extends AbstractBean {
 //			System.out.println("logout_____");
 //			
 			FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-			HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 			FacesContext fContext = FacesContext.getCurrentInstance();
 			ExternalContext extContext = fContext.getExternalContext();
 			extContext.redirect("http://192.168.0.132:8180/account/pages/Start.jsf");

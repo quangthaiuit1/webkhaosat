@@ -76,7 +76,6 @@ public class AuthorServlet extends HttpServlet {
 		} else {
 			path = accdb.getAddressPublic();
 		}
-		System.out.println("path: "+path);
 		StaticPath.setPath(path);
 
 		AccountDatabase accdblocal = accountDatabaseService.findByName("webkhaosat");
@@ -85,7 +84,6 @@ public class AuthorServlet extends HttpServlet {
 		} else {
 			pathlocal = accdblocal.getAddressPublic();
 		}
-		System.out.println("pathlocal: "+pathlocal);
 		StaticPath.setPathLocal(pathlocal);
 		
 		AccountDatabase accdbcenter = accountDatabaseService.findByName("trungtam");
@@ -94,7 +92,6 @@ public class AuthorServlet extends HttpServlet {
 		} else {
 			pathcenter = accdbcenter.getAddressPublic();
 		}
-		System.out.println("pathcenter: "+pathcenter);
 		StaticPath.setPathCenter(pathcenter);
 	}
 

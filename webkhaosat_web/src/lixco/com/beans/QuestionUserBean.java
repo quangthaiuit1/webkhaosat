@@ -10,11 +10,11 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
 
 import lixco.com.entities.ManagerSurveyUser;
 import lixco.com.entities.Survey;
+import lixco.com.entities.User_Result;
 import trong.lixco.com.account.servicepublics.Account;
 
 @ManagedBean
@@ -26,6 +26,7 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 
 	private List<Survey> surveysByEmployeeCode;
 	private List<ManagerSurveyUser> managerSurveyUser;
+	private List<ManagerSurveyUser> surveysIncomplete;
 
 	@Override
 	protected void initItem() {
@@ -33,6 +34,7 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 		try {
 			accountLogin = getSession();
 			managerSurveyUser = getListSurvey(accountLogin);
+			surveysIncomplete = getListSurveyIncomplete(managerSurveyUser);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} catch (Throwable e) {
@@ -47,46 +49,47 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 		return accountTemp;
 	}
 
-//Get list survey
+//Get all survey
 	public List<ManagerSurveyUser> getListSurvey(Account ac) throws Throwable {
 		List<ManagerSurveyUser> managerSurveyUser = new ArrayList<>();
-		List<Survey> surveyByEmployeeCodeTemp1 = SURVEY_SERVICE.find(ac.getMember().getCode(), null);
+		List<Survey> surveyByEmployeeCodeTemp1 = SURVEY_SERVICE.find(ac.getMember().getCode());
 		// Xu ly hoan thanh, chua hoan thanh, het han
+		
 		for (Survey s : surveyByEmployeeCodeTemp1) {
 			ManagerSurveyUser temp = new ManagerSurveyUser();
 			temp.setSurvey(s);
 			//chua het han
 			if (checkSurveyExpired(s)) {
-				// check neu list user hoan thanh: rong
-				if (StringUtils.isEmpty(s.getListUserCompleted()) || s.getListUserCompleted() == null) {
-					temp.setInCompleted(true);
-				} else {
-					if (s.getListUserCompleted().contains(accountLogin.getMember().getCode())) {
-						temp.setCompleted(true);
-					} else {
-						temp.setInCompleted(true);
-					}
+				// chua hoan thanh
+				if(checkSurveyComplete(s.getId(),accountLogin.getMember().getCode())) {
+					temp.setCompleted(true);
+				}
+				else {
+					temp.setInCompleted(true);;
 				}
 			} else {
-				// ds hoan thanh rong
-				if (StringUtils.isEmpty(s.getListUserCompleted()) || s.getListUserCompleted() == null) {
-					temp.setExpired(true);
-				} else {
-					if (s.getListUserCompleted().contains(accountLogin.getMember().getCode())) {
-						temp.setCompleted(true);
-						temp.setExpired(true);
-					} else {
-						temp.setCompleted(false);
-						temp.setExpired(true);
-					}
+				temp.setExpired(true);
+				if(checkSurveyComplete(s.getId(),accountLogin.getMember().getCode())) {
+					temp.setCompleted(true);
+				}
+				else {
+					temp.setInCompleted(true);;
 				}
 			}
 			managerSurveyUser.add(temp);
 		}
 		return managerSurveyUser;
-
 	}
-
+//Get survey inComplete
+	public List<ManagerSurveyUser> getListSurveyIncomplete(List<ManagerSurveyUser> all){
+		List<ManagerSurveyUser> managerSurveyUser = new ArrayList<>();
+		for(ManagerSurveyUser m : all) {
+			if(m.isExpired() == false && m.isInCompleted() == true) {
+				managerSurveyUser.add(m);
+			}
+		}
+		return managerSurveyUser;
+	}
 //Chu y
 // Kiem tra het han chua
 	public boolean checkSurveyExpired(Survey setOf) throws Throwable {
@@ -95,6 +98,14 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 			return true;
 		} else
 			return false;
+	}
+//Kiem tra hoan thanh
+	public boolean checkSurveyComplete(long surveyid, String employeeCode) {
+		List<User_Result> check = USER_RESULT_SERVICE.find(surveyid, 0L, employeeCode);
+		if(check.isEmpty()) {
+			return false;
+		}
+		return true;
 	}
 // GET AND SET
 
@@ -125,5 +136,13 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 
 	public void setSurveysByEmployeeCode(List<Survey> surveysByEmployeeCode) {
 		this.surveysByEmployeeCode = surveysByEmployeeCode;
+	}
+
+	public List<ManagerSurveyUser> getSurveysIncomplete() {
+		return surveysIncomplete;
+	}
+
+	public void setSurveysIncomplete(List<ManagerSurveyUser> surveysIncomplete) {
+		this.surveysIncomplete = surveysIncomplete;
 	}
 }

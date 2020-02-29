@@ -41,7 +41,7 @@ public class SurveyService extends AbstractService<Survey>{
 	protected SessionContext getUt() {
 		return ct;
 	}
-	public List<Survey> find(String employeeCode, String employeeCodeCompleted) {
+	public List<Survey> find(String employeeCode) {
 
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Survey> cq = cb.createQuery(Survey.class);
@@ -52,10 +52,6 @@ public class SurveyService extends AbstractService<Survey>{
 		//Truy van theo code nhan vien
 		if(employeeCode != null) {
 			Predicate employeeCodeId = cb.like(root.get("listUserOrDeparments"), ("%"  + employeeCode + "%"));
-			queries.add(employeeCodeId);
-		}
-		if(employeeCodeCompleted != null) {
-			Predicate employeeCodeId = cb.like(root.get("listUserCompleted"), ("%"  + employeeCodeCompleted + "%"));
 			queries.add(employeeCodeId);
 		}
 		Predicate data[] = new Predicate[queries.size()];

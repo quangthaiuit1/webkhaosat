@@ -40,12 +40,12 @@
 					<div class="row"
 						style="width: 100%; margin-left: 0px; margin: 0 auto">
 						<div class="col-sm-12 col-md-8 col-lg-7">
-							<h5
-								style="color: black; text-align: center; margin-bottom: 71px; font-weight: bold">Danh
-								sách câu hỏi</h5>
-							<div style="width: 20%;margin-left:85%;margin-bottom: 5px">
+							<h6 style="color: black; text-align: center; font-weight: bold">DANH
+								SÁCH CÂU HỎI</h6>
+							<div style="width: 20%; margin-left: 85%; margin-bottom: 5px">
 								<p:linkButton icon="fa fa-plus" outcome="TaoCauHoi"
-									value="Tạo câu hỏi mới" style="background-color: #007bff; margin-right: 10px">
+									value="Tạo câu hỏi mới"
+									style="background-color: #007bff; margin-right: 10px">
 									<f:param name="setofid" value="#{detailQuestionBean.setofId}" />
 								</p:linkButton>
 							</div>
@@ -147,16 +147,15 @@
 
 						</div>
 						<div class="col-sm-12 col-md-4 col-lg-5">
-
-							<h5
-								style="color: black; text-align: center; margin-bottom: 35px; font-weight: bold">
-								Danh sách câu trả lời</h5>
+							<h6 style="color: black; text-align: center; font-weight: bold">
+								DANH SÁCH CÂU TRẢ LỜI</h6>
 							<h:form id="formAddNewRating">
 								<div style="width: 100%; margin-bottom: 10px">
 									<div style="width: 22%; margin-left: 77%">
 										<p:commandButton icon="fa fa-plus"
-											style="width:100%;color: #fff;background-color: #007bff;margin-top:34px"
-											value="Thêm câu trả lời" oncomplete="PF('dialogAddNewRating').show()" />
+											style="width:100%;color: #fff;background-color: #007bff"
+											value="Thêm câu trả lời"
+											oncomplete="PF('dialogAddNewRating').show()" />
 									</div>
 								</div>
 							</h:form>

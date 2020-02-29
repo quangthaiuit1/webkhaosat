@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <h:head>
 	<title>LIXCO</title>
@@ -21,10 +22,10 @@
 	<ui:composition template="common.xhtml">
 		<ui:define name="header"></ui:define>
 		<ui:define name="content">
-			<h:form id="loadResult">
-				<!-- Them bo cau hoi -->
+			<h:form id="feedBack">
+
 				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 20px">
+					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 					<div class="row" style="width: 100%">
 						<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
 							style="margin-top: 10px;margin-left: 50px">
@@ -34,27 +35,21 @@
 							style="margin-right: 10px;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
 					</div>
 					<hr width="97%" style="border-top: 1px solid #9c7e7e" />
-					<div class="row" style="margin-bottom: 35px; margin: 0 auto">
-						<p style="width: 100%">
-							<span>KẾT QUẢ KỲ KHẢO SÁT: <h:inputText
-									style="color: black;width: 100%;border-radius: 5px"
-									value="#{viewResultSurveyBean.surveyPlaying.name}"
-									disabled="true"></h:inputText></span>
-						</p>
-					</div>
 					<div class="row"
-						style="width: 90%; margin-left: 0px; margin: 0 auto">
-						<!-- TEST -->
-						<p:dataTable var="ur" value="#{viewResultSurveyBean.results}"
-							widgetVar="userResult1" emptyMessage="Không tìm thấy"
-							filteredValue="#{viewResultSurveyBean.resultsAfterFilter}"
-							paginator="true" rows="20" rowIndexVar="rowIndex">
+						style="width: 80%; margin-left: 0px; margin: 0 auto">
+						<div class="col-sm-12 col-md-12 col-lg-12">
+							<h6 style="color: black; text-align: center; font-weight: bold">TOÀN BỘ Ý KIẾN</h6>
+						</div>
+						<p:dataTable var="ur" value="#{feedBackBean.feedbacks}"
+							widgetVar="feedback1" emptyMessage="Không tìm thấy"
+							filteredValue="#{feedBackBean.feedbacksAfterFilter}"
+							paginator="true" rows="10" rowIndexVar="rowIndex">
 							<f:facet name="header">
 								<p:outputPanel style="margin-right: 5px">
 									<h:outputText value="Tìm kiếm:" />
 									<i class="pi pi-search"></i>
 									<p:inputText id="globalFilter"
-										onkeyup="PF('userResult1').filter()"
+										onkeyup="PF('feedback1').filter()"
 										style="width:30%;background-color: white;color: black"
 										placeholder="Nhập từ khóa" />
 								</p:outputPanel>
@@ -63,35 +58,30 @@
 								<h:outputText value="#{rowIndex+1}" style="" />
 							</p:column>
 
-							<p:column filterBy="#{ur.employeeDepartment}"
+							<p:column filterBy="#{ur.department}"
 								headerText="Phòng ban" filterMatchMode="exact"
 								style="width: 15%">
 								<f:facet name="filter">
-									<p:selectOneMenu onchange="PF('userResult1').filter()"
+									<p:selectOneMenu onchange="PF('feedback1').filter()"
 										styleClass="custom-filter" style="width:100%">
 										<f:selectItem itemLabel="Chọn phòng ban" itemValue="#{null}"
 											noSelectionOption="true" />
-										<f:selectItems value="#{viewResultSurveyBean.departments}"
+										<f:selectItems value="#{feedBackBean.departments}"
 											var="depart1" itemLabel="#{depart1.name}"
 											itemValue="#{depart1.name}" />
 									</p:selectOneMenu>
 								</f:facet>
-								<h:outputText value="#{ur.employeeDepartment}" />
+								<h:outputText value="#{ur.department}" />
 							</p:column>
 							<p:column filterBy="#{ur.employeeName}"
 								headerText="Tên nhân viên" filterMatchMode="contains"
 								style="width: 15%;">
 								<h:outputText value="#{ur.employeeName}" />
 							</p:column>
-							<p:column headerText="Tên câu hỏi" style="width: 40%">
-								<h:outputText value="#{ur.userResult.question.name}" />
-							</p:column>
-							<p:column headerText="Đáp án" style="width: 25%">
+							<p:column headerText="Đáp án" >
 								<h:outputText value="#{ur.userResult.result}" />
 							</p:column>
-
 						</p:dataTable>
-						<!-- END TEST -->
 					</div>
 				</div>
 			</h:form>

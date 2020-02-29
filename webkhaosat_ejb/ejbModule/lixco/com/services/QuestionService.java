@@ -43,7 +43,7 @@ public class QuestionService extends AbstractService<Question>{
 		return ct;
 	}
 	
-	public List<Question> find(Long questionTypeId,Long surveyId) {
+	public List<Question> find(Long questionTypeId,Long surveyId, String questionName) {
 
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Question> cq = cb.createQuery(Question.class);
@@ -58,6 +58,10 @@ public class QuestionService extends AbstractService<Question>{
 		if(surveyId != null) {
 			Predicate surveyIdQuery = cb.equal(root.get("survey").get("id"), surveyId);
 			queries.add(surveyIdQuery);
+		}
+		if(questionName != null) {
+			Predicate questionNameQuery = cb.equal(root.get("name"), questionName);
+			queries.add(questionNameQuery);
 		}
 		Predicate data[] = new Predicate[queries.size()];
 		for (int i = 0; i < queries.size(); i++) {

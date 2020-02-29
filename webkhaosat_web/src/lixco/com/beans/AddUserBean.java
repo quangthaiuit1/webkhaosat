@@ -8,11 +8,11 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import lixco.com.entities.Survey;
 import trong.lixco.com.account.servicepublics.Department;
@@ -26,61 +26,75 @@ public class AddUserBean extends AbstractBean implements Serializable {
 	private Member[] employees; // Danh sach toan bo user
 	private List<Member> employeesArrayList;
 	private List<Member> listEmployeeNew;
-	private List<Member> employeesAfterFilter;
 	private Department[] allDepartment; // Toan bo phong ban
 	private List<Department> departmentArrayList;// cast tu array
-	private long setofId; // Bien hung ket qua get param setof
+	private long surveyId; // Bien hung ket qua get param setof
 	private Survey surveyPlaying;
 
 	@Override
 	protected void initItem() {
+
 		listEmployeeNew = new ArrayList<>();
 		try {
-			surveyPlaying = SURVEY_SERVICE.findById(setofId);
+			surveyPlaying = SURVEY_SERVICE.findById(surveyId);
 			employees = EMPLOYEE_SERVICE.findAll();
 			employeesArrayList = Arrays.asList(employees);
-//			employeesAfterFilter = new ArrayList<>();
-//			employeesAfterFilter = employeesArrayList;
-
 			allDepartment = DEPARTMENT_SERVICE.findAll();
 			departmentArrayList = Arrays.asList(allDepartment);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		setofId = getParamSetOfId();
-	}
+		surveyId = getParamSetOfId();
 
-	// Get param from URL
-	public long getParamSetOfId() {
-		try {
-			HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
-					.getRequest();
-			String setofIdTemp = request.getParameter("setofid");
-			return Long.parseLong(setofIdTemp);
-		} catch (Exception e) {
-			return 0l;
-		}
 	}
 
 	// Them nhan vien
+	@SuppressWarnings("unchecked")
 	public void addEmployee() {
-		StringBuffer idEmployees = new StringBuffer();
-		Survey surveyTemp = SURVEY_SERVICE.findById(setofId);
-		if (StringUtils.isNotEmpty(surveyTemp.getListUserOrDeparments()) && surveyTemp.getListUserOrDeparments() != null) {
-			idEmployees.append(surveyTemp.getListUserOrDeparments());	
-		}
+		long begin = System.currentTimeMillis();
+//		StringBuffer idEmployees = new StringBuffer();
+		Survey surveyTemp = SURVEY_SERVICE.findById(surveyId);
+//		if (StringUtils.isNotEmpty(surveyTemp.getListUserOrDeparments())
+//				&& surveyTemp.getListUserOrDeparments() != null) {
+//			idEmployees.append(surveyTemp.getListUserOrDeparments());
+//		}
+//		String str = idEmployees.toString();
+		JSONArray employeeList = new JSONArray();
 		for (Member m : listEmployeeNew) {
-			String str = idEmployees.toString();
-			// kiem tra trung
-			if (!str.contains(m.getCode())) {
-				idEmployees.append(m.getCode());
-				idEmployees.append(",");
+			
+			JSONObject employeeDetails = new JSONObject();
+			employeeDetails.put("code", m.getCode());
+			if(m.getDepartment() != null) {
+				employeeDetails.put("department", m.getDepartment().getName());
 			}
+			if(m.getDepartment() == null) {
+				employeeDetails.put("department", "");
+			}
+			employeeDetails.put("name", m.getName());
+
+			JSONObject employeeObject = new JSONObject();
+			employeeObject.put("employee", employeeDetails);
+			employeeList.add(employeeObject);
+			
+			
+			// kiem tra trung
+//			if (m.getCode() != null) {
+//				if (!str.contains(m.getCode())) {
+//					idEmployees.append(m.getCode());
+//					idEmployees.append(",");
+//				}
+//			}
 		}
-		String str = idEmployees.toString();
-		surveyTemp.setListUserOrDeparments(str);
+		String test ='"' +  employeeList.toString() + '"';
+		surveyTemp.setListEmployeesJson(test);
+		System.out.println(employeeList.toString());
+//		str = idEmployees.toString();
+//		surveyTemp.setListUserOrDeparments(str);
 		SURVEY_SERVICE.update(surveyTemp);
 		notifyUpdateSuccess();
+		listEmployeeNew = null;
+		listEmployeeNew = new ArrayList<>();
+		System.out.println(System.currentTimeMillis() - begin);
 	}
 
 	// Phong ban duoc chon
@@ -110,14 +124,6 @@ public class AddUserBean extends AbstractBean implements Serializable {
 		this.listEmployeeNew = listEmployeeNew;
 	}
 
-	public List<Member> getEmployeesAfterFilter() {
-		return employeesAfterFilter;
-	}
-
-	public void setEmployeesAfterFilter(List<Member> employeesAfterFilter) {
-		this.employeesAfterFilter = employeesAfterFilter;
-	}
-
 	public Department[] getAllDepartment() {
 		return allDepartment;
 	}
@@ -134,12 +140,12 @@ public class AddUserBean extends AbstractBean implements Serializable {
 		this.departmentArrayList = departmentArrayList;
 	}
 
-	public long getSetofId() {
-		return setofId;
+	public long getSurveyId() {
+		return surveyId;
 	}
 
-	public void setSetofId(long setofId) {
-		this.setofId = setofId;
+	public void setSurveyId(long surveyId) {
+		this.surveyId = surveyId;
 	}
 
 	public List<Member> getEmployeesArrayList() {

@@ -51,7 +51,7 @@ public abstract class AbstractBean implements Serializable {
 //Thai
 	protected MemberServicePublic EMPLOYEE_SERVICE = new MemberServicePublicProxy();
 	protected DepartmentServicePublic DEPARTMENT_SERVICE = new DepartmentServicePublicProxy();
-	
+
 	@Inject
 	protected QuestionService QUESTION_SERVICE;
 
@@ -66,38 +66,49 @@ public abstract class AbstractBean implements Serializable {
 
 	@Inject
 	protected QuestionTypeService QUESTIONTYPE_SERVICE;
-	
+
 	@Inject
 	protected UserResultService USER_RESULT_SERVICE;
-	
-	
+
 	@PostConstruct
 	public void init() {
 		lockTableServicePublic = new LockTableServicePublicProxy();
 		accountServicePublic = new AccountServicePublicProxy();
 		initItem();
 	}
-	
+
 //Thai
 	protected Date getDate() {
 		return new Date();
 	}
+
 // Bo thong bao
-	protected void notifySuccess(){
+	protected void notifySuccess() {
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Thành công!");
 		PrimeFaces.current().dialog().showMessageDynamic(message);
 	}
+
 	protected void notifyAddSuccess() {
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Thêm mới thành công!");
 		PrimeFaces.current().dialog().showMessageDynamic(message);
 	}
+
 	protected void notifyUpdateSuccess() {
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Cập nhật thành công!");
 		PrimeFaces.current().dialog().showMessageDynamic(message);
 	}
+
 	protected void notifyDeleteSuccess() {
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Đã xóa!");
 		PrimeFaces.current().dialog().showMessageDynamic(message);
+	}
+
+	// Get param from URL
+	protected long getParamSetOfId() {
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+				.getRequest();
+		String setofIdTemp = request.getParameter("setofid");
+		return Long.parseLong(setofIdTemp);
 	}
 //End Thai
 
@@ -115,7 +126,7 @@ public abstract class AbstractBean implements Serializable {
 				cf = new PrivateConfig(account.getPrivateConfig());
 			} catch (Exception e) {
 			}
-			
+
 	}
 
 	public void writeLogInfo(String message) {
@@ -288,6 +299,7 @@ public abstract class AbstractBean implements Serializable {
 		}
 
 	}
+
 	public String getDatabase() {
 		HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
 				.getRequest();

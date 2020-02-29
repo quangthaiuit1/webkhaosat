@@ -40,66 +40,79 @@
 						</p:linkButton>
 					</div>
 					<p:dataTable id="listSurvey" var="set1"
-						value="#{surveyBean.surveys1}" rowIndexVar="rowIndex">
-						<p:column headerText="STT" style="text-align: center;width:4%">
+						value="#{surveyBean.surveys1}" rowIndexVar="rowIndex"
+						widgetVar="wgDTSurveyAdmin" emptyMessage="Không có dữ liệu"
+						paginator="true" rows="20">
+						<f:facet name="header">
+									<p:outputPanel style="margin-right: 5px">
+										<h:outputText value="Tìm kiếm:" />
+										<i class="pi pi-search"></i>
+										<p:inputText id="globalFilter"
+											onkeyup="PF('wgDTSurveyAdmin').filter()"
+											style="width:30%;background-color: white;color: black"
+											placeholder="Nhập từ khóa" />
+									</p:outputPanel>
+								</f:facet>
+						<p:column headerText="STT" style="text-align: center;width:4%" sortBy="#{set1.endDate}">
 							<h:outputText value="#{rowIndex+1}" />
 						</p:column>
-						<p:column headerText="Tên bộ câu hỏi">
+						<p:column headerText="Tên kỳ khảo sát" filterBy="#{set1.name}" filterMatchMode="contains">
 							<h:outputText value="#{set1.name}" />
 						</p:column>
-						<p:column headerText="Ngày tạo">
+						<p:column headerText="Ngày tạo" style="width: 13%" >
 							<center>
 								<h:outputText value="#{set1.createdDate}">
 									<f:convertDateTime pattern="dd.MM.yyyy" />
 								</h:outputText>
 							</center>
 						</p:column>
-						<p:column headerText="Ngày bắt đầu">
+						<p:column headerText="Ngày bắt đầu" style="width: 13%">
 							<center>
-								<h:outputText value="#{set1.startDate}">
+								<h:outputText value="#{set1.startDate}" >
 									<f:convertDateTime pattern="dd.MM.yyyy" />
 								</h:outputText>
 							</center>
 						</p:column>
-						<p:column headerText="Ngày kết thúc">
+						<p:column headerText="Ngày kết thúc" style="width: 13%">
 							<center>
 								<h:outputText value="#{set1.endDate}">
 									<f:convertDateTime pattern="dd.MM.yyyy" />
 								</h:outputText>
 							</center>
 						</p:column>
-						<p:column headerText="Chi tiết" style="text-align: center"
-							priority="3">
-							<p:linkButton icon="fa fa-search-plus" outcome="ChiTietKyKS">
-								<f:param name="setofid" value="#{set1.id}" />
-							</p:linkButton>
+						<p:column headerText="Chi tiết" style="width:7%" priority="3">
+							<center>
+								<p:linkButton icon="fa fa-search-plus" outcome="ChiTietKyKS">
+									<f:param name="setofid" value="#{set1.id}" />
+								</p:linkButton>
+							</center>
 						</p:column>
-						<p:column headerText="Danh sách nhân viên"
-							style="text-align: center" priority="3">
-							<p:linkButton icon="fa fa-list-ul" outcome="CaiDatUser">
-								<f:param name="setofid" value="#{set1.id}" />
-							</p:linkButton>
-						</p:column>
-						<p:column headerText="Kết quả" style="text-align: center"
+						<p:column headerText="Kết quả" style="text-align: center;width:7%"
 							priority="3">
 							<p:linkButton icon="fa fa-list-alt" outcome="KetQua">
 								<f:param name="setofid" value="#{set1.id}" />
 							</p:linkButton>
 						</p:column>
-						<p:column headerText="Thống kê" style="text-align: center"
+						<p:column headerText="DS Nhân viên" style="text-align: center;width:7%"
 							priority="3">
-							<p:linkButton icon="fa fa-list-alt" outcome="ThongKe">
+							<p:linkButton icon="fa fa-user" outcome="CaiDatUser">
 								<f:param name="setofid" value="#{set1.id}" />
 							</p:linkButton>
 						</p:column>
-						<p:column headerText="Sửa" style="text-align: center">
+						<p:column headerText="Thống kê"
+							style="text-align: center;width:7%" priority="3">
+							<p:linkButton icon="fa fa-line-chart" outcome="ThongKe">
+								<f:param name="setofid" value="#{set1.id}" />
+							</p:linkButton>
+						</p:column>
+						<p:column headerText="Sửa" style="text-align: center;width:7%">
 							<p:commandButton update="headerCustom:updateSetof"
 								icon="fa fa-edit" oncomplete="PF('dialogUpdateSetof').show();">
 								<f:setPropertyActionListener value="#{set1}"
 									target="#{surveyBean.surveyUpdated}" />
 							</p:commandButton>
 						</p:column>
-						<p:column headerText="Xóa" style="text-align: center">
+						<p:column headerText="Xóa" style="text-align: center;width:7%">
 							<p:commandButton update="headerCustom:listSurvey"
 								icon="fa fa-trash" oncomplete="PF('dialogDeleteSetof').show();">
 								<f:setPropertyActionListener value="#{set1}"

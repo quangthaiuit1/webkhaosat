@@ -55,12 +55,10 @@ public class WebFilterKPI implements Filter {
 				}
 
 			} else {
-				System.out.println(request.getRequestURI());
 				// Kiem tra co duoc phep truy cap form
 				boolean allowAccessForm = authorizationManager.allowAccessForm(request.getRequestURI());
 				if (allowAccessForm) {
 					StringBuffer a=request.getRequestURL();
-					System.out.println(a.toString());
 					chain.doFilter(req, res);
 				} else {
 					String url = "http://" + req.getServerName() + ":" + req.getServerPort() + "/kpi/error/403.jsf";
