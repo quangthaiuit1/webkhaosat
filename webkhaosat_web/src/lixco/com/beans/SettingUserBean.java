@@ -12,9 +12,9 @@ import javax.faces.bean.ViewScoped;
 
 import org.jboss.logging.Logger;
 
+import lixco.com.entities.Employee;
 import lixco.com.entities.Survey;
 import trong.lixco.com.account.servicepublics.Department;
-import trong.lixco.com.account.servicepublics.Member;
 
 @ManagedBean
 @ViewScoped
@@ -26,13 +26,13 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 	private Survey surveyPlaying;
 	private Department[] allDepartment;
 	private List<Department> departments;
-	private List<Member> employeesBySurvey;
-	private Member employeeDeleted;
-	private List<Member> selectedDelete;
+	private List<Employee> selectedDelete;
+	private List<Employee> employeeBySur;
+	private List<Employee> employeeAfterFilter;
 
 	@Override
 	protected void initItem() {
-		long begin = System.currentTimeMillis();
+		employeeAfterFilter = new ArrayList<>();
 		try {
 			allDepartment = DEPARTMENT_SERVICE.findAll();
 			departments = castToArrayList(allDepartment);
@@ -40,12 +40,9 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 			e.printStackTrace();
 		}
 		selectedDelete = new ArrayList<>();
-		employeeDeleted = new Member();
 		surveyId = getParamSetOfId();
-		employeesBySurvey = new ArrayList<>();
-		employeesBySurvey = handleListuserBySurvey();
-		System.out.println(System.currentTimeMillis() - begin);
-		System.out.println("cc");
+		surveyPlaying = SURVEY_SERVICE.findById(surveyId);
+		employeeBySur = EMPLOYEE_SERVICE_THAI.find(null, surveyId);
 	}
 
 // Cast array-> arrayList
@@ -65,43 +62,39 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 	}
 
 // List user ban dau
-	public List<Member> handleListuserBySurvey() {
-		List<Member> employeeBySur = new ArrayList<>();
-		
-		surveyPlaying = SURVEY_SERVICE.findById(surveyId);
-		// target Nhan vien
-		
-		String[] parts = surveyPlaying.getListUserOrDeparments().split(",");
-//		List<String> parts = splitStringMediaIdsToList(surveyPlaying.getListUserOrDeparments());
-		
-		// Them nguoi dung thuoc bo cau hoi vao danh sach
-		for (String i : parts) {
-			Member memberTemp;
-			try {
-				System.out.println("start: ");
-				long begin = System.currentTimeMillis();
-				memberTemp = EMPLOYEE_SERVICE.findByCode(i);
-				System.out.println(System.currentTimeMillis() - begin);
-				System.out.println("end: ");
-				employeeBySur.add(memberTemp);
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
-		}
-		return employeeBySur;
-	}
+//	public List<Employee> handleListuserBySurvey(long surveyId) {
+//		
+//		// target Nhan vien
+//		
+////		String[] parts = surveyPlaying.getListUserOrDeparments().split(",");
+//////		List<String> parts = splitStringMediaIdsToList(surveyPlaying.getListUserOrDeparments());
+////		
+////		// Them nguoi dung thuoc bo cau hoi vao danh sach
+////		for (String i : parts) {
+////			Member memberTemp;
+////			try {
+////				System.out.println("start: ");
+////				long begin = System.currentTimeMillis();
+////				memberTemp = EMPLOYEE_SERVICE.findByCode(i);
+////				System.out.println(System.currentTimeMillis() - begin);
+////				System.out.println("end: ");
+////				employeeBySur.add(memberTemp);
+////			} catch (RemoteException e) {
+////				e.printStackTrace();
+////			}
+////		}
+//		return employeeBySur;
+//	}
 
 // Xoa Employee 
 	public void deleteEmployees() {
-		Survey surveyTemp = SURVEY_SERVICE.findById(surveyId);
-		String listUser = surveyTemp.getListUserOrDeparments();
-		for (Member m : selectedDelete) {
-			String idEmployee = "," + m.getCode() + ",";
-			listUser = listUser.replaceAll(idEmployee, ",");
+		if(!selectedDelete.isEmpty()) {
+			for(Employee e : selectedDelete) {
+				EMPLOYEE_SERVICE_THAI.delete(e);
+			}
 		}
-		surveyTemp.setListUserOrDeparments(listUser);
-		SURVEY_SERVICE.update(surveyTemp);
-		employeesBySurvey = handleListuserBySurvey();
+		selectedDelete = new ArrayList<>();
+		employeeBySur = EMPLOYEE_SERVICE_THAI.find(null, surveyId);
 		notifyDeleteSuccess();
 	}
 
@@ -117,14 +110,6 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 
 	public void setSurveyId(long surveyId) {
 		this.surveyId = surveyId;
-	}
-
-	public List<Member> getSelectedDelete() {
-		return selectedDelete;
-	}
-
-	public void setSelectedDelete(List<Member> selectedDelete) {
-		this.selectedDelete = selectedDelete;
 	}
 
 	public void setSurveyPlaying(Survey surveyPlaying) {
@@ -147,20 +132,28 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		this.departments = departments;
 	}
 
-	public List<Member> getEmployeesBySurvey() {
-		return employeesBySurvey;
+	public List<Employee> getEmployeeBySur() {
+		return employeeBySur;
 	}
 
-	public void setEmployeesBySurvey(List<Member> employeesBySurvey) {
-		this.employeesBySurvey = employeesBySurvey;
+	public void setEmployeeBySur(List<Employee> employeeBySur) {
+		this.employeeBySur = employeeBySur;
+	}
+	
+	public List<Employee> getSelectedDelete() {
+		return selectedDelete;
 	}
 
-	public Member getEmployeeDeleted() {
-		return employeeDeleted;
+	public void setSelectedDelete(List<Employee> selectedDelete) {
+		this.selectedDelete = selectedDelete;
 	}
 
-	public void setEmployeeDeleted(Member employeeDeleted) {
-		this.employeeDeleted = employeeDeleted;
+	public List<Employee> getEmployeeAfterFilter() {
+		return employeeAfterFilter;
+	}
+
+	public void setEmployeeAfterFilter(List<Employee> employeeAfterFilter) {
+		this.employeeAfterFilter = employeeAfterFilter;
 	}
 
 	@Override

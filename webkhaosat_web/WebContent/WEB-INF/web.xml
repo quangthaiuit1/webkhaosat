@@ -89,4 +89,7 @@
 		<filter-name>primeFacesFileUploadFilter</filter-name>
 		<servlet-name>Faces Servlet</servlet-name>
 	</filter-mapping>
+	<session-config>
+        <session-timeout>10</session-timeout>
+    </session-config>
 </web-app>

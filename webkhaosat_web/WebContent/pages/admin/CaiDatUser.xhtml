@@ -57,44 +57,45 @@
 						style="width: 90%; margin-left: 0px; margin: 0 auto">
 						<!-- TEST -->
 						<p:dataTable id="dtSettingUser" var="employee"
-							widgetVar="filterEmployees"
-							value="#{settingUserBean.employeesBySurvey}"
-							emptyMessage="Không có dữ liệu" rowIndexVar="rowIndex"
-							selection="#{settingUserBean.selectedDelete}"
-							rowKey="#{employee.id}" paginator="true" rows="20">
-							<f:facet name="header">
-								<p:outputPanel style="margin-right: 5px">
-									<h:outputText value="Tìm kiếm:" />
-									<i class="pi pi-search"></i>
-									<p:inputText id="globalFilter"
-										onkeyup="PF('filterEmployees').filter()"
-										style="width:30%;background-color: white;color: black"
-										placeholder="Nhập từ khóa" />
-								</p:outputPanel>
-							</f:facet>
-							<p:column selectionMode="multiple"
-								style="width:10%;text-align:center" />
-							<p:column headerText="STT" style="width: 10%;text-align: center">
-								<h:outputText value="#{rowIndex+1}" />
-							</p:column>
-							<p:column filterBy="#{employee.department.name}"
-								filterMatchMode="exact">
-								<f:facet name="filter">
-									<p:selectOneMenu onchange="PF('filterEmployees').filter()"
-										styleClass="custom-filter">
-										<f:selectItem itemLabel="Chọn Phòng ban" itemValue="#{null}"
-											noSelectionOption="true" />
-										<f:selectItems value="#{addUserBean.departmentArrayList}"
-											var="de" itemLabel="#{de.name}" itemValue="#{de.name}" />
-									</p:selectOneMenu>
+								widgetVar="filterEmployeesView"
+								value="#{settingUserBean.employeeBySur}"
+								emptyMessage="Không có dữ liệu" rowIndexVar="rowIndex"
+								filteredValue="#{settingUserBean.employeeAfterFilter}"
+								selection="#{settingUserBean.selectedDelete}"
+								rowKey="#{employee.id}" paginator="true" rows="20">
+								<f:facet name="header">
+									<p:outputPanel style="margin-right: 5px">
+										<h:outputText value="Tìm kiếm:" />
+										<i class="fa fa-search"></i>
+										<p:inputText id="globalFilterView"
+											onkeyup="PF('filterEmployeesView').filter()"
+											style="width:30%;background-color: white;color: black"
+											placeholder="Nhập từ khóa" />
+									</p:outputPanel>
 								</f:facet>
-								<h:outputText value="#{employee.department.name}" />
-							</p:column>
-							<p:column filterBy="#{employee.name}" filterMatchMode="contains"
-								headerText="Tên nhân viên">
-								<h:outputText value="#{employee.name}" />
-							</p:column>
-						</p:dataTable>
+								<p:column selectionMode="multiple"
+									style="width:10%;text-align:center" />
+								<p:column headerText="STT" style="width: 10%;text-align: center">
+									<h:outputText value="#{rowIndex+1}" />
+								</p:column>
+								<p:column filterBy="#{employee.department}"
+									filterMatchMode="exact">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('filterEmployeesView').filter()"
+											styleClass="custom-filter">
+											<f:selectItem itemLabel="Chọn Phòng ban" itemValue="#{null}"
+												noSelectionOption="true" />
+											<f:selectItems value="#{settingUserBean.departments}"
+												var="de" itemLabel="#{de.name}" itemValue="#{de.name}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<h:outputText value="#{employee.department}" />
+								</p:column>
+								<p:column filterBy="#{employee.name}" filterMatchMode="contains"
+									headerText="Tên nhân viên">
+									<h:outputText value="#{employee.name}" />
+								</p:column>
+							</p:dataTable>
 					</div>
 				</div>
 			</h:form>

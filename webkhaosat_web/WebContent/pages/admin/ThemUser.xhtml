@@ -45,11 +45,11 @@
 								value="#{addUserBean.employeesArrayList}"
 								emptyMessage="Không có dữ liệu" rowIndexVar="rowIndex"
 								selection="#{addUserBean.listEmployeeNew}"
-								rowKey="#{employee.id}" paginator="true" rows="100">
+								rowKey="#{employee.id}" paginator="true" rows="50">
 								<f:facet name="header">
 									<p:outputPanel style="margin-right: 5px">
 										<h:outputText value="Tìm kiếm:" />
-										<i class="pi pi-search"></i>
+										<i class="fa fa-search"></i>
 										<p:inputText id="globalFilter"
 											onkeyup="PF('filterEmployees1').filter()"
 											style="width:30%;background-color: white;color: black"

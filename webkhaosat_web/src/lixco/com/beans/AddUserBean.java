@@ -9,11 +9,9 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
+import lixco.com.entities.Employee;
 import lixco.com.entities.Survey;
 import trong.lixco.com.account.servicepublics.Department;
 import trong.lixco.com.account.servicepublics.Member;
@@ -33,7 +31,6 @@ public class AddUserBean extends AbstractBean implements Serializable {
 
 	@Override
 	protected void initItem() {
-
 		listEmployeeNew = new ArrayList<>();
 		try {
 			surveyPlaying = SURVEY_SERVICE.findById(surveyId);
@@ -45,56 +42,31 @@ public class AddUserBean extends AbstractBean implements Serializable {
 			e.printStackTrace();
 		}
 		surveyId = getParamSetOfId();
-
 	}
 
 	// Them nhan vien
-	@SuppressWarnings("unchecked")
 	public void addEmployee() {
-		long begin = System.currentTimeMillis();
-//		StringBuffer idEmployees = new StringBuffer();
 		Survey surveyTemp = SURVEY_SERVICE.findById(surveyId);
-//		if (StringUtils.isNotEmpty(surveyTemp.getListUserOrDeparments())
-//				&& surveyTemp.getListUserOrDeparments() != null) {
-//			idEmployees.append(surveyTemp.getListUserOrDeparments());
-//		}
-//		String str = idEmployees.toString();
-		JSONArray employeeList = new JSONArray();
+		long tempId = surveyTemp.getId();
 		for (Member m : listEmployeeNew) {
-			
-			JSONObject employeeDetails = new JSONObject();
-			employeeDetails.put("code", m.getCode());
-			if(m.getDepartment() != null) {
-				employeeDetails.put("department", m.getDepartment().getName());
-			}
-			if(m.getDepartment() == null) {
-				employeeDetails.put("department", "");
-			}
-			employeeDetails.put("name", m.getName());
+			if (EMPLOYEE_SERVICE_THAI.find(m.getCode(), 0L).isEmpty()) {
+				// kiem tra row rong
+				if (m.getCode() != null) {
+					Employee employee = new Employee();
+					employee.setName(m.getName());
+					if (m.getDepartment() != null) {
+						employee.setDepartment(m.getDepartment().getName());
+					}
+					employee.setEmployeeCode(m.getCode());
+					employee.setSurveyId(tempId);
 
-			JSONObject employeeObject = new JSONObject();
-			employeeObject.put("employee", employeeDetails);
-			employeeList.add(employeeObject);
-			
-			
-			// kiem tra trung
-//			if (m.getCode() != null) {
-//				if (!str.contains(m.getCode())) {
-//					idEmployees.append(m.getCode());
-//					idEmployees.append(",");
-//				}
-//			}
+					EMPLOYEE_SERVICE_THAI.create(employee);
+				}
+			}
 		}
-		String test ='"' +  employeeList.toString() + '"';
-		surveyTemp.setListEmployeesJson(test);
-		System.out.println(employeeList.toString());
-//		str = idEmployees.toString();
-//		surveyTemp.setListUserOrDeparments(str);
-		SURVEY_SERVICE.update(surveyTemp);
 		notifyUpdateSuccess();
 		listEmployeeNew = null;
 		listEmployeeNew = new ArrayList<>();
-		System.out.println(System.currentTimeMillis() - begin);
 	}
 
 	// Phong ban duoc chon
