@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 
+import lixco.com.entities.Employee;
 import lixco.com.entities.ManagerSurveyUser;
 import lixco.com.entities.Survey;
 import lixco.com.entities.User_Result;
@@ -52,11 +53,12 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 //Get all survey
 	public List<ManagerSurveyUser> getListSurvey(Account ac) throws Throwable {
 		List<ManagerSurveyUser> managerSurveyUser = new ArrayList<>();
-		List<Survey> surveyByEmployeeCodeTemp1 = SURVEY_SERVICE.find(ac.getMember().getCode());
+		List<Employee> allSurveyByEmployeeCode = EMPLOYEE_SERVICE_THAI.find(ac.getMember().getCode(), 0L);
 		// Xu ly hoan thanh, chua hoan thanh, het han
 		
-		for (Survey s : surveyByEmployeeCodeTemp1) {
+		for (Employee e : allSurveyByEmployeeCode) {
 			ManagerSurveyUser temp = new ManagerSurveyUser();
+			Survey s = SURVEY_SERVICE.findById(e.getSurveyId());
 			temp.setSurvey(s);
 			//chua het han
 			if (checkSurveyExpired(s)) {

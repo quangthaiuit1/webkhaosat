@@ -313,13 +313,4 @@ public abstract class AbstractBean implements Serializable {
 
 	}
 
-	public void notice(String content) {
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "ThÃƒÂ´ng bÃƒÂ¡o!", content);
-//		RequestContext.getCurrentInstance().showMessageInDialog(message);
-	}
-
-	public void noticeError(String content) {
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ThÃƒÂ´ng bÃƒÂ¡o!", content);
-//		RequestContext.getCurrentInstance().showMessageInDialog(message);
-	}
 }

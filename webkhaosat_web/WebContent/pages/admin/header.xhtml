@@ -42,24 +42,26 @@
 					<p:dataTable id="listSurvey" var="set1"
 						value="#{surveyBean.surveys1}" rowIndexVar="rowIndex"
 						widgetVar="wgDTSurveyAdmin" emptyMessage="Không có dữ liệu"
-						paginator="true" rows="20">
+						paginator="true"  paginatorPosition="bottom" rows="20">
 						<f:facet name="header">
-									<p:outputPanel style="margin-right: 5px">
-										<h:outputText value="Tìm kiếm:" />
-										<i class="pi pi-search"></i>
-										<p:inputText id="globalFilter"
-											onkeyup="PF('wgDTSurveyAdmin').filter()"
-											style="width:30%;background-color: white;color: black"
-											placeholder="Nhập từ khóa" />
-									</p:outputPanel>
-								</f:facet>
-						<p:column headerText="STT" style="text-align: center;width:4%" sortBy="#{set1.endDate}">
+							<p:outputPanel style="margin-right: 5px">
+								<h:outputText value="Tìm kiếm:" />
+								<i class="fa fa-search-plus"></i>
+								<p:inputText id="globalFilter"
+									onkeyup="PF('wgDTSurveyAdmin').filter()"
+									style="width:30%;background-color: white;color: black"
+									placeholder="Nhập từ khóa" />
+							</p:outputPanel>
+						</f:facet>
+						<p:column headerText="STT" style="text-align: center;width:4%"
+							sortBy="#{set1.endDate}">
 							<h:outputText value="#{rowIndex+1}" />
 						</p:column>
-						<p:column headerText="Tên kỳ khảo sát" filterBy="#{set1.name}" filterMatchMode="contains">
+						<p:column headerText="Tên kỳ khảo sát" filterBy="#{set1.name}"
+							filterMatchMode="contains">
 							<h:outputText value="#{set1.name}" />
 						</p:column>
-						<p:column headerText="Ngày tạo" style="width: 13%" >
+						<p:column headerText="Ngày tạo" style="width: 13%">
 							<center>
 								<h:outputText value="#{set1.createdDate}">
 									<f:convertDateTime pattern="dd.MM.yyyy" />
@@ -68,7 +70,7 @@
 						</p:column>
 						<p:column headerText="Ngày bắt đầu" style="width: 13%">
 							<center>
-								<h:outputText value="#{set1.startDate}" >
+								<h:outputText value="#{set1.startDate}">
 									<f:convertDateTime pattern="dd.MM.yyyy" />
 								</h:outputText>
 							</center>
@@ -93,8 +95,8 @@
 								<f:param name="setofid" value="#{set1.id}" />
 							</p:linkButton>
 						</p:column>
-						<p:column headerText="DS Nhân viên" style="text-align: center;width:7%"
-							priority="3">
+						<p:column headerText="DS Nhân viên"
+							style="text-align: center;width:7%" priority="3">
 							<p:linkButton icon="fa fa-user" outcome="CaiDatUser">
 								<f:param name="setofid" value="#{set1.id}" />
 							</p:linkButton>
@@ -134,6 +136,39 @@
 										style="width: 100%!important;color: black!important"
 										id="inputEditSetofDescription"
 										value="#{surveyBean.surveyUpdated.description}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 15px">
+								<div class="col-sm-12 col-md-4 col-lg-3">
+									<h:outputText value="Mô tả phần Đánh giá: " />
+								</div>
+								<div class="col-sm-12 col-md-8 col-lg-9">
+									<p:inputTextarea
+										style="width: 100%!important;color: black!important"
+										id="inputEditSetofTitleRating"
+										value="#{surveyBean.surveyUpdated.titleRating}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 15px">
+								<div class="col-sm-12 col-md-4 col-lg-3">
+									<h:outputText value="Mô tả phần Thang điểm: " />
+								</div>
+								<div class="col-sm-12 col-md-8 col-lg-9">
+									<p:inputTextarea
+										style="width: 100%!important;color: black!important"
+										id="inputEditSetofTitleSlider"
+										value="#{surveyBean.surveyUpdated.titleSlider}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 15px">
+								<div class="col-sm-12 col-md-4 col-lg-3">
+									<h:outputText value="Mô tả phần Lấy ý kiến: " />
+								</div>
+								<div class="col-sm-12 col-md-8 col-lg-9">
+									<p:inputTextarea
+										style="width: 100%!important;color: black!important"
+										id="inputEditSetofTitleFeedback"
+										value="#{surveyBean.surveyUpdated.titleFeedback}" />
 								</div>
 							</div>
 							<div class="row" style="margin-bottom: 15px">
@@ -189,7 +224,7 @@
 					<!--Dialog xoa ky khao sat  -->
 					<p:dialog header="Delete" widgetVar="dialogDeleteSetof"
 						modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-						<p:outputPanel id="panelDeleteSetof" style="text-align:center;">
+						<p:outputPanel id="panelDeleteSetof" style="text-align:center">
 							<div class="row" style="width: 100%; margin: 0 auto">
 								<div style="width: 48%; margin-right: 5px">
 									<p:commandButton icon="fa fa-remove" value="Hủy bỏ"

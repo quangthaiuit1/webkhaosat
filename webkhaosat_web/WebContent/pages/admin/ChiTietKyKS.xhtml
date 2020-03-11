@@ -42,11 +42,16 @@
 						<div class="col-sm-12 col-md-8 col-lg-7">
 							<h6 style="color: black; text-align: center; font-weight: bold">DANH
 								SÁCH CÂU HỎI</h6>
-							<div style="width:60%;margin: 0 auto"> <h:inputText
-									style="color: black;width: 100%;border-radius: 5px"
+							<div style="width: 60%; margin: 0 auto; margin-bottom: 5px">
+								<h:inputText style="color: black;width: 100%;border-radius: 5px"
 									value="#{viewResultSurveyBean.surveyPlaying.name}"
-									disabled="true"></h:inputText></div>
-							<div style="width: 20%; margin-left: 85%; margin-bottom: 5px">
+									disabled="true"></h:inputText>
+							</div>
+							<div style="width: 50%; margin-left: 73%; margin-bottom: 5px">
+								<p:linkButton icon="fa fa-arrow-left" outcome="index"
+									value="Quay lại"
+									style="background-color: #46af79;border-color:#46af79; margin-right: 10px">
+								</p:linkButton>
 								<p:linkButton icon="fa fa-plus" outcome="TaoCauHoi"
 									value="Tạo câu hỏi mới"
 									style="background-color: #007bff; margin-right: 10px">

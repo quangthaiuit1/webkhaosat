@@ -2,6 +2,7 @@ package lixco.com.entities;
 
 import java.util.Date;
 
+import javax.enterprise.inject.Typed;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,12 +11,6 @@ import javax.persistence.Table;
 @Table (name = "survey")
 public class Survey extends AbstractEntities{
 	private String name;
-	@Column(name = "list_user_or_department")
-	private String listUserOrDeparments;
-	@Column(name = "employees_json")
-	private String listEmployeesJson;
-	@Column(name = "target_type")
-	private String targetType;
 	private String description; 
 	@Column(name = "start_date")
 	private Date startDate;
@@ -28,13 +23,17 @@ public class Survey extends AbstractEntities{
 	@Column(name="title_feedback")
 	private String titleFeedback;
 	
+	@Column(name = "users_json")
+	private String usersJson;
 	
-	public String getListEmployeesJson() {
-		return listEmployeesJson;
+	
+	
+	public String getUsersJson() {
+		return usersJson;
 	}
 
-	public void setListEmployeesJson(String listEmployeesJson) {
-		this.listEmployeesJson = listEmployeesJson;
+	public void setUsersJson(String usersJson) {
+		this.usersJson = usersJson;
 	}
 
 	public String getDescription() {
@@ -53,14 +52,6 @@ public class Survey extends AbstractEntities{
 		this.name = name;
 	}
 	
-	public String getListUserOrDeparments() {
-		return listUserOrDeparments;
-	}
-
-	public void setListUserOrDeparments(String listUserOrDeparments) {
-		this.listUserOrDeparments = listUserOrDeparments;
-	}
-	
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -75,14 +66,6 @@ public class Survey extends AbstractEntities{
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
-	}
-
-	public String getTargetType() {
-		return targetType;
-	}
-
-	public void setTargetType(String targetType) {
-		this.targetType = targetType;
 	}
 
 	public String getTitleRating() {

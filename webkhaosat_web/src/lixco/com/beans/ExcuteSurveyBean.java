@@ -219,7 +219,6 @@ public class ExcuteSurveyBean extends AbstractBean {
 			}
 			// kiem tra danh sach rong hay khong
 			notifyComplete = true;
-//			PrimeFaces.current().ajax().update("ahihi");
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 					"Bạn đã hoàn thành khảo sát!");
 			PrimeFaces.current().dialog().showMessageDynamic(message);

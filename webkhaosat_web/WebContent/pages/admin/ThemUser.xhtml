@@ -40,64 +40,42 @@
 						<div class="col-sm-12 col-md-12 col-lg-12">
 							<h6 style="color: black; text-align: center; font-weight: bold">DANH
 								SÁCH NHÂN VIÊN</h6>
-							<p:dataTable id="dtEmployees" var="employee"
-								widgetVar="filterEmployees1"
-								value="#{addUserBean.employeesArrayList}"
-								emptyMessage="Không có dữ liệu" rowIndexVar="rowIndex"
-								selection="#{addUserBean.listEmployeeNew}"
-								rowKey="#{employee.id}" paginator="true" rows="50">
-								<f:facet name="header">
-									<p:outputPanel style="margin-right: 5px">
-										<h:outputText value="Tìm kiếm:" />
-										<i class="fa fa-search"></i>
-										<p:inputText id="globalFilter"
-											onkeyup="PF('filterEmployees1').filter()"
-											style="width:30%;background-color: white;color: black"
-											placeholder="Nhập từ khóa" />
-									</p:outputPanel>
-								</f:facet>
-								<p:column selectionMode="multiple"
-									style="width:10%;text-align:center" />
-								<p:column headerText="STT" style="width: 10%;text-align: center">
-									<h:outputText value="#{rowIndex+1}" />
+							<div style="width: 50%; margin-left: 70%">
+								<p:linkButton outcome="CaiDatUser" icon="fa fa-arrow-left"
+									value="Quay lại"
+									style="background-color: #46af79;border-color:#46af79; margin-right: 10px">
+									<c:if test="${addUserBean.surveyId != 0}">
+										<f:param name="setofid" value="#{addUserBean.surveyId}" />
+									</c:if>
+								</p:linkButton>
+								<p:commandButton value="Thêm" icon="fa fa-plus"
+									update="formEmployee:dtEmployees"
+									style=" margin-left: 1%;margin-bottom: 5px;color: #fff;background-color: #007bff;border-color:#007bff"
+									action="#{addUserBean.addEmployee()}" />
+							</div>
+
+							<p:dataTable id="dtEmployees" var="department"
+								value="#{addUserBean.departmentsByLocate}"
+								sortBy="#{department.locateName}" expandableRowGroups="true"
+								style="width:70%;margin:0 auto"
+								selection="#{addUserBean.departmentsSelected}" rowKey="#{department.id}">
+								<p:headerRow>
+									<p:column colspan="3">
+										<h:outputText value="#{department.locateName}" />
+									</p:column>
+								</p:headerRow>
+								<p:column selectionMode="multiple" style="width:70px;text-align:center"/>
+								<p:column headerText="Mã" style="width: 100px; text-align: center">
+									<h:outputText value="#{department.departmentCode}" />
 								</p:column>
-								<p:column filterBy="#{employee.department.name}"
-									filterMatchMode="exact">
-									<f:facet name="filter">
-										<p:selectOneMenu onchange="PF('filterEmployees1').filter()"
-											styleClass="custom-filter">
-											<f:selectItem itemLabel="Chọn Phòng ban" itemValue="#{null}"
-												noSelectionOption="true" />
-											<f:selectItems value="#{addUserBean.departmentArrayList}"
-												var="de" itemLabel="#{de.name}" itemValue="#{de.name}" />
-										</p:selectOneMenu>
-									</f:facet>
-									<h:outputText value="#{employee.department.name}" />
-								</p:column>
-								<p:column filterBy="#{employee.name}" filterMatchMode="contains"
-									headerText="Tên nhân viên">
-									<h:outputText value="#{employee.name}" />
+								<p:column style="width:100%;text-align: left" headerText="Tên phòng ban">
+									<h:outputText  value="#{department.departmentName}" />
 								</p:column>
 							</p:dataTable>
-							<div class="row"
-								style="width: 40%; margin: 0 auto; margin-top: 10px">
-								<div class="col-sm-12 col-md-6 col-lg-6"
-									style="text-align: right">
-									<p:linkButton outcome="CaiDatUser" icon="fa fa-remove"
-										value="Quay lại"
-										style="color: #fff;background-color: #dc3545;border-color:#dc3545">
-										<c:if test="${addUserBean.surveyId != 0}">
-											<f:param name="setofid" value="#{addUserBean.surveyId}" />
-										</c:if>
-									</p:linkButton>
-								</div>
-								<div class="col-sm-12 col-md-6 col-lg-6">
-									<p:commandButton value="Thêm" icon="fa fa-plus" update="formEmployee:dtEmployees"
-										style=" margin-left: 10%;margin-bottom: 10px;color: #fff;background-color: #007bff;border-color:#007bff"
-										action="#{addUserBean.addEmployee()}" />
-								</div>
-							</div>
 						</div>
+						<!-- TEST -->
+						<div></div>
+						<!-- END  TEST  -->
 					</div>
 				</div>
 			</h:form>
