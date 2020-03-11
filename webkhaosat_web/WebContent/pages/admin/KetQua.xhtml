@@ -19,21 +19,11 @@
 </h:head>
 <h:body>
 	<ui:composition template="common.xhtml">
-		<ui:define name="header"></ui:define>
 		<ui:define name="content">
 			<h:form id="loadResult">
 				<!-- Them bo cau hoi -->
 				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 5px">
-					<div class="row" style="width: 100%">
-						<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
-							style="margin-top: 10px;margin-left: 50px">
-						</p:menubar>
-						<p:commandButton value="Đăng xuất"
-							actionListener="#{loginBean.logout()}"
-							style="margin-right: 10px;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
-					</div>
-					<hr width="97%" style="border-top: 1px solid #9c7e7e" />
+					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 5px; margin-bottom: 15px;">
 					<div class="row" style="margin-bottom: 35px; margin: 0 auto">
 						<p style="width: 100%">
 							<span>KẾT QUẢ KỲ KHẢO SÁT: <h:inputText
@@ -42,7 +32,7 @@
 									disabled="true"></h:inputText></span>
 						</p>
 					</div>
-					<div style="width: 50%; margin-left: 88%;margin-bottom:5px">
+					<div style="width: 50%; margin-left: 88%; margin-bottom: 5px">
 						<p:linkButton icon="fa fa-arrow-left" outcome="index"
 							value="Quay lại"
 							style="background-color: #46af79;border-color:#46af79; margin-right: 10px">
@@ -50,53 +40,60 @@
 					</div>
 					<div class="row"
 						style="width: 90%; margin-left: 0px; margin: 0 auto">
+						<div style="width: 50%; margin-right: 15px">
+							<p:dataTable id="dtDepartment" var="department"
+								value="#{viewResultSurveyBean.departmentsByLocate1}"
+								selectionMode="single"
+								selection="#{viewResultSurveyBean.departmentSelected}"
+								paginator="true" rows="20" rowKey="#{department.id}"
+								expandableRowGroups="true" sortBy="#{department.locateName}"
+								paginatorPosition="bottom">
+								<p:ajax event="rowSelect"
+									listener="#{viewResultSurveyBean.departmentSelect}"
+									update="loadResult:dtEmployee" />
+								<p:headerRow>
+									<p:column colspan="3">
+										<h:outputText value="#{department.locateName}" />
+									</p:column>
+								</p:headerRow>
+								<p:column headerText="Mã"
+									style="width: 100px; text-align: center">
+									<h:outputText value="#{department.departmentCode}" />
+								</p:column>
+								<p:column style="width:100%;text-align: left"
+									headerText="Tên phòng ban">
+									<h:outputText value="#{department.departmentName}" />
+								</p:column>
+							</p:dataTable>
+						</div>
+						<div style="width: 48%;">
+							<p:dataTable id="dtEmployee" var="employee"
+								value="#{viewResultSurveyBean.employeesByDepartment}"
+								widgetVar="employee1" emptyMessage="Không tìm thấy"
+								filteredValue="#{viewResultSurveyBean.resultsAfterFilter}"
+								paginator="true" rows="20"
+								paginatorPosition="bottom" rowIndexVar="rowIndex"
+								rowsPerPageTemplate="20,50,100">
+								<p:column headerText="STT" style="text-align: center;width:80px">
+									<h:outputText value="#{rowIndex+1}" />
+								</p:column>
+								<p:column headerText="Tên nhân viên" filterBy="#{employee.name}"
+									filterMatchMode="contains">
+									<h:outputText value="#{employee.name}" />
+								</p:column>
+								<p:column headerText="Chi tiết" style="width:80px" priority="3">
+									<center>
+										<p:linkButton icon="fa fa-search-plus"
+											outcome="ChiTietKhaoSat">
+											<f:param name="setofid" value="#{viewResultSurveyBean.surveyId}" />
+											<f:param name="employeeCode" value="#{employee.code}" />
+										</p:linkButton>
+									</center>
+								</p:column>
+
+							</p:dataTable>
+						</div>
 						<!-- TEST -->
-						<p:dataTable var="ur" value="#{viewResultSurveyBean.results}"
-							widgetVar="userResult1" emptyMessage="Không tìm thấy"
-							filteredValue="#{viewResultSurveyBean.resultsAfterFilter}"
-							paginator="true" rows="20" rowIndexVar="rowIndex">
-							<f:facet name="header">
-								<p:outputPanel style="margin-right: 5px">
-									<h:outputText value="Tìm kiếm:" />
-									<i class="pi pi-search"></i>
-									<p:inputText id="globalFilter"
-										onkeyup="PF('userResult1').filter()"
-										style="width:30%;background-color: white;color: black"
-										placeholder="Nhập từ khóa" />
-								</p:outputPanel>
-							</f:facet>
-							<p:column headerText="STT" style="width: 5%;text-align: center">
-								<h:outputText value="#{rowIndex+1}" style="" />
-							</p:column>
-
-							<p:column filterBy="#{ur.employeeDepartment}"
-								headerText="Phòng ban" filterMatchMode="exact"
-								style="width: 15%">
-								<f:facet name="filter">
-									<p:selectOneMenu onchange="PF('userResult1').filter()"
-										styleClass="custom-filter" style="width:100%">
-										<f:selectItem itemLabel="Chọn phòng ban" itemValue="#{null}"
-											noSelectionOption="true" />
-										<f:selectItems value="#{viewResultSurveyBean.departments}"
-											var="depart1" itemLabel="#{depart1.name}"
-											itemValue="#{depart1.name}" />
-									</p:selectOneMenu>
-								</f:facet>
-								<h:outputText value="#{ur.employeeDepartment}" />
-							</p:column>
-							<p:column filterBy="#{ur.employeeName}"
-								headerText="Tên nhân viên" filterMatchMode="contains"
-								style="width: 15%;">
-								<h:outputText value="#{ur.employeeName}" />
-							</p:column>
-							<p:column headerText="Tên câu hỏi" style="width: 40%">
-								<h:outputText value="#{ur.userResult.question.name}" />
-							</p:column>
-							<p:column headerText="Đáp án" style="width: 25%">
-								<h:outputText value="#{ur.userResult.result}" />
-							</p:column>
-
-						</p:dataTable>
 						<!-- END TEST -->
 					</div>
 				</div>

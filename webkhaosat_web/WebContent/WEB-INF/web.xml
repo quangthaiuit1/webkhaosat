@@ -33,11 +33,11 @@
 		<param-value>start</param-value>
 	</context-param>
 	<context-param>
-    <param-name>
-        org.primefaces.extensions.DELIVER_UNCOMPRESSED_RESOURCES
-    </param-name>
-    <param-value>false</param-value>
-</context-param>
+	    <param-name>
+	        org.primefaces.extensions.DELIVER_UNCOMPRESSED_RESOURCES
+	    </param-name>
+	    <param-value>false</param-value>
+	</context-param>
 
 	<!-- Welcome page -->
 
@@ -89,7 +89,4 @@
 		<filter-name>primeFacesFileUploadFilter</filter-name>
 		<servlet-name>Faces Servlet</servlet-name>
 	</filter-mapping>
-	<session-config>
-        <session-timeout>10</session-timeout>
-    </session-config>
 </web-app>

@@ -1,22 +1,215 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-  xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <h:head>
-  <title>LIXCO</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>HỆ THỐNG KHẢO SÁT</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-  <!-- Bootstrap core CSS -->
-  <h:outputStylesheet library="bootstrap" name="web/css/bootstrap.min.css" />
-  <h:outputStylesheet library="bootstrap" name="web/css/css-search.css" />
-  
+	<!-- Bootstrap core CSS -->
+	<h:outputStylesheet library="bootstrap"
+		name="web/css/bootstrap.min.css" />
+	<h:outputStylesheet library="bootstrap" name="web/css/style-css.css" />
+	<h:outputStylesheet library="bootstrap" name="web/css/css-search.css" />
+
+	<!-- Custom styles for this template -->
+	<h:outputStylesheet library="bootstrap"
+		name="web/css/modern-business.css" />
+	<!-- CSS -->
+	<style type="text/css">
+</style>
 </h:head>
-<h:body style="background-color: #eee">
-	<ui:composition template="common.xhtml">
-	</ui:composition>
+<h:body
+	style="background-color: #eee;width: 60%;margin: 0 auto;padding-top: 0px">
+	<div class="row" style="background-color: #15aad3; margin-top: 5px">
+		<div style="" class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+			<h:graphicImage library="images" name="logo-lixco.png" height="auto" />
+		</div>
+		<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+			<h5 style="text-align: center; color: white; margin-top: 3px">CÔNG
+				TY CỔ PHẦN BỘT GIẶT LIX</h5>
+			<p style="color: white">Cung cấp những sản phẩm chất lượng cao
+				với giá thành hợp lý cho người tiêu dùng, mang lại giá trị gia tăng
+				cao nhất cho khách hàng và cổ đông, xây dựng môi trường làm việc lý
+				tưởng cho nhân viên và quan tâm sâu sắc đến cộng đồng.</p>
+		</div>
+	</div>
+
+	<c:if test="#{excuteSurveyBean.checkNullAll == false}">
+		<div class="row" style="background-color: white;">
+			<div class="col-sm-12 col-md-12 col-lg-12"
+				style="margin-bottom: 30px">
+				<p:notificationBar id="ahihi" position="top" widgetVar="topBar"
+					styleClass="top" rendered="">
+					<h:outputText value="Đã hoàn thành!"
+						style="color:#FFCC00;font-size:36px;" />
+				</p:notificationBar>
+				<h4
+					style="text-align: center; color: #1F83D9; margin-top: 10px; font-weight: bold">PHIẾU
+					KHẢO SÁT</h4>
+				<p>#{excuteSurveyBean.surveyPlaying.description}</p>
+			</div>
+			<h:form id="total">
+				<!-- phan 1  -->
+				<c:if test="#{excuteSurveyBean.checkNullPhan1 == false}">
+					<div class="row"
+						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+						<span class="group-name"
+							style="margin: 0 auto; margin-bottom: 15px">PHẦN KHẢO SÁT:
+							ĐÁNH GIÁ</span> <span class="group-description"><p
+								style="text-align: center;"></p> </span>
+						<div class="row"
+							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.questionsType1.get(0).survey.titleRating}</div>
+						<c:set var="evenCount" value="${0}" />
+						<c:forEach items="#{excuteSurveyBean.questionAndAnswerRating}"
+							var="question1">
+							<c:set var="evenCount" value="${evenCount+1}" />
+							<div class="row" style="width: 100%">
+								<p>
+									<h:outputText value="Câu #{evenCount}" style="margin-left: 5px" />
+									: #{question1.question.name}
+								</p>
+							</div>
+							<div class="row" style="width: 100%; margin-left: 10px">
+								<h:panelGrid columns="1" style="margin-bottom:10px"
+									cellpadding="5">
+									<p:selectOneRadio id="id1_#{evenCount}"
+										value="#{excuteSurveyBean.ketquaPhanDanhGia[evenCount]}"
+										layout="grid" columns="1">
+										<c:forEach items="#{question1.ratings}" var="r">
+											<f:selectItem itemLabel="#{r.name}" itemValue="#{r.name}" />
+										</c:forEach>
+									</p:selectOneRadio>
+								</h:panelGrid>
+							</div>
+						</c:forEach>
+					</div>
+				</c:if>
+				<!-- 	het phan 1 -->
+
+				<!-- phan 2 -->
+				<c:if test="#{excuteSurveyBean.checkNullPhan2 == false}">
+					<div class="row"
+						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+						<div class="row" style="width: 100%">
+							<span class="group-name"
+								style="margin: 0 auto; margin-bottom: 15px">PHẦN KHẢO
+								SÁT: THANG ĐIỂM</span> <span class="group-description"><p
+									style="text-align: center; margin-left: 5px"></p></span>
+						</div>
+						<div class="row"
+							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.questionsType1.get(0).survey.titleSlider}</div>
+						<c:set var="evenCount2" value="${evenCount}" />
+						<c:forEach items="#{excuteSurveyBean.questionAndAnswerSlider}"
+							var="questionSlider">
+							<c:set var="evenCount2" value="${evenCount2+1}" />
+							<div class="row" style="width: 100%">
+								<p>
+									<h:outputText value="Câu #{evenCount2}: "
+										style="margin-left: 5px" />
+									#{questionSlider.question.name}
+								</p>
+								<br />
+								<div class="row" style="width: 100%">
+									<h:panelGrid columns="1"
+										style="margin-bottom: 10px;margin-left: 20px">
+										<p:spinner id="spinner1_#{evenCount2}"
+											value="#{excuteSurveyBean.ketquaPhanThangDiem[evenCount2-evenCount]}"
+											min="#{questionSlider.min}" max="#{questionSlider.max}">
+										</p:spinner>
+										<p:slider for="spinner1_#{evenCount2}"
+											minValue="#{questionSlider.min}"
+											maxValue="#{questionSlider.max}" />
+									</h:panelGrid>
+									<br />
+								</div>
+							</div>
+						</c:forEach>
+					</div>
+				</c:if>
+				<!-- Het phan 2 -->
+
+				<!-- phan 3 -->
+				<c:if test="#{excuteSurveyBean.checkNullPhan3 == false}">
+					<div class="row"
+						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+						<div class="row" style="width: 100%">
+							<span class="group-name"
+								style="margin: 0 auto; margin-bottom: 15px">PHẦN KHẢO
+								SÁT: LẤY Ý KIẾN</span> <span class="group-description"><p
+									style="text-align: center; margin-left: 5px"></p></span>
+						</div>
+						<div class="row"
+							style="width: 100%; margin-bottom: 25px; margin-left: 5px; text-align: center; font-style: italic">#{excuteSurveyBean.questionsType1.get(0).survey.titleFeedback}</div>
+						<c:set var="evenCount3" value="${evenCount2}" />
+						<c:forEach items="#{excuteSurveyBean.questionsType1}"
+							var="question3">
+
+
+							<c:set var="evenCount3" value="${evenCount3+1}" />
+							<p>
+								<h:outputText value="Câu #{evenCount3}: "
+									style="margin-left: 5px" />
+								#{question3.name}
+							</p>
+							<br />
+							<p:inputTextarea id="id2_#{evenCount3}"
+								style="margin-left: 10px;margin-bottom: 5px;width: 80%" rows="6"
+								cols="33"
+								value="#{excuteSurveyBean.ketquaPhanLayYKien[evenCount3-evenCount2]}" />
+							<br />
+						</c:forEach>
+					</div>
+				</c:if>
+				<!-- Het phan 3 -->
+				<div class="row"
+					style="margin: 0 auto; margin-bottom: 30px; margin-top: 10px;">
+					<p:commandButton style="color: white" value="Hoàn thành"
+						update="total" icon="fa fa-check"
+						action="#{excuteSurveyBean.completeSurvey}"/>
+				</div>
+			</h:form>
+		</div>
+		<h:outputScript library="bootstrap" name="admin/js/custom.js"
+			target="head" />
+		<p:dialog header="Thông báo" widgetVar="dialogCompleteSurvey"
+			modal="true" showEffect="fade" hideEffect="fade" resizable="true">
+			<p:outputPanel id="panelCompleteSurvey" style="text-align:center;">
+				<button onclick="showMessageSuccess()" class="btn btn-primary"><i class="fa fa-arrow-left"></i>Trang chủ</button>
+				<br/>
+				<button onclick="showMessageSuccess()" class="btn btn-success">Đã hoàn thành</button>
+			</p:outputPanel>
+		</p:dialog>
+		<p:dialog header="Thông báo" widgetVar="dialogErrorSurvey"
+			modal="true" showEffect="fade" hideEffect="fade" resizable="true">
+			<p:outputPanel id="panelErrorSurvey" style="text-align:center;">
+				<button class="btn btn-danger">Vui lòng hoàn thành tất cả khảo sát</button>
+			</p:outputPanel>
+		</p:dialog>
+	</c:if>
+	<div class="row" style="margin: 0 auto; background-color: #208eb6">
+		<div class="col-sm-12 col-md-12 col-lg-12">
+			<h5 style="text-align: center; color: white; margin-top: 10px">CÔNG
+				TY CỔ PHẦN BỘT GIẶT LIX</h5>
+			<p style="text-align: center; color: white">
+				<h:graphicImage rendered="#{!task.IS_SEEN}" style="font-size: 20px"
+					styleClass="fa fa-location-arrow" />
+				Số 3 Đường Số 2, P. Linh Trung, Q. Thủ Đức, TP. HCM.
+			</p>
+			<p style="text-align: center; color: white">
+				<h:graphicImage rendered="#{!task.IS_SEEN}" style="font-size: 25px"
+					styleClass="fa fa-phone-square" />
+				028 - 38 964 072
+			</p>
+
+		</div>
+	</div>
 </h:body>
 
 </html>

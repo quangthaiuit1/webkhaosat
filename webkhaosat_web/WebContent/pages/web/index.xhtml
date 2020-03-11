@@ -8,111 +8,59 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-<h:head>
-
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport"
-		content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-	<meta name="description" content="" />
-	<meta name="author" content="" />
-
-	<title>User</title>
-	<style>
-</style>
-
-	<!-- Custom fonts for this template-->
-	<h:outputStylesheet library="font-awesome" name="css/all.min.css" />
-	<h:outputStylesheet library="font-awesome"
-		name="css/fontawesome.min.css" />
-	<link
-		href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-		rel="stylesheet" />
-	<!-- Custom styles for this template-->
-	<h:outputStylesheet library="bootstrap"
-		name="admin/css/sb-admin-2.min.css" />
-	<h:outputStylesheet library="bootstrap" name="admin/css/style-css.css" />
-	<!--font awesome  -->
-	<link
-		href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
-		rel="stylesheet"></link>
-</h:head>
-
 <h:body id="page-top">
-
-	<!-- Page Wrapper -->
-
-	<div id="wrapper">
-		<!-- Content Wrapper -->
-		<div id="content-wrapper" class="d-flex flex-column">
-
-			<!-- Main Content -->
-			<div id="content">
-				<!--Header  -->
-				<h:form id="headerCustom">
+	<ui:composition template="common.xhtml">
+		<ui:define name="content">
+			<h:form id="formContentIndex">
+				<div class="row"
+					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 20px;margin-bottom: 15px;">
+					<div class="row" style="width: 100%; font-weight: bold">
+						<span class="group-name"
+							style="margin: 0 auto; color: black; margin-top: 20px">DANH
+							SÁCH CÁC KỲ KHẢO SÁT</span> <span class="group-description"><p
+								style="text-align: center; margin-left: 5px"></p></span> <br />
+					</div>
 					<div class="row"
-						style="width: 90%; box-shadow: 0px 0px 5px #888; margin: 0 auto; margin-bottom: 15px; margin-top: 20px; border-radius: 5px; background-color: #e4e4e4">
+						style="width: 98%; margin-left: 0px; margin: 0 auto">
 
-						<div class="row" style="width: 100%">
-							<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
-								style="margin-top: 10px;margin-left: 50px">
-							</p:menubar>
-							<p:commandButton value="Đăng xuất"
-								actionListener="#{loginBean.logout()}"
-								style="margin-right: 10px;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
-						</div>
-						<hr width="97%" style="border-top: 1px solid #9c7e7e" />
-
-						<div class="row"
-							style="width: 100%; font-weight: bold">
-							<span class="group-name"
-								style="margin: 0 auto; color: black; margin-top: 20px">DANH
-								SÁCH CÁC KỲ KHẢO SÁT</span> <span class="group-description"><p
-									style="text-align: center; margin-left: 5px"></p></span> <br />
-						</div>
-						<div class="row"
-							style="width: 98%; margin-left: 0px; margin: 0 auto">
-
-							<p:dataTable id="listSetofquestions" var="set1"
-								value="#{questionUserBean.surveysIncomplete}"
-								rowIndexVar="rowIndex">
-								<p:column headerText="STT" style="text-align: center;width: 5%">
-									<h:outputText value="#{rowIndex+1}" />
-								</p:column>
-								<p:column headerText="Tên bộ câu hỏi" style="">
-									<h:outputText value="#{set1.survey.name}" />
-								</p:column>
-								<p:column headerText="Ngày bắt đầu" style="width: 15%">
+						<p:dataTable id="listSetofquestions" var="set1"
+							value="#{questionUserBean.surveysIncomplete}"
+							rowIndexVar="rowIndex">
+							<p:column headerText="STT" style="text-align: center;width: 5%">
+								<h:outputText value="#{rowIndex+1}" />
+							</p:column>
+							<p:column headerText="Tên bộ câu hỏi" style="">
+								<h:outputText value="#{set1.survey.name}" />
+							</p:column>
+							<p:column headerText="Ngày bắt đầu" style="width: 15%">
 								<center>
 									<h:outputText value="#{set1.survey.startDate}">
 										<f:convertDateTime pattern="dd.MM.yyyy" />
 									</h:outputText>
 								</center>
-								</p:column>
-								<p:column headerText="Ngày kết thúc" style="width: 15%">
-									<center>
+							</p:column>
+							<p:column headerText="Ngày kết thúc" style="width: 15%">
+								<center>
 									<h:outputText value="#{set1.survey.endDate}">
 										<f:convertDateTime pattern="dd.MM.yyyy" />
 									</h:outputText>
-									</center>
-								</p:column>
-								<p:column headerText="Chưa khảo sát" style="text-align: center;width: 10%"
-									priority="3">
-									<p:linkButton outcome="KhaoSat" value="Thực hiện"
-										style="color:#ffffff;background-color: #1a9e3d" rendered="#{set1.inCompleted}">
-										<f:param name="setofid" value="#{set1.survey.id}" />
-									</p:linkButton>
-								</p:column>
-							</p:dataTable>
+								</center>
+							</p:column>
+							<p:column headerText="Chưa khảo sát"
+								style="text-align: center;width: 10%" priority="3">
+								<p:linkButton outcome="KhaoSat" value="Thực hiện" target="_blank"
+									style="color:#ffffff;background-color: #1a9e3d;border:1px solid #1a9e3d"
+									rendered="#{set1.inCompleted}">
+									<f:param name="setofid" value="#{set1.survey.id}" />
+								</p:linkButton>
+							</p:column>
+						</p:dataTable>
 
-						</div>
 					</div>
-
-
-				</h:form>
-			</div>
-		</div>
-	</div>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
 </h:body>
 
 </html>

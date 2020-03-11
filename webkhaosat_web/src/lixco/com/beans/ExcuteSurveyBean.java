@@ -83,7 +83,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 			buildSetOfQuestionByType(questionsType2, questionsType4, answers1, questionAndAnswerRating,
 					questionAndAnswerSlider);
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		// tao bien hung ket qua phan 1
 	}
@@ -160,16 +160,18 @@ public class ExcuteSurveyBean extends AbstractBean {
 			for (Question questTemp1 : questionsType4) {
 				questionList.add(questTemp1);
 			}
-			boolean layYKienNull = false;
-			for (int i = 1; i <= ketquaPhanLayYKien.length; i++) {
-				if (StringUtils.isEmpty(ketquaPhanLayYKien[i])) {
-					layYKienNull = true;
+			boolean layYKienNotNull = false;
+			for (int i = 1; i < ketquaPhanLayYKien.length; i++) {
+				if (StringUtils.isNotEmpty(ketquaPhanLayYKien[i])) {
+					layYKienNotNull = true;
 					break;
 				}
 			}
-			if (layYKienNull != true) {
-				for (Question questTemp3 : questionsType1) {
-					questionList.add(questTemp3);
+			if (layYKienNotNull == true) {
+				for (int i = 1; i < ketquaPhanLayYKien.length; i++) {
+					if (StringUtils.isNotEmpty(ketquaPhanLayYKien[i])) {
+						questionList.add(questionsType1.get(i - 1));
+					}
 				}
 			}
 
@@ -183,7 +185,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 					resultList.add(b);
 				}
 			}
-			if (layYKienNull != true) {
+			if (layYKienNotNull == true) {
 				for (String c : ketquaPhanLayYKien) {
 					if (StringUtils.isNotEmpty(c)) {
 						resultList.add(c);
@@ -191,17 +193,15 @@ public class ExcuteSurveyBean extends AbstractBean {
 				}
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		if (resultList.size() != questionList.size()) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-					"Vui lòng hoàn thành tất cả khảo sát!");
-			PrimeFaces.current().dialog().showMessageDynamic(message);
+			PrimeFaces.current().executeScript("PF('dialogErrorSurvey').show();");
 			return;
 		}
 		accountLogin = getSession();
 		if (accountLogin != null) {
-			List<User_Result> checkComplete = USER_RESULT_SERVICE.find(0L, 0L, accountLogin.getMember().getCode());
+			List<User_Result> checkComplete = USER_RESULT_SERVICE.find(0L, 0L, accountLogin.getMember().getCode(),null);
 			// kiem tra da khao sat chua
 			if (!checkComplete.isEmpty()) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
@@ -215,15 +215,16 @@ public class ExcuteSurveyBean extends AbstractBean {
 				userResultTemp.setResult(resultList.get(i));
 				userResultTemp.setQuestion(questionList.get(i));
 				userResultTemp.setEmployeeCode(accountLogin.getMember().getCode());
+				userResultTemp.setEmployeeName(accountLogin.getMember().getName());
+				userResultTemp.setDepartmentName(accountLogin.getMember().getDepartment().getName());
 				USER_RESULT_SERVICE.create(userResultTemp);
 			}
 			// kiem tra danh sach rong hay khong
 			notifyComplete = true;
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-					"Bạn đã hoàn thành khảo sát!");
-			PrimeFaces.current().dialog().showMessageDynamic(message);
-			FacesContext.getCurrentInstance().getExternalContext()
-					.redirect("http://192.168.0.132:8380/webkhaosat_web/pages/web/ToanBoKS.jsf");
+//			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
+//					"Bạn đã hoàn thành khảo sát!");
+//			PrimeFaces.current().dialog().showMessageDynamic(message);
+			PrimeFaces.current().executeScript("PF('dialogCompleteSurvey').show();");
 		}
 
 	}

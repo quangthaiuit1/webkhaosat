@@ -13,6 +13,12 @@ public class User_Result extends AbstractEntities {
 
 	@Column(name = "employee_code")
 	private String employeeCode;
+	
+	@Column(name = "employee_Name")
+	private String employeeName;
+	
+	@Column(name = "departmentName")
+	private String departmentName;
 
 	@OneToOne
 	private Question question;
@@ -20,6 +26,26 @@ public class User_Result extends AbstractEntities {
 	public String getResult() {
 		return result;
 	}
+	
+	public String getEmployeeName() {
+		return employeeName;
+	}
+
+
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
+	}
+
+
+	public String getDepartmentName() {
+		return departmentName;
+	}
+
+
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+
 
 	public void setResult(String result) {
 		this.result = result;

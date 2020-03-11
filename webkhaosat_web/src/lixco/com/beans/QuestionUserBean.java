@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import org.jboss.logging.Logger;
 
-import lixco.com.entities.Employee;
 import lixco.com.entities.ManagerSurveyUser;
 import lixco.com.entities.Survey;
 import lixco.com.entities.User_Result;
@@ -31,7 +30,7 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 
 	@Override
 	protected void initItem() {
-
+		
 		try {
 			accountLogin = getSession();
 			managerSurveyUser = getListSurvey(accountLogin);
@@ -53,12 +52,11 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 //Get all survey
 	public List<ManagerSurveyUser> getListSurvey(Account ac) throws Throwable {
 		List<ManagerSurveyUser> managerSurveyUser = new ArrayList<>();
-		List<Employee> allSurveyByEmployeeCode = EMPLOYEE_SERVICE_THAI.find(ac.getMember().getCode(), 0L);
+		List<Survey> allSurveyByEmployeeCode = SURVEY_SERVICE.find(accountLogin.getMember().getCode());
 		// Xu ly hoan thanh, chua hoan thanh, het han
 		
-		for (Employee e : allSurveyByEmployeeCode) {
+		for (Survey s : allSurveyByEmployeeCode) {
 			ManagerSurveyUser temp = new ManagerSurveyUser();
-			Survey s = SURVEY_SERVICE.findById(e.getSurveyId());
 			temp.setSurvey(s);
 			//chua het han
 			if (checkSurveyExpired(s)) {
@@ -67,7 +65,7 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 					temp.setCompleted(true);
 				}
 				else {
-					temp.setInCompleted(true);;
+					temp.setInCompleted(true);
 				}
 			} else {
 				temp.setExpired(true);
@@ -103,7 +101,7 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 	}
 //Kiem tra hoan thanh
 	public boolean checkSurveyComplete(long surveyid, String employeeCode) {
-		List<User_Result> check = USER_RESULT_SERVICE.find(surveyid, 0L, employeeCode);
+		List<User_Result> check = USER_RESULT_SERVICE.find(surveyid, 0L, employeeCode,null);
 		if(check.isEmpty()) {
 			return false;
 		}

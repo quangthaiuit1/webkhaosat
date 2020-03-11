@@ -20,27 +20,15 @@
 </h:head>
 <h:body>
 	<ui:composition template="common.xhtml">
-		<ui:define name="header"></ui:define>
 		<ui:define name="content">
 			<h:form id="createQuestion">
 
 				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
-					<div class="row" style="width: 100%">
-						<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
-							style="margin-top: 10px;margin-left: 50px">
-
-						</p:menubar>
-
-						<p:commandButton value="Đăng xuất"
-							actionListener="#{loginBean.logout()}"
-							style="margin-right: 10px;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
-					</div>
-					<hr width="97%" style="border-top: 1px solid #9c7e7e" />
+					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 					<div class="row"
 						style="width: 100%; margin-left: 0px; margin: 0 auto">
 						<div class="col-sm-12 col-md-8 col-lg-7">
-							<h6 style="color: black; text-align: center; font-weight: bold">DANH
+							<h6 style="color: black; text-align: center; font-weight: bold;margin-top:5px">DANH
 								SÁCH CÂU HỎI</h6>
 							<div style="width: 60%; margin: 0 auto; margin-bottom: 5px">
 								<h:inputText style="color: black;width: 100%;border-radius: 5px"
@@ -54,7 +42,7 @@
 								</p:linkButton>
 								<p:linkButton icon="fa fa-plus" outcome="TaoCauHoi"
 									value="Tạo câu hỏi mới"
-									style="background-color: #007bff; margin-right: 10px">
+									style="background-color: #007bff;border: 1px solid #007bff; margin-right: 10px">
 									<f:param name="setofid" value="#{detailQuestionBean.setofId}" />
 								</p:linkButton>
 							</div>
@@ -103,7 +91,7 @@
 							<!-- DIALOG cap nhat cau hoi -->
 							<p:dialog header="Cập nhật" id="updateQuest" width="600"
 								widgetVar="dialogUpdateQuest" modal="true" showEffect="fade"
-								hideEffect="fade" resizable="false">
+								hideEffect="fade" resizable="true">
 								<p:outputPanel id="editQuest" style="text-align:center;">
 									<div class="row" style="margin-bottom: 15px">
 										<div class="col-sm-12 col-md-4 col-lg-3">
@@ -135,7 +123,7 @@
 							<!--Dialog xoa cau hoi  -->
 							<p:dialog header="Delete" widgetVar="dialogDeleteQuest"
 								modal="true" showEffect="fade" hideEffect="fade"
-								resizable="false">
+								resizable="true">
 								<p:outputPanel id="panelDeleteQuest" style="text-align:center;">
 									<div class="row" style="width: 100%; margin: 0 auto">
 										<div style="width: 48%; margin-right: 5px">
@@ -156,13 +144,13 @@
 
 						</div>
 						<div class="col-sm-12 col-md-4 col-lg-5">
-							<h6 style="color: black; text-align: center; font-weight: bold">
+							<h6 style="color: black; text-align: center; font-weight: bold;margin-top:5px">
 								DANH SÁCH CÂU TRẢ LỜI</h6>
 							<h:form id="formAddNewRating">
 								<div style="width: 100%; margin-bottom: 10px">
 									<div style="width: 22%; margin-left: 77%">
 										<p:commandButton icon="fa fa-plus"
-											style="width:100%;color: #fff;background-color: #007bff"
+											style="width:100%;color: #fff;border: 1px solid #007bff;background-color: #007bff"
 											value="Thêm câu trả lời"
 											oncomplete="PF('dialogAddNewRating').show()" />
 									</div>
@@ -206,7 +194,7 @@
 							<!-- DIALOG cap nhat RATING -->
 							<p:dialog header="Cập nhật" id="updateRati" width="600"
 								widgetVar="dialogUpdateRati" modal="true" showEffect="fade"
-								hideEffect="fade" resizable="false">
+								hideEffect="fade" resizable="true">
 								<p:outputPanel id="editRati" style="text-align:center;">
 									<div class="row" style="margin-bottom: 15px">
 										<div class="col-sm-12 col-md-4 col-lg-3">
@@ -239,7 +227,7 @@
 							<!--Dialog xoa RATING  -->
 							<p:dialog header="Delete" widgetVar="dialogDeleteRati"
 								modal="true" showEffect="fade" hideEffect="fade"
-								resizable="false">
+								resizable="true">
 								<p:outputPanel id="panelDeleteRati" style="text-align:center;">
 									<div class="row" style="width: 100%; margin: 0 auto">
 										<div style="width: 48%; margin-right: 5px">
@@ -261,7 +249,7 @@
 							<!-- Dialog Them cau tra loi moi _ danh gia -->
 							<p:dialog header="Thêm mới" id="AddNewRating" width="600"
 								widgetVar="dialogAddNewRating" modal="true" showEffect="fade"
-								hideEffect="fade" resizable="false">
+								hideEffect="fade" resizable="true">
 								<p:outputPanel id="editAddNewRating" style="text-align:center;">
 									<div class="row" style="margin-bottom: 15px">
 										<p:inputText

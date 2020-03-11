@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>LIXCO</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<!-- Bootstrap core CSS -->
+	<h:outputStylesheet library="bootstrap"
+		name="web/css/bootstrap.min.css" />
+	<h:outputStylesheet library="bootstrap" name="web/css/css-search.css" />
+
+</h:head>
+<h:body>
+	<ui:composition template="common.xhtml">
+		<ui:define name="content">
+			<h:form id="loadResult">
+				<!-- Them bo cau hoi -->
+				<div class="row"
+					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 5px; margin-bottom: 15px;">
+					<div class="row" style="margin-bottom: 35px; margin: 0 auto">
+						<p style="width: 100%">
+							<span>KẾT QUẢ KHẢO SÁT: <h:inputText
+									style="color: black;width: 100%;border-radius: 5px"
+									value="#{detailSurveyByUser.employeePlaying.name}"
+									disabled="true"></h:inputText></span>
+						</p>
+					</div>
+					<div style="width: 50%; margin-left: 88%; margin-bottom: 5px">
+						<p:linkButton icon="fa fa-arrow-left" outcome="KetQua"
+							value="Quay lại"
+							style="background-color: #46af79;border-color:#46af79; margin-right: 10px">
+							<f:param name="setofid" value="#{detailSurveyByUser.surveyId}" />
+						</p:linkButton>
+					</div>
+					<div class="row"
+						style="width: 90%; margin-left: 0px; margin: 0 auto">
+						<p:dataTable id="dtResult" var="ur"
+							value="#{detailSurveyByUser.userResultByUser}"
+							paginator="true" rows="20"
+							paginatorPosition="bottom" rowIndexVar="rowIndex"
+							rowsPerPageTemplate="20,50,100">
+							<p:column headerText="STT" style="text-align: center;width:80px">
+								<h:outputText value="#{rowIndex+1}" />
+							</p:column>
+							<p:column headerText="Câu hỏi">
+								<h:outputText value="#{ur.question.name}" />
+							</p:column>
+							<p:column headerText="Trả lời">
+								<h:outputText value="#{ur.result}" />
+							</p:column>
+
+						</p:dataTable>
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

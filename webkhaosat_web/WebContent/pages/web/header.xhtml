@@ -10,21 +10,21 @@
 	xmlns:b="http://bootsfaces.net/ui">
 <h:body>
 	<ui:composition>
-		<div class="row" style="background-color: #15aad3;margin-top: 5px">
-			<div style="" class="col-xs-3 col-sm-3 col-md-3 col-lg-3" >		
-					<h:graphicImage library="images" name="logo-lixco.png" height="auto" />
-			</div>
-			<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-				<h5 style="text-align: center; color: white;margin-top: 3px">CÔNG TY CỔ PHẦN
-					BỘT GIẶT LIX</h5>
-				<p style="color: white">Cung cấp những sản phẩm chất lượng cao với giá thành hợp lý
-					cho người tiêu dùng, mang lại giá trị gia tăng cao nhất cho khách
-					hàng và cổ đông, xây dựng môi trường làm việc lý tưởng cho nhân
-					viên và quan tâm sâu sắc đến cộng đồng.</p>
-			</div>
-		</div>
+		<h:form id="formHeaderUser">
+			<div class="row"
+				style="width: 90%; box-shadow: 0px 0px 5px #888; margin: 0 auto; margin-bottom: 15px; margin-top: 20px; border-radius: 5px; background-color: #e4e4e4">
+				<div class="row" style="width: 100%">
+					<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
+						style="margin-top: 10px;margin-left: 50px">
+					</p:menubar>
+					<p:commandButton value="Đăng xuất"
+						actionListener="#{loginBean.logout()}"
+						style="margin-right: 10px;border: 1px solid #007bff;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
+				</div>
+				<hr width="97%" style="border-top: 1px solid #9c7e7e" />
 
-
+			</div>
+		</h:form>		
 	</ui:composition>
 </h:body>
 

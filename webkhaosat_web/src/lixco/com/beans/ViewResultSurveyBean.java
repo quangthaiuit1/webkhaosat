@@ -11,6 +11,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.jboss.logging.Logger;
 
+import lixco.com.beans.entity.DepartmentByLocate;
 import lixco.com.entities.Result;
 import lixco.com.entities.Survey;
 import lixco.com.entities.User_Result;
@@ -28,37 +29,63 @@ public class ViewResultSurveyBean extends AbstractBean implements Serializable {
 	private Long surveyId;
 	private Survey surveyPlaying;
 	private List<Department> departments;
+	private List<Department> departmentsAfterFilter;
+	private DepartmentByLocate departmentSelected;
+	private List<Member> employeesByDepartment;
+	private List<DepartmentByLocate> departmentsByLocate1;
 
 	@Override
 	protected void initItem() {
 		results = new ArrayList<>();
+		employeesByDepartment = new ArrayList<>();
+		departmentSelected = new DepartmentByLocate();
 		surveyId = getParamSetOfId();
-		allUserResult = USER_RESULT_SERVICE.find(surveyId, 0l, null);
-		try {
-			results = castToResult(allUserResult);
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
 		surveyPlaying = SURVEY_SERVICE.findById(surveyId);
 		try {
 			departments = Arrays.asList(DEPARTMENT_SERVICE.findAll());
+			departmentsByLocate1 = filterDepartmentByLocate(departments);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
 	}
 
 //Cast from User_Result to Result
-	public List<Result> castToResult(List<User_Result> listUserResult) throws Throwable{
-		List<Result> resultsTemp = new ArrayList<>();
-		for(User_Result ur : listUserResult) {
-			Member employeeTemp = EMPLOYEE_SERVICE.findByCode(ur.getEmployeeCode());
-			Result r = new Result();
-			r.setUserResult(ur);
-			r.setEmployeeName(employeeTemp.getName());
-			r.setEmployeeDepartment(employeeTemp.getDepartment().getName());
-			resultsTemp.add(r);
+	public List<DepartmentByLocate> filterDepartmentByLocate(List<Department> allDepartment) {
+		List<DepartmentByLocate> departmentsTemp = new ArrayList<>();
+		for (Department d : allDepartment) {
+			if (d.getDepartment() != null) {
+				DepartmentByLocate dT = new DepartmentByLocate();
+				dT.setId(d.getId());
+				dT.setDepartmentId(d.getDepartment().getId());
+				dT.setDepartmentCode(d.getCode());
+				dT.setDepartmentName(d.getName());
+				if (d.getDepartment().getId() == 193) {
+					dT.setLocateName("CHI NHÁNH BÌNH DƯƠNG");
+					departmentsTemp.add(dT);
+				}
+				if (d.getDepartment().getId() == 194) {
+					dT.setLocateName("CHI NHÁNH BẮC NINH");
+					departmentsTemp.add(dT);
+				}
+				if (d.getDepartment().getId() == 191) {
+					dT.setLocateName("TRỤ SỞ HỒ CHÍ MINH");
+					departmentsTemp.add(dT);
+				}
+				// departmentsTemp.add(dT); khong de duoi nay duoc vi se bi trung danh sach
+			}
 		}
-		return resultsTemp;
+		return departmentsTemp;
+	}
+
+	public void departmentSelect() throws RemoteException {
+			employeesByDepartment = new ArrayList<>();
+			List<User_Result> userResultTemp = USER_RESULT_SERVICE.find(surveyId, 0L, null,
+					departmentSelected.getDepartmentName());
+			for(User_Result ur : userResultTemp) {
+				Member employeeTemp = EMPLOYEE_SERVICE.findByCode(ur.getEmployeeCode());
+				 if(!employeesByDepartment.contains(employeeTemp))
+					 employeesByDepartment.add(employeeTemp);
+			}
 	}
 
 	@Override
@@ -66,7 +93,6 @@ public class ViewResultSurveyBean extends AbstractBean implements Serializable {
 		return null;
 	}
 
-	
 //GET AND SET
 	public List<User_Result> getAllUserResult() {
 		return allUserResult;
@@ -115,5 +141,36 @@ public class ViewResultSurveyBean extends AbstractBean implements Serializable {
 	public void setDepartments(List<Department> departments) {
 		this.departments = departments;
 	}
-	
+
+	public List<Department> getDepartmentsAfterFilter() {
+		return departmentsAfterFilter;
+	}
+
+	public void setDepartmentsAfterFilter(List<Department> departmentsAfterFilter) {
+		this.departmentsAfterFilter = departmentsAfterFilter;
+	}
+
+	public DepartmentByLocate getDepartmentSelected() {
+		return departmentSelected;
+	}
+
+	public void setDepartmentSelected(DepartmentByLocate departmentSelected) {
+		this.departmentSelected = departmentSelected;
+	}
+
+	public List<Member> getEmployeesByDepartment() {
+		return employeesByDepartment;
+	}
+
+	public void setEmployeesByDepartment(List<Member> employeesByDepartment) {
+		this.employeesByDepartment = employeesByDepartment;
+	}
+
+	public List<DepartmentByLocate> getDepartmentsByLocate1() {
+		return departmentsByLocate1;
+	}
+
+	public void setDepartmentsByLocate1(List<DepartmentByLocate> departmentsByLocate1) {
+		this.departmentsByLocate1 = departmentsByLocate1;
+	}
 }

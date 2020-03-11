@@ -11,21 +11,11 @@
 
 <h:body>
 	<ui:composition template="common.xhtml">
-		<ui:define name="header"></ui:define>
 		<ui:define name="content">
 			<h:form id="loadResult">
 				<!-- Them bo cau hoi -->
 				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 20px">
-					<div class="row" style="width: 100%">
-						<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
-							style="margin-top: 10px;margin-left: 50px">
-						</p:menubar>
-						<p:commandButton value="Đăng xuất"
-							actionListener="#{loginBean.logout()}"
-							style="margin-right: 10px;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
-					</div>
-					<hr width="97%" style="border-top: 1px solid #9c7e7e" />
+					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 20px;margin-bottom: 5px;">
 					<div class="row" style="margin: 0 auto">
 						<p style="width: 100%">
 							<span>DANH SÁCH NHÂN VIÊN: <h:inputText
@@ -52,12 +42,42 @@
 							action="#{settingUserBean.deleteEmployees}" />
 					</div>
 					<!-- TEST -->
+					<div style="width: 60%;margin-left: 46%" class="row">
+						<div style="width: 20%;text-align:right">
+							<span>Tìm kiếm: <i class="fa fa-search-plus"/></span>
+						</div>
+						<div style="width: 80%">
+							<p:autoComplete id="themePojo"
+								value="#{settingUserBean.autocompleteEmployee}"
+								completeMethod="#{settingUserBean.completeTest}" var="theme"
+								itemLabel="#{theme.name}" itemValue="#{theme}"
+								converter="#{themeConverter}" minQueryLength="4"
+								forceSelection="true" scrollHeight="400" size="56"
+								style="font-size:80px"
+								>
+								<p:column style="width:20%" headerText="Mã">
+									<h:outputText value="#{theme.code}" />
+								</p:column>
+								<p:column style="width:50%" headerText="Tên">
+									<h:outputText value="#{theme.name}" />
+								</p:column>
+
+								<p:column style="width:30%" headerText="Phòng ban">
+									<h:outputText value="#{theme.department.name}" />
+								</p:column>
+								<p:ajax event="itemSelect"
+									listener="#{settingUserBean.autocompleteSelected()}"
+									update="loadResult:dtEmployees themePojo" />
+							</p:autoComplete>
+						</div>
+					</div>
 					<p:dataTable id="dtEmployees" var="employee"
 						value="#{settingUserBean.employeesBySurList}"
 						sortBy="#{employee.department.name}"
 						style="width:70%;margin:0 auto" expandableRowGroups="true"
 						selection="#{settingUserBean.selectedDelete}"
-						rowKey="#{employee.id}">
+						rowKey="#{employee.id}" paginator="true" rows="30"
+						 rowsPerPageTemplate="30,50,100">
 						<p:headerRow>
 							<p:column colspan="3">
 								<h:outputText value="#{employee.department.name}" />

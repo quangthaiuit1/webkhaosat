@@ -20,25 +20,12 @@
 </h:head>
 <h:body>
 	<ui:composition template="common.xhtml">
-		<ui:define name="header"></ui:define>
 		<ui:define name="content">
 			<h:form id="createQuestion">
 				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
-					<div class="row" style="width: 100%">
-						<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
-							style="margin-top: 10px;margin-left: 50px">
-
-						</p:menubar>
-
-						<p:commandButton value="Đăng xuất"
-							actionListener="#{loginBean.logout()}"
-							style="margin-right: 10px;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
-					</div>
-					<hr width="97%" style="border-top: 1px solid #9c7e7e" />
-
+					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 					<div class="row"
-						style="width: 99%; margin-left: 0px; margin: 0 auto">
+						style="width: 99%; margin-left: 0px; margin: 0 auto;margin-top:5px">
 						<div class="col-sm-12 col-md-8 col-lg-7">
 							<center>
 								<h6

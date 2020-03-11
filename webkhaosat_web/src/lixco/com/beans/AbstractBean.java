@@ -22,7 +22,6 @@ import general.AuthorizationManager;
 import general.PrivateConfig;
 import general.UrlPermission;
 import lixco.com.services.AnswerService;
-import lixco.com.services.EmployeeService;
 import lixco.com.services.QuestionService;
 import lixco.com.services.QuestionTypeService;
 import lixco.com.services.RatingService;
@@ -71,9 +70,6 @@ public abstract class AbstractBean implements Serializable {
 	@Inject
 	protected UserResultService USER_RESULT_SERVICE;
 	
-	@Inject
-	protected EmployeeService EMPLOYEE_SERVICE_THAI;
-
 	@PostConstruct
 	public void init() {
 		lockTableServicePublic = new LockTableServicePublicProxy();

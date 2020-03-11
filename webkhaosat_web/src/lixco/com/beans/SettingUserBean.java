@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lixco.com.beans.entity.DepartmentByLocate;
-import lixco.com.entities.Employee;
 import lixco.com.entities.Survey;
 import trong.lixco.com.account.servicepublics.Department;
 import trong.lixco.com.account.servicepublics.Member;
@@ -39,17 +38,13 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 	private Department[] allDepartment;
 	private List<Department> departments;
 	private List<Member> selectedDelete;
-	private List<Employee> employeeBySur;
-	private List<Employee> employeeAfterFilter;
 	private List<DepartmentByLocate> departmentsByLocate;
 	private List<DepartmentByLocate> departmentsSelected;
 	private static ObjectMapper mapper = new ObjectMapper();
 	private List<Member> employeesBySurList;
 	private List<Member> membersSelected;
-	private List<Employee> test;
 	private Member[] employeesBySur;
 	private Member autocompleteEmployee;
-	private List<Member> allEmployee;
 	private String txt1;
 
 	@Override
@@ -64,7 +59,6 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		selectedDelete = new ArrayList<>();
 		surveyId = getParamSetOfId();
 		surveyPlaying = SURVEY_SERVICE.findById(surveyId);
-//		employeeBySur = EMPLOYEE_SERVICE_THAI.find(null, surveyId);
 		try {
 			if (StringUtils.isEmpty(surveyPlaying.getUsersJson())) {
 				employeesBySurList = new ArrayList<>();
@@ -135,12 +129,12 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 				}
 				employeesNewArrayL = Stream.concat(employeesNewArrayL.stream(), temp.stream()).distinct()
 						.collect(Collectors.toList());
-				System.out.println(employeesNewArrayL.size());
 			}
 			List<Member> listTemp = employeesBySurList;
 			employeesNewArrayL = Stream.concat(employeesNewArrayL.stream(), listTemp.stream()).distinct()
 					.collect(Collectors.toList());
 			this.employeesBySurList = employeesNewArrayL;
+			departmentsSelected = new ArrayList<>();
 			PrimeFaces.current().executeScript("PF('dialogAddEmployee').hide();");
 
 		} catch (IOException e) {
@@ -150,14 +144,25 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 
 	public void saveOrUpdate() throws JsonParseException, JsonMappingException, IOException {
 		// convert JSON to Array objects
-		//Member[] employeesOld = mapper.readValue(surveyPlaying.getUsersJson(), Member[].class);
-		
+		// Member[] employeesOld = mapper.readValue(surveyPlaying.getUsersJson(),
+		// Member[].class);
+
 		// convert Array object to JSON
 		String a = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.employeesBySurList);
 		surveyPlaying.setUsersJson(a);
 		SURVEY_SERVICE.update(surveyPlaying);
 		notifyUpdateSuccess();
-		System.out.println(employeesBySurList.size());
+	}
+
+	public void autocompleteSelected() {
+		if(!autocompleteEmployee.isDisable()) {
+			List<Member> listTemp = new ArrayList<>();
+			listTemp.add(autocompleteEmployee);
+			listTemp = Stream.concat(listTemp.stream(), this.employeesBySurList.stream()).distinct()
+					.collect(Collectors.toList());
+			this.employeesBySurList = listTemp;
+		}
+		autocompleteEmployee = new Member();
 	}
 
 //	public List<String> splitStringMediaIdsToList(String strMediaIds) {
@@ -207,23 +212,14 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		this.employeesBySurList = maps.values().stream().collect(Collectors.toList());
 	}
 
-	public List<Member> completeThemeContains(String query) throws RemoteException {
-		String queryLowerCase = query.toLowerCase();
-		Member[] temp = EMPLOYEE_SERVICE.findAll();
-		List<Member> allThemes = new ArrayList<>();
-		for (Member m : temp) {
-			if (!m.isDisable()) {
-				allThemes.add(m);
-			}
-		}
-		return allThemes.stream().filter(t -> t.getName().toLowerCase().contains(queryLowerCase))
-				.collect(Collectors.toList());
-	}
-
 	public List<Member> completeTest(String query) throws RemoteException {
-		Member[] temp = EMPLOYEE_SERVICE.findSearch(query, null);
-		System.out.println("Not Ok");
-		return Arrays.asList(temp);
+		Member[] result = EMPLOYEE_SERVICE.findSearch(query, new String[] { "name" });
+		if (result == null) {
+			return new ArrayList<>();
+		} else {
+			List<Member> ahihi = Arrays.asList(result);
+			return ahihi;
+		}
 	}
 
 //	GET AND SET
@@ -260,36 +256,12 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		this.departments = departments;
 	}
 
-	public List<Employee> getEmployeeBySur() {
-		return employeeBySur;
-	}
-
-	public void setEmployeeBySur(List<Employee> employeeBySur) {
-		this.employeeBySur = employeeBySur;
-	}
-
 	public List<Member> getSelectedDelete() {
 		return selectedDelete;
 	}
 
 	public void setSelectedDelete(List<Member> selectedDelete) {
 		this.selectedDelete = selectedDelete;
-	}
-
-	public List<Employee> getEmployeeAfterFilter() {
-		return employeeAfterFilter;
-	}
-
-	public void setEmployeeAfterFilter(List<Employee> employeeAfterFilter) {
-		this.employeeAfterFilter = employeeAfterFilter;
-	}
-
-	public List<Employee> getTest() {
-		return test;
-	}
-
-	public void setTest(List<Employee> test) {
-		this.test = test;
 	}
 
 	public List<DepartmentByLocate> getDepartmentsByLocate() {
@@ -338,14 +310,6 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 
 	public void setAutocompleteEmployee(Member autocompleteEmployee) {
 		this.autocompleteEmployee = autocompleteEmployee;
-	}
-
-	public List<Member> getAllEmployee() {
-		return allEmployee;
-	}
-
-	public void setAllEmployee(List<Member> allEmployee) {
-		this.allEmployee = allEmployee;
 	}
 
 	public String getTxt1() {

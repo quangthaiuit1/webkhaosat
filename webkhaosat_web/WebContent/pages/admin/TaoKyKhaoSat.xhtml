@@ -19,21 +19,11 @@
 </h:head>
 <h:body>
 	<ui:composition template="common.xhtml">
-		<ui:define name="header">
-		</ui:define>
 		<ui:define name="content">
 			<h:form id="createSurvey">
 				<!-- Them bo cau hoi -->
 				<div class="row"
 					style="width: 90%; box-shadow: 0px 0px 5px #000; margin: 0 auto; margin-bottom: 5px; border-radius: 5px; margin-top: 20px">
-					<div class="row" style="width: 100%">
-						<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
-							style="margin-top: 10px;margin-left: 50px">
-						</p:menubar>
-						<p:commandButton value="Đăng xuất"
-							actionListener="#{loginBean.logout()}"
-							style="margin-right: 10px;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
-					</div>
 					<div class="row" style="width: 100%; margin-bottom: 45px">
 						<span class="group-name"
 							style="margin: 0 auto; color: black; margin-bottom: 10px; margin-top: 20px; font-weight: bold">TẠO

@@ -20,21 +20,11 @@
 </h:head>
 <h:body>
 	<ui:composition template="common.xhtml">
-		<ui:define name="header"></ui:define>
 		<ui:define name="content">
 			<h:form id="feedBack">
 
 				<div class="row"
 					style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
-					<div class="row" style="width: 100%">
-						<p:menubar id="tb" model="#{menuBean.model}" styleClass="menubar"
-							style="margin-top: 10px;margin-left: 50px">
-						</p:menubar>
-						<p:commandButton value="Đăng xuất"
-							actionListener="#{loginBean.logout()}"
-							style="margin-right: 10px;margin-left: 15px;margin-top: 11px;background-color: #4285d9;" />
-					</div>
-					<hr width="97%" style="border-top: 1px solid #9c7e7e" />
 					<div class="row"
 						style="width: 99%; margin-left: 0px; margin: 0 auto">
 						<div class="col-sm-12 col-md-12 col-lg-12">
@@ -53,7 +43,8 @@
 						<p:dataTable var="ur" value="#{feedBackBean.feedbacks}"
 							widgetVar="feedback1" emptyMessage="Không tìm thấy"
 							filteredValue="#{feedBackBean.feedbacksAfterFilter}"
-							paginator="true" rows="10" rowIndexVar="rowIndex">
+							paginator="true" rows="10" paginatorPosition="bottom"
+							rowIndexVar="rowIndex" rowsPerPageTemplate="20,50,100">
 							<f:facet name="header">
 								<p:outputPanel style="margin-right: 5px">
 									<h:outputText value="Tìm kiếm:" />
@@ -65,31 +56,20 @@
 								</p:outputPanel>
 							</f:facet>
 							<p:column headerText="STT" style="width: 5%;text-align: center">
-								<h:outputText value="#{rowIndex+1}" style="" />
+								<h:outputText value="#{rowIndex+1}" />
 							</p:column>
-
-							<p:column filterBy="#{ur.department}" headerText="Phòng ban"
-								filterMatchMode="exact" style="width: 15%">
-								<f:facet name="filter">
-									<p:selectOneMenu onchange="PF('feedback1').filter()"
-										styleClass="custom-filter" style="width:100%">
-										<f:selectItem itemLabel="Chọn phòng ban" itemValue="#{null}"
-											noSelectionOption="true" />
-										<f:selectItems value="#{feedBackBean.departments}"
-											var="depart1" itemLabel="#{depart1.name}"
-											itemValue="#{depart1.name}" />
-									</p:selectOneMenu>
-								</f:facet>
-								<h:outputText value="#{ur.department}" />
+							<p:column headerText="Câu hỏi" style="width:20%">
+								<h:outputText value="#{ur.userResult.question.name}" />
+							</p:column>
+							<p:column headerText="Đáp án" style="width:65%">
+								<h:outputText value="#{ur.userResult.result}" />
 							</p:column>
 							<p:column filterBy="#{ur.employeeName}"
 								headerText="Tên nhân viên" filterMatchMode="contains"
 								style="width: 15%;">
 								<h:outputText value="#{ur.employeeName}" />
 							</p:column>
-							<p:column headerText="Đáp án">
-								<h:outputText value="#{ur.userResult.result}" />
-							</p:column>
+
 						</p:dataTable>
 					</div>
 				</div>
