@@ -1,6 +1,8 @@
 package lixco.com.beans;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +49,15 @@ public class SurveyBean extends AbstractBean implements Serializable {
 		surveyDeleted = new Survey();
 		//All ky khao sat
 		surveys1 = SURVEY_SERVICE.findAllByFilter();
+		//sort time desc
+		Collections.sort(surveys1, new Comparator<Survey>()
+	    {
+	        @Override
+	        public int compare(Survey d1, Survey d2)
+	        {
+	            return d2.getEndDate().compareTo(d1.getEndDate());//use the name specified in the pojo class for getting the date in the place of 'getdate'
+	        }
+	    });
 	}
 
 
@@ -98,7 +109,6 @@ public class SurveyBean extends AbstractBean implements Serializable {
 
 	
 //GET AND SET
-	
 	
 	public Survey getSurveyNew() {
 		return surveyNew;

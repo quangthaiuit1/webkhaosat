@@ -13,7 +13,7 @@
 		<ui:define name="content">
 			<h:form id="formContentIndex">
 				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 20px;margin-bottom: 15px;">
+					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 20px; margin-bottom: 15px;">
 					<div class="row" style="width: 100%; font-weight: bold">
 						<span class="group-name"
 							style="margin: 0 auto; color: black; margin-top: 20px">DANH
@@ -48,7 +48,8 @@
 							</p:column>
 							<p:column headerText="Chưa khảo sát"
 								style="text-align: center;width: 10%" priority="3">
-								<p:linkButton outcome="KhaoSat" value="Thực hiện" target="_blank"
+								<p:linkButton outcome="KhaoSat" value="Thực hiện"
+									target="_blank"
 									style="color:#ffffff;background-color: #1a9e3d;border:1px solid #1a9e3d"
 									rendered="#{set1.inCompleted}">
 									<f:param name="setofid" value="#{set1.survey.id}" />

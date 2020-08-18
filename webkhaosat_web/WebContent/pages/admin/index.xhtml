@@ -22,7 +22,7 @@
 		<ui:define name="content">
 			<h:form id="formIndex">
 				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 20px;margin-bottom: 15px;">
+					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 20px; margin-bottom: 15px;">
 					<div class="row"
 						style="width: 100%; margin-bottom: 45px; font-weight: bold">
 						<span class="group-name"
@@ -53,8 +53,7 @@
 										placeholder="Nhập từ khóa" />
 								</p:outputPanel>
 							</f:facet>
-							<p:column headerText="STT" style="text-align: center;width:4%"
-								sortBy="#{set1.endDate}">
+							<p:column headerText="STT" style="text-align: center;width:4%">
 								<h:outputText value="#{rowIndex+1}" />
 							</p:column>
 							<p:column headerText="Tên kỳ khảo sát" filterBy="#{set1.name}"

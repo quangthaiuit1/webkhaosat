@@ -46,6 +46,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 	private boolean checkNullAll;
 	private boolean notifyComplete;
 	private Account accountLogin;
+	private int test;
 
 	@Override
 	protected void initItem() {
@@ -364,6 +365,14 @@ public class ExcuteSurveyBean extends AbstractBean {
 
 	public void setCheckNullAll(boolean checkNullAll) {
 		this.checkNullAll = checkNullAll;
+	}
+	
+	public int getTest() {
+		return test;
+	}
+
+	public void setTest(int test) {
+		this.test = test;
 	}
 
 	@Override
