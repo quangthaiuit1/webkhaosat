@@ -7,6 +7,8 @@
 
 package trong.lixco.com.account.servicepublics;
 
+import general.StaticPath;
+
 public class DepartNoticeRelaServicePublicServiceLocator extends org.apache.axis.client.Service implements trong.lixco.com.account.servicepublics.DepartNoticeRelaServicePublicService {
 
     public DepartNoticeRelaServicePublicServiceLocator() {
@@ -22,7 +24,7 @@ public class DepartNoticeRelaServicePublicServiceLocator extends org.apache.axis
     }
 
     // Use to get a proxy class for DepartNoticeRelaServicePublicPort
-    private java.lang.String DepartNoticeRelaServicePublicPort_address = "http://192.168.0.132:8180/account_service/DepartNoticeRelaServicePublic";
+    private java.lang.String DepartNoticeRelaServicePublicPort_address = StaticPath.getPath()+"/account_service/DepartNoticeRelaServicePublic";
 
     public java.lang.String getDepartNoticeRelaServicePublicPortAddress() {
         return DepartNoticeRelaServicePublicPort_address;

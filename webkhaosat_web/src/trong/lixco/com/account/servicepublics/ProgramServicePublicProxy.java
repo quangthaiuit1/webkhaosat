@@ -49,7 +49,6 @@ public class ProgramServicePublicProxy implements trong.lixco.com.account.servic
       _initProgramServicePublicProxy();
     return programServicePublic.getFirst();
   }
-  
   public trong.lixco.com.account.servicepublics.Program[] findIndex(int arg0) throws java.rmi.RemoteException{
     if (programServicePublic == null)
       _initProgramServicePublicProxy();

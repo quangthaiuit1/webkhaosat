@@ -78,14 +78,16 @@
 							</div>
 							<div class="row" style="width: 100%; margin-left: 10px">
 								<h:panelGrid columns="1" style="margin-bottom:10px"
-									cellpadding="5">
+									cellpadding="5" id="vcl">
 									<p:selectOneRadio id="id1_#{evenCount}"
 										value="#{excuteSurveyBean.ketquaPhanDanhGia[evenCount]}"
 										layout="grid" columns="1">
-										<c:forEach items="#{question1.ratings}" var="r">
-											<f:selectItem itemLabel="#{r.name}" itemValue="#{r.name}" />
-										</c:forEach>
+										<p:ajax process="@this" listener="#{excuteSurveyBean.printABC(evenCount)}"/>
+										<f:selectItems value="#{question1.ratings}" var="r"
+											itemLabel="#{r.name}" itemValue="#{r.name}"/>
 									</p:selectOneRadio>
+									<h:inputText id="thaiDayAhihi" value=""
+												rendered="#{excuteSurveyBean.renderedInputText}" />
 								</h:panelGrid>
 							</div>
 						</c:forEach>
@@ -113,7 +115,9 @@
 								<p>
 									<h:outputText value="Câu #{evenCount2}: "
 										style="margin-left: 5px" />
-									#{questionSlider.question.name} (<span style="font-style: italic;color: #ba5570">Vui lòng nhập từ #{questionSlider.min} đến #{questionSlider.max} </span>)
+									#{questionSlider.question.name} (<span
+										style="font-style: italic; color: #ba5570">Vui lòng
+										nhập từ #{questionSlider.min} đến #{questionSlider.max} </span>)
 								</p>
 								<br />
 								<div class="row" style="width: 100%">
@@ -156,7 +160,7 @@
 							<p>
 								<h:outputText value="Câu #{evenCount3}: "
 									style="margin-left: 5px" />
-								#{question3.name} 
+								#{question3.name}
 							</p>
 							<br />
 							<p:inputTextarea id="id2_#{evenCount3}"

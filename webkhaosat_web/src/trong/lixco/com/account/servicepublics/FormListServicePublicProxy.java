@@ -43,7 +43,6 @@ public class FormListServicePublicProxy implements trong.lixco.com.account.servi
       _initFormListServicePublicProxy();
     return formListServicePublic;
   }
-  
   public trong.lixco.com.account.servicepublics.FormList[] findByProgram(trong.lixco.com.account.servicepublics.Program arg0) throws java.rmi.RemoteException{
     if (formListServicePublic == null)
       _initFormListServicePublicProxy();

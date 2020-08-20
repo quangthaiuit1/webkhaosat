@@ -43,7 +43,6 @@ public class DepartNoticeRelaServicePublicProxy implements trong.lixco.com.accou
       _initDepartNoticeRelaServicePublicProxy();
     return departNoticeRelaServicePublic;
   }
-  
   public trong.lixco.com.account.servicepublics.DepartNoticeRela[] findByDepartment(trong.lixco.com.account.servicepublics.Department arg0) throws java.rmi.RemoteException{
     if (departNoticeRelaServicePublic == null)
       _initDepartNoticeRelaServicePublicProxy();

@@ -44,6 +44,7 @@ public class MenuServicePublicProxy implements trong.lixco.com.account.servicepu
     return menuServicePublic;
   }
   
+  
   public trong.lixco.com.account.servicepublics.Menu find_ID(long arg0) throws java.rmi.RemoteException{
     if (menuServicePublic == null)
       _initMenuServicePublicProxy();

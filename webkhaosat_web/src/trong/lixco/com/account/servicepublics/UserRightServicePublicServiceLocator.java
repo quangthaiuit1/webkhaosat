@@ -7,6 +7,8 @@
 
 package trong.lixco.com.account.servicepublics;
 
+import general.StaticPath;
+
 public class UserRightServicePublicServiceLocator extends org.apache.axis.client.Service implements trong.lixco.com.account.servicepublics.UserRightServicePublicService {
 
     public UserRightServicePublicServiceLocator() {
@@ -22,7 +24,7 @@ public class UserRightServicePublicServiceLocator extends org.apache.axis.client
     }
 
     // Use to get a proxy class for UserRightServicePublicPort
-    private java.lang.String UserRightServicePublicPort_address = "http://192.168.0.132:8180/account_service/UserRightServicePublic";
+    private java.lang.String UserRightServicePublicPort_address = StaticPath.getPath()+"/account_service/UserRightServicePublic";
 
     public java.lang.String getUserRightServicePublicPortAddress() {
         return UserRightServicePublicPort_address;

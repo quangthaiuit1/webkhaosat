@@ -7,6 +7,9 @@
 
 package trong.lixco.com.account.servicepublics;
 
+import general.StaticPath;
+import net.xml.java.com.SerializationConnect;
+
 public class FormListServicePublicServiceLocator extends org.apache.axis.client.Service implements trong.lixco.com.account.servicepublics.FormListServicePublicService {
 
     public FormListServicePublicServiceLocator() {
@@ -22,7 +25,7 @@ public class FormListServicePublicServiceLocator extends org.apache.axis.client.
     }
 
     // Use to get a proxy class for FormListServicePublicPort
-    private java.lang.String FormListServicePublicPort_address = "http://192.168.0.132:8180/account_service/FormListServicePublic";
+    private java.lang.String FormListServicePublicPort_address = StaticPath.getPath()+"/account_service/FormListServicePublic";
 
     public java.lang.String getFormListServicePublicPortAddress() {
         return FormListServicePublicPort_address;
@@ -40,8 +43,9 @@ public class FormListServicePublicServiceLocator extends org.apache.axis.client.
     }
 
     public trong.lixco.com.account.servicepublics.FormListServicePublic getFormListServicePublicPort() throws javax.xml.rpc.ServiceException {
-       java.net.URL endpoint;
+       java.net.URL endpoint = null;
         try {
+        	if (new SerializationConnect().connect(FormListServicePublicPort_address))
             endpoint = new java.net.URL(FormListServicePublicPort_address);
         }
         catch (java.net.MalformedURLException e) {

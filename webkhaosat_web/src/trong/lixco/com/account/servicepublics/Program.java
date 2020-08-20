@@ -23,6 +23,7 @@ public class Program  extends trong.lixco.com.account.servicepublics.AbstractEnt
     private java.lang.String serveraddressPublic;
 
     private java.lang.String uRL;
+    private short indexSort;
 
     public Program() {
     }

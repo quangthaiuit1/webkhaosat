@@ -7,6 +7,9 @@
 
 package trong.lixco.com.account.servicepublics;
 
+import general.StaticPath;
+import net.xml.java.com.SerializationConnect;
+
 public class MenuServicePublicServiceLocator extends org.apache.axis.client.Service implements trong.lixco.com.account.servicepublics.MenuServicePublicService {
 
     public MenuServicePublicServiceLocator() {
@@ -22,7 +25,7 @@ public class MenuServicePublicServiceLocator extends org.apache.axis.client.Serv
     }
 
     // Use to get a proxy class for MenuServicePublicPort
-    private java.lang.String MenuServicePublicPort_address = "http://192.168.0.132:8180/account_service/MenuServicePublic";
+    private java.lang.String MenuServicePublicPort_address = StaticPath.getPath()+"/account_service/MenuServicePublic";
 
     public java.lang.String getMenuServicePublicPortAddress() {
         return MenuServicePublicPort_address;
@@ -40,8 +43,9 @@ public class MenuServicePublicServiceLocator extends org.apache.axis.client.Serv
     }
 
     public trong.lixco.com.account.servicepublics.MenuServicePublic getMenuServicePublicPort() throws javax.xml.rpc.ServiceException {
-       java.net.URL endpoint;
+       java.net.URL endpoint = null;
         try {
+//        	if (new SerializationConnect().connect(MenuServicePublicPort_address))
             endpoint = new java.net.URL(MenuServicePublicPort_address);
         }
         catch (java.net.MalformedURLException e) {

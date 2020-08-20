@@ -44,6 +44,7 @@ public class PrivateConfigServicePublicProxy implements trong.lixco.com.account.
     return privateConfigServicePublic;
   }
   
+  
   public boolean delete(trong.lixco.com.account.servicepublics.PrivateConfig arg0) throws java.rmi.RemoteException{
     if (privateConfigServicePublic == null)
       _initPrivateConfigServicePublicProxy();

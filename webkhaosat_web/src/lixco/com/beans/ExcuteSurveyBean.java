@@ -48,6 +48,9 @@ public class ExcuteSurveyBean extends AbstractBean {
 	private Account accountLogin;
 	private int test;
 
+	private List<String> testString;
+	private boolean renderedInputText = false;
+
 	@Override
 	protected void initItem() {
 		try {
@@ -202,7 +205,8 @@ public class ExcuteSurveyBean extends AbstractBean {
 		}
 		accountLogin = getSession();
 		if (accountLogin != null) {
-			List<User_Result> checkComplete = USER_RESULT_SERVICE.find(0L, 0L, accountLogin.getMember().getCode(),null);
+			List<User_Result> checkComplete = USER_RESULT_SERVICE.find(0L, 0L, accountLogin.getMember().getCode(),
+					null);
 			// kiem tra da khao sat chua
 			if (!checkComplete.isEmpty()) {
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
@@ -228,6 +232,19 @@ public class ExcuteSurveyBean extends AbstractBean {
 			PrimeFaces.current().executeScript("PF('dialogCompleteSurvey').show();");
 		}
 
+	}
+
+	public void printABC(int id) {
+//		if (ketquaPhanDanhGia[id].equals("Bình thường")) {
+//			renderedInputText = true;
+//			PrimeFaces.current().ajax().update(":total:vcl");
+//		}
+		System.out.println(ketquaPhanDanhGia[id]);
+		if(ketquaPhanDanhGia[id].equals("Tốt")) {
+			System.out.println("Thai");
+			renderedInputText = true;
+			PrimeFaces.current().ajax().update(":total:vcl");
+		}
 	}
 
 //GET AND SET
@@ -366,13 +383,29 @@ public class ExcuteSurveyBean extends AbstractBean {
 	public void setCheckNullAll(boolean checkNullAll) {
 		this.checkNullAll = checkNullAll;
 	}
-	
+
 	public int getTest() {
 		return test;
 	}
 
 	public void setTest(int test) {
 		this.test = test;
+	}
+
+	public List<String> getTestString() {
+		return testString;
+	}
+
+	public void setTestString(List<String> testString) {
+		this.testString = testString;
+	}
+
+	public boolean isRenderedInputText() {
+		return renderedInputText;
+	}
+
+	public void setRenderedInputText(boolean renderedInputText) {
+		this.renderedInputText = renderedInputText;
 	}
 
 	@Override
