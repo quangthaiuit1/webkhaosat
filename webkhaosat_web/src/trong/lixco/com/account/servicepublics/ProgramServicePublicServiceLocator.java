@@ -7,6 +7,8 @@
 
 package trong.lixco.com.account.servicepublics;
 
+import general.StaticPath;
+
 public class ProgramServicePublicServiceLocator extends org.apache.axis.client.Service implements trong.lixco.com.account.servicepublics.ProgramServicePublicService {
 
     public ProgramServicePublicServiceLocator() {
@@ -22,7 +24,7 @@ public class ProgramServicePublicServiceLocator extends org.apache.axis.client.S
     }
 
     // Use to get a proxy class for ProgramServicePublicPort
-    private java.lang.String ProgramServicePublicPort_address = "http://192.168.0.132:8180/account_service/ProgramServicePublic";
+    private java.lang.String ProgramServicePublicPort_address = StaticPath.getPath()+"/account_service/ProgramServicePublic";
 
     public java.lang.String getProgramServicePublicPortAddress() {
         return ProgramServicePublicPort_address;

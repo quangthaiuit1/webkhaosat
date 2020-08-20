@@ -179,7 +179,41 @@ public class Department  extends trong.lixco.com.account.servicepublics.Abstract
         __equalsCalc = null;
         return _equals;
     }
+    public String showAllNameDepart() {
+		try {
+			if (levelDep.getLevel() == 1) {
+				return name;
+			} else {
+				String lt = "";
+				for (int i = 0; i < levelDep.getLevel(); i++) {
+					lt = lt + "&emsp;";
+				}
+				if (department != null)
+					return lt + name;
+				return name;
+			}
+		} catch (Exception e) {
+			return name;
+		}
+	}
 
+	public String showAllNameDepartFull() {
+		try {
+			if (levelDep.getLevel() == 1) {
+				return name;
+			} else {
+				String lt = "";
+				for (int i = 0; i < levelDep.getLevel(); i++) {
+					lt = lt + "&emsp;";
+				}
+				if (department != null)
+					return department.showAllNameDepartFull() + lt + name;
+				return name;
+			}
+		} catch (Exception e) {
+			return name;
+		}
+	}
     private boolean __hashCodeCalc = false;
     public synchronized int hashCode() {
         if (__hashCodeCalc) {

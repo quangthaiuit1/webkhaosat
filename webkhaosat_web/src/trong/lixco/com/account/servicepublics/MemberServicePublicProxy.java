@@ -44,12 +44,6 @@ public class MemberServicePublicProxy implements trong.lixco.com.account.service
     return memberServicePublic;
   }
   
-  public trong.lixco.com.account.servicepublics.Member[] findSearch(java.lang.String arg0, java.lang.String[] arg1) throws java.rmi.RemoteException{
-    if (memberServicePublic == null)
-      _initMemberServicePublicProxy();
-    return memberServicePublic.findSearch(arg0, arg1);
-  }
-  
   public trong.lixco.com.account.servicepublics.Member findByCode(java.lang.String arg0) throws java.rmi.RemoteException{
     if (memberServicePublic == null)
       _initMemberServicePublicProxy();
@@ -74,10 +68,22 @@ public class MemberServicePublicProxy implements trong.lixco.com.account.service
     return memberServicePublic.findSearchWarehouse(arg0, arg1, arg2);
   }
   
-  public boolean delete(trong.lixco.com.account.servicepublics.Member arg0) throws java.rmi.RemoteException{
+  public trong.lixco.com.account.servicepublics.Member findId(long arg0) throws java.rmi.RemoteException{
     if (memberServicePublic == null)
       _initMemberServicePublicProxy();
-    return memberServicePublic.delete(arg0);
+    return memberServicePublic.findId(arg0);
+  }
+  
+  public trong.lixco.com.account.servicepublics.Member create(trong.lixco.com.account.servicepublics.Member arg0) throws java.rmi.RemoteException{
+    if (memberServicePublic == null)
+      _initMemberServicePublicProxy();
+    return memberServicePublic.create(arg0);
+  }
+  
+  public trong.lixco.com.account.servicepublics.Member[] findSearch(java.lang.String arg0, java.lang.String[] arg1) throws java.rmi.RemoteException{
+    if (memberServicePublic == null)
+      _initMemberServicePublicProxy();
+    return memberServicePublic.findSearch(arg0, arg1);
   }
   
   public trong.lixco.com.account.servicepublics.Member[] findAll() throws java.rmi.RemoteException{
@@ -86,22 +92,16 @@ public class MemberServicePublicProxy implements trong.lixco.com.account.service
     return memberServicePublic.findAll();
   }
   
-  public trong.lixco.com.account.servicepublics.Member findId(long arg0) throws java.rmi.RemoteException{
+  public boolean delete(trong.lixco.com.account.servicepublics.Member arg0) throws java.rmi.RemoteException{
     if (memberServicePublic == null)
       _initMemberServicePublicProxy();
-    return memberServicePublic.findId(arg0);
+    return memberServicePublic.delete(arg0);
   }
   
   public trong.lixco.com.account.servicepublics.Member[] findByCodeDepart(java.lang.String arg0) throws java.rmi.RemoteException{
     if (memberServicePublic == null)
       _initMemberServicePublicProxy();
     return memberServicePublic.findByCodeDepart(arg0);
-  }
-  
-  public trong.lixco.com.account.servicepublics.Member create(trong.lixco.com.account.servicepublics.Member arg0) throws java.rmi.RemoteException{
-    if (memberServicePublic == null)
-      _initMemberServicePublicProxy();
-    return memberServicePublic.create(arg0);
   }
   
   public trong.lixco.com.account.servicepublics.Member update(trong.lixco.com.account.servicepublics.Member arg0) throws java.rmi.RemoteException{

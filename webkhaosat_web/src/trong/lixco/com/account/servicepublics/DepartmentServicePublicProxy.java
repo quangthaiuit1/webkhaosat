@@ -44,6 +44,7 @@ public class DepartmentServicePublicProxy implements trong.lixco.com.account.ser
     return departmentServicePublic;
   }
   
+  
   public trong.lixco.com.account.servicepublics.Department[] findSearch(java.lang.String arg0, java.lang.String[] arg1) throws java.rmi.RemoteException{
     if (departmentServicePublic == null)
       _initDepartmentServicePublicProxy();
@@ -54,12 +55,6 @@ public class DepartmentServicePublicProxy implements trong.lixco.com.account.ser
     if (departmentServicePublic == null)
       _initDepartmentServicePublicProxy();
     return departmentServicePublic.findByCode(arg0, arg1);
-  }
-  
-  public trong.lixco.com.account.servicepublics.Department[] getAllDepartSubByParent(java.lang.String arg0) throws java.rmi.RemoteException{
-    if (departmentServicePublic == null)
-      _initDepartmentServicePublicProxy();
-    return departmentServicePublic.getAllDepartSubByParent(arg0);
   }
   
   public trong.lixco.com.account.servicepublics.Department findId(long arg0) throws java.rmi.RemoteException{
@@ -90,6 +85,12 @@ public class DepartmentServicePublicProxy implements trong.lixco.com.account.ser
     if (departmentServicePublic == null)
       _initDepartmentServicePublicProxy();
     return departmentServicePublic.update(arg0);
+  }
+  
+  public trong.lixco.com.account.servicepublics.Department[] getAllDepartSubByParent(java.lang.String arg0) throws java.rmi.RemoteException{
+    if (departmentServicePublic == null)
+      _initDepartmentServicePublicProxy();
+    return departmentServicePublic.getAllDepartSubByParent(arg0);
   }
   
   

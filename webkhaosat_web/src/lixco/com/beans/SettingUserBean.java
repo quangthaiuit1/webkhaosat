@@ -3,16 +3,24 @@ package lixco.com.beans;
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.naming.NamingException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
@@ -26,6 +34,10 @@ import lixco.com.beans.entity.DepartmentByLocate;
 import lixco.com.entities.Survey;
 import trong.lixco.com.account.servicepublics.Department;
 import trong.lixco.com.account.servicepublics.Member;
+import trong.lixco.com.servicepublic.EmployeeDTO;
+import trong.lixco.com.servicepublic.EmployeeServicePublic;
+import trong.lixco.com.servicepublic.EmployeeServicePublicProxy;
+import trong.lixco.com.util.DepartmentUtil;
 
 @ManagedBean
 @ViewScoped
@@ -47,25 +59,78 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 	private Member autocompleteEmployee;
 	private String txt1;
 
+	private List<EmployeeDTO> employeesDTO;
+	private List<EmployeeDTO> selectedsDelete;
+	private EmployeeDTO employeeDTOSelected;
+	private EmployeeDTO[] employeeBySurDTO;
+	private List<EmployeeDTO> employeeBySurListDTO;
+	private Set<EmployeeDTO> employeeBySurSetDTO;
+	private Set<Department> departmentList;
+	EmployeeServicePublic EMPLOYEE_SERVICEPUBLIC_DTO;
+
 	@Override
 	protected void initItem() {
+		employeesDTO = new ArrayList<EmployeeDTO>();
+
+		EMPLOYEE_SERVICEPUBLIC_DTO = new EmployeeServicePublicProxy();
+		employeeDTOSelected = new EmployeeDTO();
 		autocompleteEmployee = new Member();
+		departmentList = new HashSet<Department>();
+		employeeBySurSetDTO = new HashSet<EmployeeDTO>();
+		departments = new ArrayList<>();
+
 		try {
-			allDepartment = DEPARTMENT_SERVICE.findAll();
-			departmentsByLocate = filterDepartmentByLocate(allDepartment);
+//			allDepartment = DEPARTMENT_SERVICE.findAll();
+//			departmentsByLocate = filterDepartmentByLocate(allDepartment);
+
+			Department[] deps = DEPARTMENT_SERVICE.getAllDepartSubByParent("10001");
+			for (int i = 0; i < deps.length; i++) {
+				if (deps[i].getLevelDep().getLevel() <= 2) {
+					departments.add(deps[i]);
+					Department[] departments = DEPARTMENT_SERVICE.getAllDepartSubByParent(deps[i].getCode());
+					List<String> codeDeps = new ArrayList<String>();
+					if (departments != null)
+						for (int j = 0; j < departments.length; j++) {
+							codeDeps.add(departments[j].getCode());
+						}
+					if (deps[i].getLevelDep().getLevel() == 2) {
+						codeDeps.add(deps[i].getCode());
+						departmentList.add(deps[i]);
+						String[] codearr = codeDeps.stream().toArray(String[]::new);
+						EmployeeDTO[] employeeDTOs = EMPLOYEE_SERVICEPUBLIC_DTO.findByDep(codearr);
+						if (employeeDTOs != null)
+							for (int j = 0; j < employeeDTOs.length; j++) {
+								employeeDTOs[j].setCodeDepart(deps[i].getCode());
+								employeeDTOs[j].setNameDepart(deps[i].getName());
+								this.employeesDTO.add(employeeDTOs[j]);
+							}
+					}
+				}
+			}
+			if (departments.size() != 0) {
+				departments = DepartmentUtil.sort(departments);
+			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
 		selectedDelete = new ArrayList<>();
+		selectedsDelete = new ArrayList<>();
 		surveyId = getParamSetOfId();
 		surveyPlaying = SURVEY_SERVICE.findById(surveyId);
 		try {
+//			if (StringUtils.isEmpty(surveyPlaying.getUsersJson())) {
+//				employeesBySurList = new ArrayList<>();
+//			} else {
+//				employeesBySur = mapper.readValue(surveyPlaying.getUsersJson(), Member[].class);
+//				employeesBySurList = new ArrayList<>();
+//				employeesBySurList = Arrays.asList(employeesBySur);
+//			}
 			if (StringUtils.isEmpty(surveyPlaying.getUsersJson())) {
-				employeesBySurList = new ArrayList<>();
+				employeeBySurListDTO = new ArrayList<EmployeeDTO>();
 			} else {
-				employeesBySur = mapper.readValue(surveyPlaying.getUsersJson(), Member[].class);
-				employeesBySurList = new ArrayList<>();
-				employeesBySurList = Arrays.asList(employeesBySur);
+				employeeBySurDTO = mapper.readValue(surveyPlaying.getUsersJson(), EmployeeDTO[].class);
+				employeeBySurListDTO = new ArrayList<>();
+				employeeBySurListDTO = Arrays.asList(employeeBySurDTO);
 			}
 		} catch (JsonParseException e) {
 			e.printStackTrace();
@@ -148,14 +213,16 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		// Member[].class);
 
 		// convert Array object to JSON
-		String a = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.employeesBySurList);
+//		String a = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.employeesBySurList);
+
+		String a = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.employeeBySurListDTO);
 		surveyPlaying.setUsersJson(a);
 		SURVEY_SERVICE.update(surveyPlaying);
 		notifyUpdateSuccess();
 	}
 
 	public void autocompleteSelected() {
-		if(!autocompleteEmployee.isDisable()) {
+		if (!autocompleteEmployee.isDisable()) {
 			List<Member> listTemp = new ArrayList<>();
 			listTemp.add(autocompleteEmployee);
 			listTemp = Stream.concat(listTemp.stream(), this.employeesBySurList.stream()).distinct()
@@ -199,21 +266,33 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 
 // Xoa Employee 
 	public void deleteEmployees() {
-		Map<Long, Member> maps = new HashMap<Long, Member>();
-		for (Member i : employeesBySurList) {
+//		Map<Long, Member> maps = new HashMap<Long, Member>();
+//		for (Member i : employeesBySurList) {
+//			maps.put(i.getId(), i);
+//		}
+//		for (Member m : selectedDelete) {
+//			if (maps.containsKey(m.getId())) {
+//				maps.remove(m.getId());
+//			}
+//		}
+
+		Map<Long, EmployeeDTO> maps = new HashMap<Long, EmployeeDTO>();
+		for (EmployeeDTO i : employeeBySurListDTO) {
 			maps.put(i.getId(), i);
 		}
-		for (Member m : selectedDelete) {
+		for (EmployeeDTO m : selectedsDelete) {
 			if (maps.containsKey(m.getId())) {
 				maps.remove(m.getId());
 			}
 		}
 
-		this.employeesBySurList = maps.values().stream().collect(Collectors.toList());
+		this.employeeBySurListDTO = maps.values().stream().collect(Collectors.toList());
 	}
 
 	public List<Member> completeTest(String query) throws RemoteException {
 		Member[] result = EMPLOYEE_SERVICE.findSearch(query, new String[] { "name" });
+		// test
+		// end test
 		if (result == null) {
 			return new ArrayList<>();
 		} else {
@@ -222,7 +301,99 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		}
 	}
 
-//	GET AND SET
+	// new
+	public List<Department> getDepartmentList() {
+		List<Department> results = new ArrayList<>(departmentList);
+		Collections.sort(results, new Comparator<Department>() {
+			public int compare(Department o1, Department o2) {
+				try {
+					int rs = o1.getDepartment().getCode().compareTo(o2.getDepartment().getCode());
+					if (rs == 0) {
+						return o1.getCode().compareTo(o2.getCode());
+					} else {
+						return rs;
+					}
+				} catch (Exception e) {
+					return -1;
+				}
+			}
+		});
+		return results;
+	}
+
+	public void selectDep() {
+		for (Department dep : departmentList) {
+			if (dep.isSelect()) {
+				for (int i = 0; i < employeesDTO.size(); i++) {
+					try {
+						if (dep.getCode().equals(employeesDTO.get(i).getCodeDepart())) {
+							employeeBySurSetDTO.add(employeesDTO.get(i));
+
+							// convert hash set to arraylist
+							List<EmployeeDTO> usrAll = new ArrayList<EmployeeDTO>(employeeBySurSetDTO);
+							List<EmployeeDTO> usrAll1 = new ArrayList<>();
+							usrAll1.addAll(employeeBySurListDTO);
+							//add to list employee by survey
+							for(int j = 0; j < usrAll.size(); j++) {
+								//kiem tra trong list da co employee do chua
+								boolean check = false;
+								for(int l = 0; l < employeeBySurListDTO.size(); l++) {
+									if(employeeBySurListDTO.get(l).getCode().equals(usrAll.get(j).getCode())) {
+										check = true;
+										break;
+									}
+								}
+								if(check == false) {
+									usrAll1.add(usrAll.get(j));
+								}
+							}
+							employeeBySurListDTO = new ArrayList<>();
+							employeeBySurListDTO.addAll(usrAll1);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+				}
+			}
+		}
+	}
+
+	public void ajaxEmp() {
+		try {
+			List<EmployeeDTO> listTemp = new ArrayList<>();
+			listTemp.add(employeeDTOSelected);
+			listTemp = Stream.concat(listTemp.stream(), this.employeeBySurListDTO.stream()).distinct()
+					.collect(Collectors.toList());
+			this.employeeBySurListDTO = listTemp;
+			employeeDTOSelected = new EmployeeDTO();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public static String converViToEn(String s) {
+		String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
+		Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+		String result = pattern.matcher(temp).replaceAll("");
+		return pattern.matcher(result).replaceAll("").replaceAll("Đ", "D").replaceAll("đ", "d");
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<EmployeeDTO> completeEmployee(final String containedStr)
+			throws NamingException, ClassNotFoundException {
+		List<EmployeeDTO> linkedList = new LinkedList<EmployeeDTO>();
+		String searchText = converViToEn(containedStr.toLowerCase());
+		for (int i = 0; i < employeesDTO.size(); i++) {
+			if (converViToEn(employeesDTO.get(i).getCode()).toLowerCase().contains(searchText)
+					|| converViToEn(employeesDTO.get(i).getName()).toLowerCase().contains(searchText))
+				linkedList.add(employeesDTO.get(i));
+		}
+		return linkedList;
+	}
+	// end new
+	// GET AND SET
 
 	public Survey getSurveyPlaying() {
 		return surveyPlaying;
@@ -318,6 +489,46 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 
 	public void setTxt1(String txt1) {
 		this.txt1 = txt1;
+	}
+
+	public List<EmployeeDTO> getEmployeesDTO() {
+		return employeesDTO;
+	}
+
+	public void setEmployeesDTO(List<EmployeeDTO> employeesDTO) {
+		this.employeesDTO = employeesDTO;
+	}
+
+	public EmployeeDTO getEmployeeDTOSelected() {
+		return employeeDTOSelected;
+	}
+
+	public void setEmployeeDTOSelected(EmployeeDTO employeeDTOSelected) {
+		this.employeeDTOSelected = employeeDTOSelected;
+	}
+
+	public EmployeeDTO[] getEmployeeBySurDTO() {
+		return employeeBySurDTO;
+	}
+
+	public void setEmployeeBySurDTO(EmployeeDTO[] employeeBySurDTO) {
+		this.employeeBySurDTO = employeeBySurDTO;
+	}
+
+	public List<EmployeeDTO> getEmployeeBySurListDTO() {
+		return employeeBySurListDTO;
+	}
+
+	public void setEmployeeBySurListDTO(List<EmployeeDTO> employeeBySurListDTO) {
+		this.employeeBySurListDTO = employeeBySurListDTO;
+	}
+
+	public List<EmployeeDTO> getSelectedsDelete() {
+		return selectedsDelete;
+	}
+
+	public void setSelectedsDelete(List<EmployeeDTO> selectedsDelete) {
+		this.selectedsDelete = selectedsDelete;
 	}
 
 	@Override

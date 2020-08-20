@@ -68,12 +68,6 @@ public class AccountServicePublicProxy implements trong.lixco.com.account.servic
     return accountServicePublic.findProgramByAccount(arg0);
   }
   
-  public trong.lixco.com.account.servicepublics.Account[] findByDepartment(trong.lixco.com.account.servicepublics.Department arg0) throws java.rmi.RemoteException{
-    if (accountServicePublic == null)
-      _initAccountServicePublicProxy();
-    return accountServicePublic.findByDepartment(arg0);
-  }
-  
   public trong.lixco.com.account.servicepublics.Account findMember(trong.lixco.com.account.servicepublics.Member arg0) throws java.rmi.RemoteException{
     if (accountServicePublic == null)
       _initAccountServicePublicProxy();
@@ -121,6 +115,7 @@ public class AccountServicePublicProxy implements trong.lixco.com.account.servic
       _initAccountServicePublicProxy();
     return accountServicePublic.findSSOByValue(arg0);
   }
+  
   
   public trong.lixco.com.account.servicepublics.Account find_User(java.lang.String arg0) throws java.rmi.RemoteException{
     if (accountServicePublic == null)

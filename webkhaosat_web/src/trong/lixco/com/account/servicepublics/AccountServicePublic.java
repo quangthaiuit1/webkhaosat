@@ -12,7 +12,6 @@ public interface AccountServicePublic extends java.rmi.Remote {
     public trong.lixco.com.account.servicepublics.Account findById(long arg0) throws java.rmi.RemoteException;
     public trong.lixco.com.account.servicepublics.SingleSignOn findSSOById(long arg0) throws java.rmi.RemoteException;
     public trong.lixco.com.account.servicepublics.Program[] findProgramByAccount(trong.lixco.com.account.servicepublics.Account arg0) throws java.rmi.RemoteException;
-    public trong.lixco.com.account.servicepublics.Account[] findByDepartment(trong.lixco.com.account.servicepublics.Department arg0) throws java.rmi.RemoteException;
     public trong.lixco.com.account.servicepublics.Account findMember(trong.lixco.com.account.servicepublics.Member arg0) throws java.rmi.RemoteException;
     public trong.lixco.com.account.servicepublics.UserRight[] findUserRightByAccPro(trong.lixco.com.account.servicepublics.Account arg0, trong.lixco.com.account.servicepublics.Program arg1) throws java.rmi.RemoteException;
     public trong.lixco.com.account.servicepublics.Account[] findAllNotAccount(trong.lixco.com.account.servicepublics.Account arg0) throws java.rmi.RemoteException;

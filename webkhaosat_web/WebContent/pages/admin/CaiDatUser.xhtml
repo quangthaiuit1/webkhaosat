@@ -15,7 +15,7 @@
 			<h:form id="loadResult">
 				<!-- Them bo cau hoi -->
 				<div class="row"
-					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 20px;margin-bottom: 5px;">
+					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 20px; margin-bottom: 5px;">
 					<div class="row" style="margin: 0 auto">
 						<p style="width: 100%">
 							<span>DANH SÁCH NHÂN VIÊN: <h:inputText
@@ -32,55 +32,56 @@
 							update="loadResult:dtEmployees"
 							style=" margin-left: 1%;margin-bottom: 10px;color: #fff;background-color: #d79d39;border-color:#d79d39"
 							action="#{settingUserBean.saveOrUpdate}" />
-						<p:commandButton value="Thêm nhân viên" icon="fa fa-plus"
-							style=" margin-left: 1%;margin-bottom: 10px;color: #fff;background-color: #007bff;border-color:#007bff"
-							update="loadResult:addEmployee"
-							oncomplete="PF('dialogAddEmployee').show();" />
 						<p:commandButton value="Xóa" icon="fa fa-trash-o"
 							update="loadResult:dtEmployees"
 							style=" margin-left: 1%;margin-bottom: 10px;color: #fff;background-color: #dc3545;border-color:#dc3545"
 							action="#{settingUserBean.deleteEmployees}" />
 					</div>
 					<!-- TEST -->
-					<div style="width: 60%;margin-left: 46%" class="row">
-						<div style="width: 20%;text-align:right">
-							<span>Tìm kiếm: <i class="fa fa-search-plus"/></span>
+					<div style="width: 60%; margin-left: 46%" class="row">
+						<div style="width: 20%; text-align: right">
+							<span>Tìm kiếm: <i class="fa fa-search-plus" /></span>
 						</div>
 						<div style="width: 80%">
-							<p:autoComplete id="themePojo"
-								value="#{settingUserBean.autocompleteEmployee}"
-								completeMethod="#{settingUserBean.completeTest}" var="theme"
-								itemLabel="#{theme.name}" itemValue="#{theme}"
-								converter="#{themeConverter}" minQueryLength="4"
-								forceSelection="true" scrollHeight="400" size="56"
-								style="font-size:80px"
-								>
-								<p:column style="width:20%" headerText="Mã">
-									<h:outputText value="#{theme.code}" />
-								</p:column>
-								<p:column style="width:50%" headerText="Tên">
-									<h:outputText value="#{theme.name}" />
-								</p:column>
-
-								<p:column style="width:30%" headerText="Phòng ban">
-									<h:outputText value="#{theme.department.name}" />
-								</p:column>
-								<p:ajax event="itemSelect"
-									listener="#{settingUserBean.autocompleteSelected()}"
-									update="loadResult:dtEmployees themePojo" />
-							</p:autoComplete>
+							<p:panelGrid columns="3" columnClasses="w30,w60,w10"
+								style="width:60%;margin-right:15%;margin-bottom: 5px">
+								<p:outputLabel value="Nhân viên" />
+								<p:autoComplete style="width:100%;" id="autocompleteNhanVien"
+									value="#{settingUserBean.employeeDTOSelected}"
+									converter="abstractConverter" minQueryLength="3"
+									completeMethod="#{settingUserBean.completeEmployee}" var="p"
+									itemLabel="#{p.name}" itemValue="#{p}" forceSelection="true">
+									<p:ajax event="itemSelect"
+										listener="#{settingUserBean.ajaxEmp()}"
+										update="loadResult:dtEmployees, autocompleteNhanVien" />
+									<f:attribute name="filters" value="name,code" />
+									<p:column style="width:50px">
+							   	#{p.code}
+							</p:column>
+									<p:column style="width:200px">
+							   	#{p.name}
+							</p:column>
+									<p:column style="width:200px">
+							   	#{p.nameDepart}
+							</p:column>
+								</p:autoComplete>
+								<p:commandButton
+									style="color: #fff;background-color: #007bff;border-color:#007bff"
+									value="Phòng ban" onclick="PF('dialogAddEmployee').show()" />
+							</p:panelGrid>
 						</div>
 					</div>
 					<p:dataTable id="dtEmployees" var="employee"
-						value="#{settingUserBean.employeesBySurList}"
-						sortBy="#{employee.department.name}"
-						style="width:70%;margin:0 auto" expandableRowGroups="true"
-						selection="#{settingUserBean.selectedDelete}"
+						value="#{settingUserBean.employeeBySurListDTO}"
+						sortBy="#{employee.nameDepart}"
+						style="width:70%;margin:0 auto;margin-bottom:10px"
+						expandableRowGroups="true"
+						selection="#{settingUserBean.selectedsDelete}"
 						rowKey="#{employee.id}" paginator="true" rows="30"
-						 rowsPerPageTemplate="30,50,100">
+						rowsPerPageTemplate="30,50,100" paginatorPosition="bottom">
 						<p:headerRow>
 							<p:column colspan="3">
-								<h:outputText value="#{employee.department.name}" />
+								<h:outputText value="#{employee.nameDepart}" />
 							</p:column>
 						</p:headerRow>
 						<p:column selectionMode="multiple"
@@ -97,46 +98,42 @@
 						widgetVar="dialogAddEmployee" modal="true" showEffect="fade"
 						hideEffect="fade" resizable="true">
 						<p:outputPanel id="editSetof" style="text-align:center;">
-							<div style="width: 50%; margin-left: 42%">
-								<p:linkButton outcome="CaiDatUser" icon="fa fa-arrow-left"
-									value="Quay lại"
-									style="background-color: #46af79;border-color:#46af79; margin-right: 10px">
-									<c:if test="${settingUserBean.surveyId != 0}">
-										<f:param name="setofid" value="#{settingUserBean.surveyId}" />
-									</c:if>
-								</p:linkButton>
-								<p:commandButton id="btnAddUser" value="Thêm" icon="fa fa-plus"
-									style=" margin-left: 1%;margin-bottom: 5px;color: #fff;background-color: #007bff;border-color:#007bff"
-									update="loadResult:dtEmployees addEmployee"
-									action="#{settingUserBean.addEmployee()}" onclick="start()"
-									widgetVar="startButton1" />
-								<br />
-							</div>
-							<p:progressBar id="progressBarClient" widgetVar="pbClient"
-								style="width:190px;margin-left:50%" />
-							<br />
-
-							<p:dataTable id="dtAddEmployees" var="department"
-								value="#{settingUserBean.departmentsByLocate}"
-								sortBy="#{department.locateName}" expandableRowGroups="true"
-								style="width:70%;margin:0 auto"
-								selection="#{settingUserBean.departmentsSelected}"
-								rowKey="#{department.id}">
+							<p:dataTable value="#{settingUserBean.departmentList}" var="item"
+								scrollable="true" scrollHeight="500" styleClass="tableformat"
+								paginatorPosition="bottom" rowsPerPageTemplate="60,80,100"
+								paginator="true" rows="80" rowKey="#{item.code}"
+								sortBy="#{item.department.id}" expandableRowGroups="true"
+								rowIndexVar="rowIndex" resizableColumns="true">
 								<p:headerRow>
-									<p:column colspan="3">
-										<h:outputText value="#{department.locateName}" />
+									<p:column style="text-align:center">
+										<h:outputText value="" />
+									</p:column>
+									<p:column style="font-size: 1.3em;text-align:center" width="50">
+										<h:outputText value="#{item.department.code}" />
+									</p:column>
+									<p:column style="font-size: 1.3em;padding: 5px;">
+										<h:outputText value="#{item.department.name}" />
 									</p:column>
 								</p:headerRow>
-								<p:column selectionMode="multiple"
-									style="width:70px;text-align:center" />
-								<p:column headerText="Mã"
-									style="width: 100px; text-align: center">
-									<h:outputText value="#{department.departmentCode}" />
+								<p:column headerText="..." style="text-align:center" width="30">
+									<p:selectBooleanCheckbox value="#{item.select}">
+										<p:ajax process="@this" />
+									</p:selectBooleanCheckbox>
 								</p:column>
-								<p:column style="width:100%;text-align: left"
-									headerText="Tên phòng ban">
-									<h:outputText value="#{department.departmentName}" />
+								<p:column headerText="Mã" style="text-align:center" width="50">
+									<h:outputText value="#{item.code}" />
 								</p:column>
+								<p:column headerText="Tên phòng ban" style="text-align:left">
+									<h:outputText value="#{item.name}" />
+								</p:column>
+								<f:facet name="footer">
+									<p:commandButton
+										style="color: #fff;background-color: #007bff;border-color:#007bff"
+										process="@form" value="Thêm vào danh sách"
+										update="loadResult:dtEmployees"
+										action="#{settingUserBean.selectDep()}" />
+									<div style="clear: both;" />
+								</f:facet>
 							</p:dataTable>
 						</p:outputPanel>
 					</p:dialog>

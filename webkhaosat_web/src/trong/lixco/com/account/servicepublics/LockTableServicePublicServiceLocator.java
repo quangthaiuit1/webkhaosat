@@ -7,6 +7,8 @@
 
 package trong.lixco.com.account.servicepublics;
 
+import general.StaticPath;
+
 public class LockTableServicePublicServiceLocator extends org.apache.axis.client.Service implements trong.lixco.com.account.servicepublics.LockTableServicePublicService {
 
     public LockTableServicePublicServiceLocator() {
@@ -22,7 +24,7 @@ public class LockTableServicePublicServiceLocator extends org.apache.axis.client
     }
 
     // Use to get a proxy class for LockTableServicePublicPort
-    private java.lang.String LockTableServicePublicPort_address = "http://192.168.0.132:8180/account_service/LockTableServicePublic";
+    private java.lang.String LockTableServicePublicPort_address = StaticPath.getPath()+"/account_service/LockTableServicePublic";
 
     public java.lang.String getLockTableServicePublicPortAddress() {
         return LockTableServicePublicPort_address;

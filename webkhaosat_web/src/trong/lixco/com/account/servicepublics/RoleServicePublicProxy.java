@@ -43,7 +43,6 @@ public class RoleServicePublicProxy implements trong.lixco.com.account.servicepu
       _initRoleServicePublicProxy();
     return roleServicePublic;
   }
-  
   public trong.lixco.com.account.servicepublics.Role[] findByProgram(trong.lixco.com.account.servicepublics.Program arg0) throws java.rmi.RemoteException{
     if (roleServicePublic == null)
       _initRoleServicePublicProxy();

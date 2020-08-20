@@ -26,7 +26,11 @@ span.ui-slider-handle.ui-corner-all.ui-state-default{
 }
 
 body .ui-radiobutton .ui-radiobutton-box.ui-state-active {
-	border-color: #007ad9;
+	/* border-color: #007ad9; */
+	background-color: #007ad9;
+	color: #fff;
+}
+.ui-chkbox-box.ui-widget.ui-corner-all.ui-state-default.ui-state-active {
 	background-color: #007ad9;
 	color: #fff;
 }
