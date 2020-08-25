@@ -4,20 +4,25 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
+import org.omnifaces.cdi.ViewScoped;
 import org.primefaces.PrimeFaces;
 
+import lixco.com.config.ConfigQuestionType;
 import lixco.com.entities.Answer;
 import lixco.com.entities.Question;
 import lixco.com.entities.Rating;
+import lixco.com.entities.TypeRating;
+import lixco.com.services.TypeRatingService;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class DetailQuestionBean extends AbstractBean implements Serializable {
 
@@ -28,30 +33,37 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 	private Question questionDeleted;
 	private Answer answerUpdated;
 	private Answer answerDeleted;
-	private Rating ratingUpdated;
-	private Rating ratingDeleted;
 	private Question questionSelected; // Hung gia tri khi cau hoi duoc chon
 	private String newAnswer1;
 	private String newAnswer2;
 	// Danh sach cau tra loi theo tung cau hoi
 	private List<Answer> listAnswersByQuestion;
 	private List<Rating> listRatingByQuestion;
+	private List<Rating> listRatingRemove;
+
+	@Inject
+	private TypeRatingService TYPE_RATING_SERVICE;
+	private List<TypeRating> typeRatings;
+	private TypeRating typeRatingSelected;
+	private Rating ratingSelected;
 
 	@Override
 	protected void initItem() {
+		ratingSelected = new Rating();
+		listRatingRemove = new ArrayList<>();
+		typeRatings = TYPE_RATING_SERVICE.findAll();
+		typeRatingSelected = new TypeRating();
 		listQuestionBySet = new ArrayList<>();
 		// ?? Tai sao lai phai khoi tao
 		questionUpdated = new Question();
 		questionDeleted = new Question();
 		answerUpdated = new Answer();
 		answerDeleted = new Answer();
-		ratingUpdated = new Rating();
-		ratingDeleted = new Rating();
 		listAnswersByQuestion = new ArrayList<>();
 		listRatingByQuestion = new ArrayList<>();
 		try {
 			setofId = getParamSetOfId();
-			listQuestionBySet = QUESTION_SERVICE.find(null,setofId,null);
+			listQuestionBySet = QUESTION_SERVICE.find(null, setofId, null);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -68,7 +80,7 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 	// Xoa Cau hoi
 	public void deleteQuestion() {
 		QUESTION_SERVICE.delete(questionDeleted);
-		listQuestionBySet = QUESTION_SERVICE.find(null, setofId,null);
+		listQuestionBySet = QUESTION_SERVICE.find(null, setofId, null);
 		PrimeFaces.current().executeScript("PF('dialogDeleteQuest').hide()");
 		notifyDeleteSuccess();
 	}
@@ -96,18 +108,18 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 		notifyDeleteSuccess();
 	}
 
-	public void updateRating() {
-		ratingUpdated.setModifiedDate(getDate());
-		RATING_SERVICE.update(ratingUpdated);
-		PrimeFaces.current().executeScript("PF('dialogUpdateRati').hide()");
-		notifyUpdateSuccess();
-	}
 
-	public void deleteRating() {
-		RATING_SERVICE.delete(ratingDeleted);
-		listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId(),0L);
-		PrimeFaces.current().executeScript("PF('dialogDeleteRati').hide()");
-		notifyDeleteSuccess();
+	public void deleteRating(Rating item) {
+		List<Rating> temp = new ArrayList<>();
+		for(Rating r : listRatingByQuestion) {
+			if(r.getId() != item.getId()) {
+				temp.add(r);
+			}else {
+				listRatingRemove.add(r);
+			}
+		}
+		listRatingByQuestion = new ArrayList<>();
+		listRatingByQuestion.addAll(temp);
 	}
 
 	public void cancelDelete() {
@@ -118,20 +130,66 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 	public void selectedQuestion() {
 		// Danh sach cau tra loi theo id cau hoi
 		// Danh gia
-		if (questionSelected.getQuestionType().getId() == 2) {
-			listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId(),0L);
+		if (questionSelected.getQuestionType().getId() == ConfigQuestionType.DANH_GIA) {
+			listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId(), 0L);
 			// Reset ds dap ap cua loai cau hoi
 			listAnswersByQuestion = new ArrayList<>();
 		}
-		if(questionSelected.getQuestionType().getId() == 4) {
-			listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId(),0L);
+		if (questionSelected.getQuestionType().getId() == ConfigQuestionType.THANG_DIEM) {
+			listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId(), 0L);
 			listAnswersByQuestion = new ArrayList<>();
 		}
 		// Lay y kien
-		if (questionSelected.getQuestionType().getId() == 1) {
+		if (questionSelected.getQuestionType().getId() == ConfigQuestionType.LAY_Y_KIEN) {
 			listAnswersByQuestion = new ArrayList<>();
 			listRatingByQuestion = new ArrayList<>();
 		}
+	}
+
+	public void updateRatingNew() {
+		boolean check = false;
+		try {
+			if(!listRatingRemove.isEmpty()) {
+				for(Rating ra: listRatingRemove) {
+					RATING_SERVICE.delete(ra);
+				}
+				listRatingRemove = new ArrayList<>();
+			}
+			for (Rating r : listRatingByQuestion) {
+				if (r.getId() != 0) {
+					Rating newR = RATING_SERVICE.update(r);
+					if(newR == null) {
+						check = true;
+					}
+				} else {
+					if (StringUtils.isNotEmpty(r.getName()) && r.getType_rating() != null) {
+						r.setQuestion(listRatingByQuestion.get(0).getQuestion());
+						Rating newR = RATING_SERVICE.create(r);
+						if(newR == null) {
+							check = true;
+						}
+					}
+				}
+			}
+			if(check == false) {
+				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Cập nhật thành công.");
+				PrimeFaces.current().dialog().showMessageDynamic(message);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void addNewRatingNew() {
+		Rating newR = new Rating();
+		newR.setType_rating(typeRatings.get(1));
+		listRatingByQuestion.add(newR);
+	}
+
+	public void handleRatingSelected(Rating item) {
+		ratingSelected = item;
+		PrimeFaces.current().executeScript("PF('dialogChooseCTKKS').show()");
 	}
 
 	// Bo sung them dap an
@@ -156,27 +214,14 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 
 	}
 
-	public void addNewRating() {
-		try {
-			if (questionSelected.getName() != null && StringUtils.isNotEmpty(newAnswer2)
-					&& questionSelected.getQuestionType().getId() == 2) {
-				Rating newRating = new Rating();
-				newRating.setCreatedDate(getDate());
-				newRating.setDeleted(false);
-				newRating.setName(newAnswer2);
-				newRating.setQuestion(questionSelected);
-				RATING_SERVICE.create(newRating);
-				newAnswer2 = "";
-				listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId(),0L);
-				PrimeFaces.current().executeScript("PF('dialogAddNewRating').hide()");
-				notifyAddSuccess();
+	public void handleChoose(TypeRating item) {
+		for (int i = 0; i < listRatingByQuestion.size(); i++) {
+			if (listRatingByQuestion.get(i).getName().equals(ratingSelected.getName())) {
+				listRatingByQuestion.get(i).setType_rating(item);
 			}
-		} catch (Exception e) {
-			// TODO: handle exception
 		}
-
 	}
-	
+
 	public Long getSetofId() {
 		return setofId;
 	}
@@ -225,22 +270,6 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 		this.answerDeleted = answerDeleted;
 	}
 
-	public Rating getRatingUpdated() {
-		return ratingUpdated;
-	}
-
-	public void setRatingUpdated(Rating ratingUpdated) {
-		this.ratingUpdated = ratingUpdated;
-	}
-
-	public Rating getRatingDeleted() {
-		return ratingDeleted;
-	}
-
-	public void setRatingDeleted(Rating ratingDeleted) {
-		this.ratingDeleted = ratingDeleted;
-	}
-
 	public Question getQuestionSelected() {
 		return questionSelected;
 	}
@@ -279,6 +308,22 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 
 	public void setListRatingByQuestion(List<Rating> listRatingByQuestion) {
 		this.listRatingByQuestion = listRatingByQuestion;
+	}
+
+	public List<TypeRating> getTypeRatings() {
+		return typeRatings;
+	}
+
+	public void setTypeRatings(List<TypeRating> typeRatings) {
+		this.typeRatings = typeRatings;
+	}
+
+	public TypeRating getTypeRatingSelected() {
+		return typeRatingSelected;
+	}
+
+	public void setTypeRatingSelected(TypeRating typeRatingSelected) {
+		this.typeRatingSelected = typeRatingSelected;
 	}
 
 	@Override

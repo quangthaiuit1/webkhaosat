@@ -58,22 +58,21 @@ public class AuthorizationManager implements Serializable {
 	private UserRightServicePublic userRightServicePublic;
 	private ProgramServicePublic programServicePublic;
 
-
 	@PostConstruct
 	public void init() {
 		accountServicePublic = new AccountServicePublicProxy();
 		userRightServicePublic = new UserRightServicePublicProxy();
 		programServicePublic = new ProgramServicePublicProxy();
 
-		
-
 		urlPermissions = new ArrayList<UrlPermission>();
 		uriUnprotected = new ArrayList<String>();
 		uriUnprotected.add("/webkhaosat_web/pages/TrangChu.jsf");
+		uriUnprotected.add("/webkhaosat_web/pages/web/index.jsf");
+		uriUnprotected.add("/webkhaosat_web/pages/web/KhaoSat.jsf");
 	}
 
 	public Program getProgram() {
-		
+
 		try {
 			return programServicePublic.findByName("webkhaosat");
 		} catch (RemoteException e) {
@@ -110,49 +109,52 @@ public class AuthorizationManager implements Serializable {
 		boolean allow = false;
 		try {
 			Program[] programs = accountServicePublic.findProgramByAccount(account);
-			for (int i = 0; i < programs.length; i++) {
-				if ("webkhaosat".equals(programs[i].getName())) {
-					Role[] roles = accountServicePublic.findRoleByAccPro(account, programs[i]);
-					for (int j = 0; j < roles.length; j++) {
-						UserRight[] userRights = userRightServicePublic.findUserRightByRole(roles[j]);
-						try {
+			
+			if (programs != null) {
+				for (int i = 0; i < programs.length; i++) {
+					if ("webkhaosat".equals(programs[i].getName())) {
+						Role[] roles = accountServicePublic.findRoleByAccPro(account, programs[i]);
+						for (int j = 0; j < roles.length; j++) {
+							UserRight[] userRights = userRightServicePublic.findUserRightByRole(roles[j]);
+							try {
 
-							for (int k = 0; k < userRights.length; k++) {
-								if (userRights[k].isAllow()) {
-									UrlPermission item = new UrlPermission();
-									item.setUrl(userRights[k].getFormList().getURL());
-									item.setAllow(userRights[k].isAllow());
-									item.setDelete(userRights[k].isDelete());
-									item.setSave(userRights[k].isInsert());
-									item.setUpdate(userRights[k].isUpdate());
-									if (urlPermissions.size() == 0) {
-										urlPermissions.add(item);
-									} else {
-										boolean status = urlPermissions.contains(item);
-										if (status) {
-											for (int l = 0; l < urlPermissions.size(); l++) {
-												if (urlPermissions.get(i).equals(item)) {
-													if (item.isDelete())
-														urlPermissions.get(i).setDelete(true);
-													if (item.isSave())
-														urlPermissions.get(i).setSave(true);
-													if (item.isUpdate())
-														urlPermissions.get(i).setUpdate(true);
-												}
-											}
-										} else {
+								for (int k = 0; k < userRights.length; k++) {
+									if (userRights[k].isAllow()) {
+										UrlPermission item = new UrlPermission();
+										item.setUrl(userRights[k].getFormList().getURL());
+										item.setAllow(userRights[k].isAllow());
+										item.setDelete(userRights[k].isDelete());
+										item.setSave(userRights[k].isInsert());
+										item.setUpdate(userRights[k].isUpdate());
+										if (urlPermissions.size() == 0) {
 											urlPermissions.add(item);
+										} else {
+											boolean status = urlPermissions.contains(item);
+											if (status) {
+												for (int l = 0; l < urlPermissions.size(); l++) {
+													if (urlPermissions.get(i).equals(item)) {
+														if (item.isDelete())
+															urlPermissions.get(i).setDelete(true);
+														if (item.isSave())
+															urlPermissions.get(i).setSave(true);
+														if (item.isUpdate())
+															urlPermissions.get(i).setUpdate(true);
+													}
+												}
+											} else {
+												urlPermissions.add(item);
+											}
 										}
 									}
 								}
+							} catch (Exception e) {
+								// TODO: handle exception
 							}
-						} catch (Exception e) {
-							// TODO: handle exception
-						}
 
+						}
+						allow = true;
+						break;
 					}
-					allow = true;
-					break;
 				}
 			}
 		} catch (Exception e) {

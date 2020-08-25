@@ -25,12 +25,11 @@
 				<div class="row"
 					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 5px; margin-bottom: 15px;">
 					<div class="row" style="margin-bottom: 35px; margin: 0 auto">
-						<p style="width: 100%">
-							<span>KẾT QUẢ KỲ KHẢO SÁT: <h:inputText
-									style="color: black;width: 100%;border-radius: 5px"
-									value="#{viewResultSurveyBean.surveyPlaying.name}"
-									disabled="true"></h:inputText></span>
-						</p>
+						<p:fieldset legend="KẾT QUẢ KỲ KHẢO SÁT:"
+							style="width:100%;margin-bottom:20px;color: black;margin-left:27%">
+							<h:outputText style="font-size:16px;font-weight:bold"
+								value="#{viewResultSurveyBean.surveyPlaying.name}" />
+						</p:fieldset>
 					</div>
 					<div style="width: 50%; margin-left: 88%; margin-bottom: 5px">
 						<p:linkButton icon="fa fa-arrow-left" outcome="index"
@@ -71,9 +70,8 @@
 								value="#{viewResultSurveyBean.employeesByDepartment}"
 								widgetVar="employee1" emptyMessage="Không tìm thấy"
 								filteredValue="#{viewResultSurveyBean.resultsAfterFilter}"
-								paginator="true" rows="20"
-								paginatorPosition="bottom" rowIndexVar="rowIndex"
-								rowsPerPageTemplate="20,50,100">
+								paginator="true" rows="20" paginatorPosition="bottom"
+								rowIndexVar="rowIndex" rowsPerPageTemplate="20,50,100">
 								<p:column headerText="STT" style="text-align: center;width:80px">
 									<h:outputText value="#{rowIndex+1}" />
 								</p:column>
@@ -85,7 +83,8 @@
 									<center>
 										<p:linkButton icon="fa fa-search-plus"
 											outcome="ChiTietKhaoSat">
-											<f:param name="setofid" value="#{viewResultSurveyBean.surveyId}" />
+											<f:param name="setofid"
+												value="#{viewResultSurveyBean.surveyId}" />
 											<f:param name="employeeCode" value="#{employee.code}" />
 										</p:linkButton>
 									</center>

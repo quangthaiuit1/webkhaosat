@@ -1,7 +1,41 @@
 /* WEB KHAO SAT */
+
+.ui-widget-content .ui-state-default{
+    border: 1px solid #909192;
+    color: black!important;
+}
+
+.ui-fieldset-legend{
+    font-size:13px!important;
+}
+
+legend {
+	width:auto!important;
+}
+.noneformatfs {
+	padding: 5px !important;
+	text-align: center;
+}
+
+.noneformatfs legend {
+	text-align: left;
+}
+
+.noneformatfs input, textarea {
+	width: 95% !important;
+}
+
+.noneformatfs .ui-fieldset-legend {
+	padding: 0.2em 0.2em !important;
+	border: 0px;
+	background: none;
+	font-weight: bold;
+}
+
 tr {
 	background-color: #686a6c;
 }
+
 .ui-menubar {
 	width: auto;
 	margin-top: 18px;
@@ -20,7 +54,6 @@ tr {
 	border: 1px solid #909192;
 	color: #222222;
 }
-
 
 .ui-widget-content .ui-inputfield {
 	color: #222222 !important;

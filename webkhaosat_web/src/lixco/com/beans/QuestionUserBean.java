@@ -27,11 +27,17 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 	private List<Survey> surveysByEmployeeCode;
 	private List<ManagerSurveyUser> managerSurveyUser;
 	private List<ManagerSurveyUser> surveysIncomplete;
+	private List<ManagerSurveyUser> surveysExpired;
+	private List<ManagerSurveyUser> surveysInExpired;
 
 	@Override
 	protected void initItem() {
 		
 		try {
+			trong.lixco.com.account.servicepublics.Member member = getAccount().getMember();
+			surveysExpired = new ArrayList<>();
+			surveysInExpired = new ArrayList<>();
+			
 			accountLogin = getSession();
 			managerSurveyUser = getListSurvey(accountLogin);
 			surveysIncomplete = getListSurveyIncomplete(managerSurveyUser);
@@ -60,13 +66,15 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 			temp.setSurvey(s);
 			//chua het han
 			if (checkSurveyExpired(s)) {
-				// chua hoan thanh
+				// da hoan thanh
 				if(checkSurveyComplete(s.getId(),accountLogin.getMember().getCode())) {
 					temp.setCompleted(true);
 				}
 				else {
 					temp.setInCompleted(true);
 				}
+				//list toan bo survey chua het han cua user do
+				surveysInExpired.add(temp);
 			} else {
 				temp.setExpired(true);
 				if(checkSurveyComplete(s.getId(),accountLogin.getMember().getCode())) {
@@ -144,5 +152,21 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 
 	public void setSurveysIncomplete(List<ManagerSurveyUser> surveysIncomplete) {
 		this.surveysIncomplete = surveysIncomplete;
+	}
+
+	public List<ManagerSurveyUser> getSurveysExpired() {
+		return surveysExpired;
+	}
+
+	public void setSurveysExpired(List<ManagerSurveyUser> surveysExpired) {
+		this.surveysExpired = surveysExpired;
+	}
+
+	public List<ManagerSurveyUser> getSurveysInExpired() {
+		return surveysInExpired;
+	}
+
+	public void setSurveysInExpired(List<ManagerSurveyUser> surveysInExpired) {
+		this.surveysInExpired = surveysInExpired;
 	}
 }

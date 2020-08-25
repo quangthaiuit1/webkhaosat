@@ -3,6 +3,7 @@ package lixco.com.beans;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,6 +80,8 @@ public class SurveyBean extends AbstractBean implements Serializable {
 	// sua ky khao sat
 	public void updatesurvey() {
 		surveyUpdated.setModifiedDate(getDate());
+		Date temp = surveyUpdated.getEndDate();
+		System.out.println(temp);
 		SURVEY_SERVICE.update(surveyUpdated);
 		PrimeFaces.current().executeScript("PF('dialogUpdateSetof').hide()");
 		notifyUpdateSuccess();

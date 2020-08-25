@@ -53,6 +53,15 @@ public class AuthorServlet extends HttpServlet {
 						if (allow) {
 							session.setAttribute("account", account);
 							response.sendRedirect(pathlocal + "/webkhaosat_web/pages/TrangChu.jsf");
+
+						} else {
+//							if (request.getHeader("User-Agent").indexOf("Mobi") != -1) {
+//								response.sendRedirect(
+//										pathlocal + "/" + NameSytem.NAMEPROGRAM + "/pages/khaiytemobile.htm");
+//							} else {
+							session.setAttribute("account", account);
+							response.sendRedirect(pathlocal + "/webkhaosat_web/pages/web/index.jsf");
+//							}
 						}
 					}
 				} else {
@@ -62,7 +71,9 @@ public class AuthorServlet extends HttpServlet {
 
 			}
 
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			e.printStackTrace();
 		}
 
@@ -85,7 +96,7 @@ public class AuthorServlet extends HttpServlet {
 			pathlocal = accdblocal.getAddressPublic();
 		}
 		StaticPath.setPathLocal(pathlocal);
-		
+
 		AccountDatabase accdbcenter = accountDatabaseService.findByName("trungtam");
 		if (check) {
 			pathcenter = accdbcenter.getAddress();
@@ -116,13 +127,14 @@ public class AuthorServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		processRequestPost(request, response);
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-			IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		processRequestPost(request, response);
 	}
 

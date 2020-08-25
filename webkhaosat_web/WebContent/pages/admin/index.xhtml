@@ -63,14 +63,14 @@
 							<p:column headerText="Ngày tạo" style="width: 13%">
 								<center>
 									<h:outputText value="#{set1.createdDate}">
-										<f:convertDateTime pattern="dd.MM.yyyy" />
+										<f:convertDateTime pattern="dd.MM.yyyy"/>
 									</h:outputText>
 								</center>
 							</p:column>
 							<p:column headerText="Ngày bắt đầu" style="width: 13%">
 								<center>
 									<h:outputText value="#{set1.startDate}">
-										<f:convertDateTime pattern="dd.MM.yyyy" />
+										<f:convertDateTime pattern="dd.MM.yyyy"/>
 									</h:outputText>
 								</center>
 							</p:column>
@@ -206,13 +206,13 @@
 								<div class="row" style="width: 50%; margin: 0 auto">
 									<div class="col-sm-12 col-md-6 col-lg-6">
 										<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
-											style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545;"
+											style=" margin-left: 0%;color: #fff!important;background-color: #dc3545;border-color: #dc3545;"
 											oncomplete="PF('dialogUpdateSetof').hide();" />
 									</div>
 									<div class="col-sm-12 col-md-6 col-lg-6">
 										<p:commandButton icon="fa fa-check" value="Cập nhật"
 											update="formIndex:listSurvey"
-											style="color: #fff;background-color: #28a745;border-color:#28a745"
+											style="color: #fff!important;background-color: #28a745;border-color:#28a745"
 											action="#{surveyBean.updatesurvey()}" />
 									</div>
 								</div>
@@ -228,13 +228,13 @@
 								<div class="row" style="width: 100%; margin: 0 auto">
 									<div style="width: 48%; margin-right: 5px">
 										<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
-											style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545"
+											style=" margin-left: 0%;color: #fff!important;background-color: #dc3545;border-color: #dc3545"
 											oncomplete="PF('dialogDeleteSetof').hide();" />
 									</div>
 									<div style="width: 48%">
 										<p:commandButton icon="fa fa-check" value="Đồng ý"
 											update="formIndex:listSurvey"
-											style="color: #fff;background-color: #28a745;border-color:#28a745"
+											style="color: #fff!important;background-color: #28a745;border-color:#28a745"
 											action="#{surveyBean.deleteSurvey}" />
 									</div>
 								</div>

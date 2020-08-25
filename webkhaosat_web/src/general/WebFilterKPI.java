@@ -55,8 +55,9 @@ public class WebFilterKPI implements Filter {
 				}
 
 			} else {
-				// Kiem tra co duoc phep truy cap form
 				boolean allowAccessForm = authorizationManager.allowAccessForm(request.getRequestURI());
+				// Kiem tra co duoc phep truy cap form
+				
 				if (allowAccessForm) {
 					StringBuffer a=request.getRequestURL();
 					chain.doFilter(req, res);

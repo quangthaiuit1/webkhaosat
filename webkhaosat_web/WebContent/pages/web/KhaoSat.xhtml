@@ -32,12 +32,8 @@
 			<h:graphicImage library="images" name="logo-lixco.png" height="auto" />
 		</div>
 		<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-			<h5 style="text-align: center; color: white; margin-top: 3px">CÔNG
+			<h5 style="color: white; margin-top: 20px; margin-left: 13%">CÔNG
 				TY CỔ PHẦN BỘT GIẶT LIX</h5>
-			<p style="color: white">Cung cấp những sản phẩm chất lượng cao
-				với giá thành hợp lý cho người tiêu dùng, mang lại giá trị gia tăng
-				cao nhất cho khách hàng và cổ đông, xây dựng môi trường làm việc lý
-				tưởng cho nhân viên và quan tâm sâu sắc đến cộng đồng.</p>
 		</div>
 	</div>
 
@@ -53,7 +49,9 @@
 				<h4
 					style="text-align: center; color: #1F83D9; margin-top: 10px; font-weight: bold">PHIẾU
 					KHẢO SÁT</h4>
-				<p>#{excuteSurveyBean.surveyPlaying.description}</p>
+				<c:if test="#{excuteSurveyBean.checkNullDescription == false}">
+					<p>#{excuteSurveyBean.surveyPlaying.description}</p>
+				</c:if>
 			</div>
 			<h:form id="total">
 				<!-- phan 1  -->
@@ -65,7 +63,7 @@
 							ĐÁNH GIÁ</span> <span class="group-description"><p
 								style="text-align: center;"></p> </span>
 						<div class="row"
-							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.questionsType1.get(0).survey.titleRating}</div>
+							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.surveyPlaying.titleRating}</div>
 						<c:set var="evenCount" value="${0}" />
 						<c:forEach items="#{excuteSurveyBean.questionAndAnswerRating}"
 							var="question1">
@@ -77,17 +75,25 @@
 								</p>
 							</div>
 							<div class="row" style="width: 100%; margin-left: 10px">
-								<h:panelGrid columns="1" style="margin-bottom:10px"
-									cellpadding="5" id="vcl">
+								<h:panelGrid columns="1" style="margin-bottom:10px;width:70%"
+									cellpadding="5" id="panelGrid1_#{evenCount}">
 									<p:selectOneRadio id="id1_#{evenCount}"
 										value="#{excuteSurveyBean.ketquaPhanDanhGia[evenCount]}"
 										layout="grid" columns="1">
-										<p:ajax process="@this" listener="#{excuteSurveyBean.printABC(evenCount)}"/>
 										<f:selectItems value="#{question1.ratings}" var="r"
-											itemLabel="#{r.name}" itemValue="#{r.name}"/>
+											itemLabel="#{r.name}" itemValue="#{r.id}" />
+										<p:ajax process="@this"
+											listener="#{excuteSurveyBean.printABC(evenCount)}" />
 									</p:selectOneRadio>
-									<h:inputText id="thaiDayAhihi" value=""
-												rendered="#{excuteSurveyBean.renderedInputText}" />
+
+
+									<p:inputTextarea id="inputTextNote_#{evenCount}"
+										placeholder="Anh/chị vui lòng cho biết ý kiến!"
+										rendered="#{excuteSurveyBean.noteRating[evenCount]}"
+										style="margin-left: 10px;margin-bottom: 5px;width:100%"
+										value="#{excuteSurveyBean.noteRatingString[evenCount]}">
+										<p:ajax process="@this" update=":total" />
+									</p:inputTextarea>
 								</h:panelGrid>
 							</div>
 						</c:forEach>
@@ -106,7 +112,7 @@
 									style="text-align: center; margin-left: 5px"></p></span>
 						</div>
 						<div class="row"
-							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.questionsType1.get(0).survey.titleSlider}</div>
+							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.surveyPlaying.titleSlider}</div>
 						<c:set var="evenCount2" value="${evenCount}" />
 						<c:forEach items="#{excuteSurveyBean.questionAndAnswerSlider}"
 							var="questionSlider">
@@ -150,7 +156,7 @@
 									style="text-align: center; margin-left: 5px"></p></span>
 						</div>
 						<div class="row"
-							style="width: 100%; margin-bottom: 25px; margin-left: 5px; text-align: center; font-style: italic">#{excuteSurveyBean.questionsType1.get(0).survey.titleFeedback}</div>
+							style="width: 100%; margin-bottom: 25px; margin-left: 5px; text-align: center; font-style: italic">#{excuteSurveyBean.surveyPlaying.titleFeedback}</div>
 						<c:set var="evenCount3" value="${evenCount2}" />
 						<c:forEach items="#{excuteSurveyBean.questionsType1}"
 							var="question3">
@@ -180,17 +186,13 @@
 				</div>
 			</h:form>
 		</div>
-		<h:outputScript library="bootstrap" name="admin/js/custom.js"
-			target="head" />
 		<p:dialog header="Thông báo" widgetVar="dialogCompleteSurvey"
 			modal="true" showEffect="fade" hideEffect="fade" resizable="true">
 			<p:outputPanel id="panelCompleteSurvey" style="text-align:center;">
-				<button onclick="showMessageSuccess()" class="btn btn-primary">
-					<i class="fa fa-arrow-left"></i>Trang chủ
-				</button>
+				<p:commandLink process="@this"
+					value="Bạn đã hoàn thành khảo sát. Nhấn   vào đây để trở lại."
+					action="#{excuteSurveyBean.rediretToAllSurvey()}" />
 				<br />
-				<button onclick="showMessageSuccess()" class="btn btn-success">Đã
-					hoàn thành</button>
 			</p:outputPanel>
 		</p:dialog>
 		<p:dialog header="Thông báo" widgetVar="dialogErrorSurvey"
@@ -203,19 +205,22 @@
 	</c:if>
 	<div class="row" style="margin: 0 auto; background-color: #208eb6">
 		<div class="col-sm-12 col-md-12 col-lg-12">
-			<h5 style="text-align: center; color: white; margin-top: 10px">CÔNG
-				TY CỔ PHẦN BỘT GIẶT LIX</h5>
-			<p style="text-align: center; color: white">
-				<h:graphicImage rendered="#{!task.IS_SEEN}" style="font-size: 20px"
-					styleClass="fa fa-location-arrow" />
-				Số 3 Đường Số 2, P. Linh Trung, Q. Thủ Đức, TP. HCM.
-			</p>
-			<p style="text-align: center; color: white">
-				<h:graphicImage rendered="#{!task.IS_SEEN}" style="font-size: 25px"
-					styleClass="fa fa-phone-square" />
-				028 - 38 964 072
-			</p>
-
+			<center>
+				<h:outputText value="CÔNG 
+				TY CỔ PHẦN BỘT GIẶT LIX"
+					style="color: white; margin-top: 10px" />
+			</center>
+			<center>
+				<h:outputText style="text-align: center; color: white;margin-bottom:5px"
+					value=" Số 3 Đường Số 2, P. Linh Trung, Q. Thủ Đức, TP. HCM."
+					styleClass="fa fa-location-arrow">
+				</h:outputText>
+			</center>
+			<center>
+				<h:outputText style="text-align: center; color: white;margin-bottom:5px"
+					value=" 028 - 38 964 072" styleClass="fa fa-phone-square">
+				</h:outputText>
+			</center>
 		</div>
 	</div>
 </h:body>

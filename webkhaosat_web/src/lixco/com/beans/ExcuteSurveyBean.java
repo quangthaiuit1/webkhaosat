@@ -1,5 +1,6 @@
 package lixco.com.beans;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,12 +8,15 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
 import org.primefaces.PrimeFaces;
 
+import lixco.com.config.ConfigQuestionType;
 import lixco.com.entities.Answer;
 import lixco.com.entities.Question;
 import lixco.com.entities.QuestionAndRating;
@@ -20,7 +24,9 @@ import lixco.com.entities.QuestionSlider;
 import lixco.com.entities.Rating;
 import lixco.com.entities.Survey;
 import lixco.com.entities.User_Result;
+import lixco.com.services.RatingService;
 import trong.lixco.com.account.servicepublics.Account;
+import trong.lixco.com.account.servicepublics.Member;
 
 @ManagedBean
 @ViewScoped
@@ -33,6 +39,11 @@ public class ExcuteSurveyBean extends AbstractBean {
 	private List<QuestionAndRating> questionAndAnswerRating; // bo cau hoi phan 1
 	private List<QuestionSlider> questionAndAnswerSlider;// thanng diem
 	private String[] ketquaPhanDanhGia; // dap an phan danh gia
+	// test
+	private Rating[] ketquaPhanDanhGiaRating;
+	private Boolean[] noteRating;
+	private String[] noteRatingString;
+
 	private String[] ketquaPhanThangDiem; // dap an phan thang diem
 	private String[] ketquaPhanLayYKien; // dap an phan lay y kien
 
@@ -44,24 +55,33 @@ public class ExcuteSurveyBean extends AbstractBean {
 	private boolean checkNullPhan2;
 	private boolean checkNullPhan3;
 	private boolean checkNullAll;
+	private boolean checkNullDescription = false;
 	private boolean notifyComplete;
 	private Account accountLogin;
+	private Member member;
 	private int test;
 
 	private List<String> testString;
-	private boolean renderedInputText = false;
+	private boolean renderedInputText = true;
 
 	@Override
 	protected void initItem() {
+		member = getAccount().getMember();
 		try {
 			setofId = getParamSetOfId();
 			surveyPlaying = SURVEY_SERVICE.findById(setofId);
+			if(surveyPlaying.getDescription() == null || StringUtils.isEmpty(surveyPlaying.getDescription())) {
+				checkNullDescription = false;
+			}
 			// Lay y kien
-			questionsType1 = getListQuestionByType(1L, setofId);
+			long layYKien = new Long(ConfigQuestionType.LAY_Y_KIEN);
+			questionsType1 = getListQuestionByType(layYKien, setofId);
 			// Danh gia
-			questionsType2 = getListQuestionByType(2L, setofId);
+			long danhGia = new Long(ConfigQuestionType.DANH_GIA);
+			questionsType2 = getListQuestionByType(danhGia, setofId);
 			// Thang diem
-			questionsType4 = getListQuestionByType(4L, setofId);
+			long thangDiem = new Long(ConfigQuestionType.THANG_DIEM);
+			questionsType4 = getListQuestionByType(thangDiem, setofId);
 			// Kiem tra null de check view
 			if (questionsType2.isEmpty()) {
 				checkNullPhan1 = true;
@@ -76,6 +96,15 @@ public class ExcuteSurveyBean extends AbstractBean {
 				checkNullAll = true;
 			}
 			ketquaPhanDanhGia = new String[questionsType2.size() + 1];
+			// test
+			ketquaPhanDanhGiaRating = new Rating[questionsType2.size() + 1];
+			noteRating = new Boolean[questionsType2.size() + 1];
+			noteRatingString = new String[questionsType2.size() + 1];
+			for (int i = 0; i < noteRating.length; i++) {
+				noteRating[i] = false;
+				ketquaPhanDanhGiaRating[i] = new Rating();
+			}
+
 			ketquaPhanThangDiem = new String[questionsType4.size() + 1];
 			ketquaPhanLayYKien = new String[questionsType1.size() + 1];
 
@@ -153,14 +182,14 @@ public class ExcuteSurveyBean extends AbstractBean {
 
 //Luu ket qua
 	public void completeSurvey() throws Throwable {
-		User_Result userResultTemp;
+		List<User_Result> listAddNew = new ArrayList<>();
 
 		List<String> resultList = new ArrayList<>();
 		List<Question> questionList = new ArrayList<>();
 		try {
-			for (Question questTemp : questionsType2) {
-				questionList.add(questTemp);
-			}
+//			for (Question questTemp : questionsType2) {
+//				questionList.add(questTemp);
+//			}
 			for (Question questTemp1 : questionsType4) {
 				questionList.add(questTemp1);
 			}
@@ -179,9 +208,45 @@ public class ExcuteSurveyBean extends AbstractBean {
 				}
 			}
 
-			for (String a : ketquaPhanDanhGia) {
-				if (StringUtils.isNotEmpty(a)) {
-					resultList.add(a);
+			for (int j = 0; j < ketquaPhanDanhGiaRating.length; j++) {
+				int lastElement = ketquaPhanDanhGiaRating.length;
+				if (StringUtils.isEmpty(ketquaPhanDanhGiaRating[lastElement - 1].getName())) {
+					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
+							"Vui lòng hoàn thành toàn bộ khảo sát.");
+					PrimeFaces.current().dialog().showMessageDynamic(message);
+					return;
+				}
+				if (!StringUtils.isEmpty(ketquaPhanDanhGiaRating[j].getName())) {
+					if(ketquaPhanDanhGiaRating[j].getType_rating().getId() == ConfigQuestionType.DAP_AN_LAY_Y_KIEN) {
+						if(StringUtils.isNotEmpty(noteRatingString[j])) {
+							User_Result userResultTemp = new User_Result();
+							userResultTemp.setCreatedDate(getDate());
+							userResultTemp.setResult(ketquaPhanDanhGiaRating[j].getName());
+							userResultTemp.setQuestion(ketquaPhanDanhGiaRating[j].getQuestion());
+							userResultTemp.setEmployeeCode(member.getCode());
+							userResultTemp.setEmployeeName(member.getName());
+							userResultTemp.setDepartmentName(member.getDepartment().getName());
+							userResultTemp.setNote(noteRatingString[j]);
+//							USER_RESULT_SERVICE.create(userResultTemp);
+							listAddNew.add(userResultTemp);
+							noteRatingString[j] = "";
+						}else {
+							FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
+									"Anh/chị vui lòng cho biết ý kiến!.");
+							PrimeFaces.current().dialog().showMessageDynamic(message);
+							return;
+						}
+					}else {
+						User_Result userResultTemp = new User_Result();
+						userResultTemp.setCreatedDate(getDate());
+						userResultTemp.setResult(ketquaPhanDanhGiaRating[j].getName());
+						userResultTemp.setQuestion(ketquaPhanDanhGiaRating[j].getQuestion());
+						userResultTemp.setEmployeeCode(member.getCode());
+						userResultTemp.setEmployeeName(member.getName());
+						userResultTemp.setDepartmentName(member.getDepartment().getName());
+//						USER_RESULT_SERVICE.create(userResultTemp);
+						listAddNew.add(userResultTemp);
+					}
 				}
 			}
 			for (String b : ketquaPhanThangDiem) {
@@ -207,24 +272,31 @@ public class ExcuteSurveyBean extends AbstractBean {
 		if (accountLogin != null) {
 			List<User_Result> checkComplete = USER_RESULT_SERVICE.find(0L, 0L, accountLogin.getMember().getCode(),
 					null);
+			boolean isCompleted = false;
 			// kiem tra da khao sat chua
 			if (!checkComplete.isEmpty()) {
-				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-						"Không được khảo sát lại!");
-				PrimeFaces.current().dialog().showMessageDynamic(message);
-				return;
+				isCompleted = true;
 			}
 			for (int i = 0; i < questionList.size(); i++) {
-				userResultTemp = new User_Result();
+				User_Result userResultTemp = new User_Result();
 				userResultTemp.setCreatedDate(getDate());
 				userResultTemp.setResult(resultList.get(i));
 				userResultTemp.setQuestion(questionList.get(i));
 				userResultTemp.setEmployeeCode(accountLogin.getMember().getCode());
 				userResultTemp.setEmployeeName(accountLogin.getMember().getName());
 				userResultTemp.setDepartmentName(accountLogin.getMember().getDepartment().getName());
-				USER_RESULT_SERVICE.create(userResultTemp);
+//				USER_RESULT_SERVICE.create(userResultTemp);
+				listAddNew.add(userResultTemp);
 			}
-			// kiem tra danh sach rong hay khong
+			// xoa list duoi DB
+			if (isCompleted) {
+				for (User_Result uDelete : checkComplete) {
+					USER_RESULT_SERVICE.delete(uDelete);
+				}
+			}
+			for (User_Result ur : listAddNew) {
+				USER_RESULT_SERVICE.create(ur);
+			}
 			notifyComplete = true;
 //			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 //					"Bạn đã hoàn thành khảo sát!");
@@ -234,17 +306,31 @@ public class ExcuteSurveyBean extends AbstractBean {
 
 	}
 
-	public void printABC(int id) {
-//		if (ketquaPhanDanhGia[id].equals("Bình thường")) {
-//			renderedInputText = true;
-//			PrimeFaces.current().ajax().update(":total:vcl");
-//		}
-		System.out.println(ketquaPhanDanhGia[id]);
-		if(ketquaPhanDanhGia[id].equals("Tốt")) {
-			System.out.println("Thai");
-			renderedInputText = true;
-			PrimeFaces.current().ajax().update(":total:vcl");
+	// redirect to all survey
+	public void rediretToAllSurvey() {
+		try {
+			FacesContext.getCurrentInstance().getExternalContext().redirect("/webkhaosat_web/pages/web/index.jsf");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+	}
+
+	public void printABC(int id) {
+		// ham ajax khong nhan array object. chi nhan array string. nen phai pass id
+		// rating qua de tim dap an -> check loai dap an
+		long idRating = Long.parseLong(ketquaPhanDanhGia[id]);
+		Rating temp = RATING_SERVICE.findById(idRating);
+
+		if (temp.getType_rating().getId() == ConfigQuestionType.DAP_AN_LAY_Y_KIEN) {
+			noteRating[id] = true;
+			PrimeFaces.current().ajax().update(":total");
+		} else {
+			noteRating[id] = false;
+			PrimeFaces.current().ajax().update(":total");
+		}
+
+		// Gan dap an vao list ket qua phan danh gia
+		ketquaPhanDanhGiaRating[id] = temp;
 	}
 
 //GET AND SET
@@ -406,6 +492,38 @@ public class ExcuteSurveyBean extends AbstractBean {
 
 	public void setRenderedInputText(boolean renderedInputText) {
 		this.renderedInputText = renderedInputText;
+	}
+
+	public Rating[] getKetquaPhanDanhGiaRating() {
+		return ketquaPhanDanhGiaRating;
+	}
+
+	public void setKetquaPhanDanhGiaRating(Rating[] ketquaPhanDanhGiaRating) {
+		this.ketquaPhanDanhGiaRating = ketquaPhanDanhGiaRating;
+	}
+
+	public Boolean[] getNoteRating() {
+		return noteRating;
+	}
+
+	public void setNoteRating(Boolean[] noteRating) {
+		this.noteRating = noteRating;
+	}
+
+	public String[] getNoteRatingString() {
+		return noteRatingString;
+	}
+
+	public void setNoteRatingString(String[] noteRatingString) {
+		this.noteRatingString = noteRatingString;
+	}
+
+	public boolean isCheckNullDescription() {
+		return checkNullDescription;
+	}
+
+	public void setCheckNullDescription(boolean checkNullDescription) {
+		this.checkNullDescription = checkNullDescription;
 	}
 
 	@Override

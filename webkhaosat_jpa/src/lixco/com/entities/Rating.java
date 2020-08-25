@@ -12,6 +12,17 @@ public class Rating extends AbstractEntities{
 	@OneToOne
 	private Question question;
 	
+	@OneToOne
+	private TypeRating type_rating;
+	
+	public TypeRating getType_rating() {
+		return type_rating;
+	}
+
+	public void setType_rating(TypeRating type_rating) {
+		this.type_rating = type_rating;
+	}
+
 	public String getName() {
 		return name;
 	}

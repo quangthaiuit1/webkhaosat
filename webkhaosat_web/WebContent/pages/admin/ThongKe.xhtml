@@ -25,13 +25,14 @@
 				<div class="row"
 					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 					<div class="row"
-						style="width: 99%; margin-left: 0px; margin: 0 auto;margin-top:5px">
+						style="width: 99%; margin-left: 0px; margin: 0 auto; margin-top: 5px">
 						<div class="col-sm-12 col-md-8 col-lg-7">
 							<center>
-								<h6
-									style="color: #7d7373; text-align: center; font-weight: bold; font-style: italic">
-									Bảng thống kê: <span style="color: #705353">#{statisticalBean.surveyPlaying.name}</span>
-								</h6>
+								<p:fieldset legend="BẢNG THỐNG KÊ:"
+									style="width:70%;margin-bottom:20px;color: black;margin-left:50%">
+									<h:outputText style="font-size:16px;font-weight:bold"
+										value="#{statisticalBean.surveyPlaying.name}" />
+								</p:fieldset>
 							</center>
 						</div>
 						<div style="width: 50%; margin-left: 85%; margin-bottom: 5px">

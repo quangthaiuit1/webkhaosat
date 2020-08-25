@@ -17,6 +17,7 @@ import lixco.com.entities.Survey;
 import lixco.com.entities.User_Result;
 import trong.lixco.com.account.servicepublics.Department;
 import trong.lixco.com.account.servicepublics.Member;
+import trong.lixco.com.servicepublic.EmployeeDTO;
 
 @ManagedBean
 @ViewScoped
@@ -78,14 +79,17 @@ public class ViewResultSurveyBean extends AbstractBean implements Serializable {
 	}
 
 	public void departmentSelect() throws RemoteException {
-			employeesByDepartment = new ArrayList<>();
-			List<User_Result> userResultTemp = USER_RESULT_SERVICE.find(surveyId, 0L, null,
-					departmentSelected.getDepartmentName());
-			for(User_Result ur : userResultTemp) {
-				Member employeeTemp = EMPLOYEE_SERVICE.findByCode(ur.getEmployeeCode());
-				 if(!employeesByDepartment.contains(employeeTemp))
-					 employeesByDepartment.add(employeeTemp);
-			}
+		employeesByDepartment = new ArrayList<>();
+		List<String> userResultTemp = USER_RESULT_SERVICE.findByDepartmentCode(surveyId,
+				departmentSelected.getDepartmentCode());
+		// cast userResultTemp to list string
+		List<String> codeEmployees = new ArrayList<>();
+		for (int i = 0; i < userResultTemp.size(); i++) {
+			codeEmployees.add(userResultTemp.get(i));
+			//create employee list
+			Member employeeTemp = EMPLOYEE_SERVICE.findByCode(userResultTemp.get(i));
+			employeesByDepartment.add(employeeTemp);
+		}
 	}
 
 	@Override

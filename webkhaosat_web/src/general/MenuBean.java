@@ -108,7 +108,7 @@ public class MenuBean extends AbstractBean {
 					model.addElement(submenu);
 				} else {
 					DefaultMenuItem item = new DefaultMenuItem(menu.getTenHienThi());
-					item.setHref(menu.getUrl());
+					item.setHref("/webkhaosat_web"+menu.getUrl());
 					item.setIcon(menu.getIcon());
 					model.addElement(item);
 				}
@@ -155,7 +155,7 @@ public class MenuBean extends AbstractBean {
 				results.add(item);
 			} else {
 				DefaultMenuItem item = new DefaultMenuItem(subM.getTenHienThi());
-				item.setHref(subM.getUrl());
+				item.setHref("/webkhaosat_web"+subM.getUrl());
 				item.setIcon(subM.getIcon());
 				results.add(item);
 			}

@@ -4,14 +4,14 @@
 	itemLabel="#{theme.name}" itemValue="#{theme}"
 	converter="#{themeConverter}" minQueryLength="4" forceSelection="true"
 	scrollHeight="400" size="56" style="font-size:80px">
-	<p:column style="width:20%" headerText="M�">
+	<p:column style="width:20%" headerText="Mã">
 		<h:outputText value="#{theme.code}" />
 	</p:column>
-	<p:column style="width:50%" headerText="T�n">
+	<p:column style="width:50%" headerText="Tên">
 		<h:outputText value="#{theme.name}" />
 	</p:column>
 
-	<p:column style="width:30%" headerText="Ph�ng ban">
+	<p:column style="width:30%" headerText="Phòng ban">
 		<h:outputText value="#{theme.department.name}" />
 	</p:column>
 	<p:ajax event="itemSelect"
@@ -21,7 +21,7 @@
 
 <h:panelGrid columns="1" style="width:100%">
 	<p:panelGrid columns="3" columnClasses="w30,w60,w10">
-		<p:outputLabel value="Nh�n vi�n" />
+		<p:outputLabel value="Nhân viên" />
 		<p:autoComplete style="width:100%;"
 			value="#{settingUserBean.employeeDTOSelected}"
 			converter="abstractConverter" minQueryLength="3"
@@ -67,18 +67,74 @@
 			<p:ajax process="@this" />
 		</p:selectBooleanCheckbox>
 	</p:column>
-	<p:column headerText="M�" style="text-align:center" width="50">
+	<p:column headerText="Mã" style="text-align:center" width="50">
 		<h:outputText value="#{item.code}" />
 	</p:column>
-	<p:column headerText="T�n ph�ng ban" style="text-align:left">
+	<p:column headerText="Tên phòng ban" style="text-align:left">
 		<h:outputText value="#{item.name}" />
 	</p:column>
 	<f:facet name="footer">
 		<p:commandButton
 			style="color: #fff;background-color: #007bff;border-color:#007bff"
-			process="@form" value="Th�m v�o danh s�ch"
+			process="@form" value="Thêm vào danh sách"
 			update="loadResult:dtEmployees"
 			action="#{settingUserBean.getDepartmentList()}" />
 		<div style="clear: both;" />
 	</f:facet>
 </p:dataTable>
+
+<!-- Tao cau hoi view -->
+<p:panel id="updatepn" style="border:none;width: 200%">
+	<c:if test="#{createQuestionBean.questionTypeTempTest == 2}">
+		<div class="row"
+			style="width: 100%; margin: 0 auto; margin-bottom: 10px">
+			<p:inputText style="width: 100%!important;margin-bottom: 10px"
+				id="inputAnswer1" placeholder="Nhập đáp án 1"
+				value="#{createQuestionBean.answersNew[0]}" />
+		</div>
+		<div class="row"
+			style="width: 100%; margin: 0 auto; margin-bottom: 10px">
+			<p:inputText style="width: 100%!important;margin-bottom: 10px"
+				id="inputAnswer2" placeholder="Nhập đáp án 2"
+				value="#{createQuestionBean.answersNew[1]}" />
+		</div>
+		<div class="row"
+			style="width: 100%; margin: 0 auto; margin-bottom: 10px">
+			<p:inputText style="width: 100%!important;margin-bottom: 10px"
+				id="inputAnswer3" placeholder="Nhập đáp án 3"
+				value="#{createQuestionBean.answersNew[2]}" />
+		</div>
+		<div class="row"
+			style="width: 100%; margin: 0 auto; margin-bottom: 10px">
+			<p:inputText style="width: 100%!important;margin-bottom: 10px"
+				id="inputAnswer4" placeholder="Nhập đáp án 4"
+				value="#{createQuestionBean.answersNew[3]}" />
+		</div>
+		<div class="row"
+			style="width: 100%; margin: 0 auto; margin-bottom: 10px">
+			<p:inputText style="width: 100%!important;margin-bottom: 10px"
+				id="inputAnswer5" placeholder="Nhập đáp án 5"
+				value="#{createQuestionBean.answersNew[4]}" />
+		</div>
+	</c:if>
+	<c:if test="#{createQuestionBean.questionTypeTempTest == 4}">
+		<div class="row"
+			style="width: 100%; margin: 0 auto; margin-bottom: 10px">
+			<p:inputText style="width: 100%!important;margin-bottom: 10px"
+				id="inputRating1" placeholder="Nhập giá trị MIN"
+				value="#{createQuestionBean.answersNew[0]}" />
+		</div>
+		<div class="row"
+			style="width: 100%; margin: 0 auto; margin-bottom: 10px">
+			<p:inputText style="width: 100%!important;margin-bottom: 10px"
+				id="inputRating2" placeholder="Nhập giá trị MAX"
+				value="#{createQuestionBean.answersNew[1]}" />
+		</div>
+
+	</c:if>
+</p:panel>
+<!-- end tao cau hoi -->
+
+<p:commandButton value="Đăng xuất"
+	actionListener="#{loginBean.logout()}"
+	style="margin-right: 10px;margin-left: 15px;margin-top: 11px;border:1px solid #4285d9;background-color: #4285d9;" />
