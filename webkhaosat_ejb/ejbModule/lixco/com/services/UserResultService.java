@@ -120,6 +120,32 @@ public class UserResultService extends AbstractService<User_Result> {
 			return resultEnd;
 		}
 	}
+	public int findByCountResult(long surveyId) {
+
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<User_Result> cq = cb.createQuery(User_Result.class);
+		Root<User_Result> root = cq.from(User_Result.class);
+		List<Predicate> queries = new ArrayList<>();
+		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
+		queries.add(deleteQuery);
+		if (surveyId != 0) {
+			Predicate answerTypeQuery = cb.equal(root.get("question").get("survey").get("id"), surveyId);
+			queries.add(answerTypeQuery);
+		}
+		Predicate data[] = new Predicate[queries.size()];
+		for (int i = 0; i < queries.size(); i++) {
+			data[i] = queries.get(i);
+		}
+		Predicate finalPredicate = cb.and(data);
+		cq.select(root).where(finalPredicate).orderBy(cb.asc(root.get("employeeName")));
+		TypedQuery<User_Result> query = em.createQuery(cq);
+		List<User_Result> resultEnd = query.getResultList();
+		if(resultEnd.isEmpty()) {
+			return 0;
+		}else {
+			return resultEnd.size();
+		}
+	}
 	
 //	@SuppressWarnings("unchecked")
 //	public List<UserResultByDepartment> findByDepartmentCode(long surveyId, String departmentCode) {

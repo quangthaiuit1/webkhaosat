@@ -112,11 +112,10 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 		cell = row.createCell(5);
 		cell.setCellValue("Kết quả");
 		cell.setCellStyle(style);
-		if(loaiBaoCao.equals("YK")) {
-			cell = row.createCell(6);
-			cell.setCellValue("Ý kiến");
-			cell.setCellStyle(style);
-		}
+
+		cell = row.createCell(6);
+		cell.setCellValue("Ý kiến");
+		cell.setCellStyle(style);
 //		 Data
 		for (User_Result kq : listKetQua) {
 			Gson gson = new Gson();
@@ -134,14 +133,14 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 			// ten nhan vien
 			cell = row.createCell(3);
 			cell.setCellValue(kq.getQuestion().getSurvey().getName());
-			
+
 			cell = row.createCell(4);
 			cell.setCellValue(kq.getQuestion().getName());
 			// Nhom nang luc
 			cell = row.createCell(5);
 			cell.setCellValue(kq.getResult());
-			
-			if(loaiBaoCao.equals("YK") && kq.getNote() != null) {
+
+			if (kq.getNote() != null) {
 				cell = row.createCell(6);
 				cell.setCellValue(kq.getNote());
 			}
