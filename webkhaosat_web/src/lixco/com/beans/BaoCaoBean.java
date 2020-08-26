@@ -89,31 +89,33 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 		CellStyle styleContent = workbook.createCellStyle();
 		row = sheet.createRow(rownum);
 
-		// EmpNo
-		cell = row.createCell(0);
-		cell.setCellValue("Mã NV");
-		// xep loai// EmpName
-		cell = row.createCell(1);
-		cell.setCellValue("Tên NV");
-		cell.setCellStyle(style);
-		// Salary
-		cell = row.createCell(2);
-		cell.setCellValue("Phòng ban");
-		cell.setCellStyle(style);
+//		// EmpNo
+//		cell = row.createCell(0);
+//		cell.setCellValue("Mã NV");
+//		// xep loai// EmpName
+//		cell = row.createCell(1);
+//		cell.setCellValue("Tên NV");
+//		cell.setCellStyle(style);
+//		// Salary
+//		cell = row.createCell(2);
+//		cell.setCellValue("Phòng ban");
+//		cell.setCellStyle(style);
+//		
+		
 		// Grade
-		cell = row.createCell(3);
+		cell = row.createCell(0);
 		cell.setCellValue("Kỳ khảo sát");
 		cell.setCellStyle(style);
 		// Bonus
-		cell = row.createCell(4);
+		cell = row.createCell(1);
 		cell.setCellValue("Câu hỏi");
 		cell.setCellStyle(style);
 		// xep loai
-		cell = row.createCell(5);
+		cell = row.createCell(2);
 		cell.setCellValue("Kết quả");
 		cell.setCellStyle(style);
 
-		cell = row.createCell(6);
+		cell = row.createCell(3);
 		cell.setCellValue("Ý kiến");
 		cell.setCellStyle(style);
 //		 Data
@@ -121,27 +123,30 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 			Gson gson = new Gson();
 			rownum++;
 			row = sheet.createRow(rownum);
-			// EmpNo (A)
+			
+//			// EmpNo (A)
+//			cell = row.createCell(0);
+//			cell.setCellValue(kq.getEmployeeCode());
+//			// EmpName (B)
+//			cell = row.createCell(1);
+//			cell.setCellValue(kq.getEmployeeName());
+//			// phong
+//			cell = row.createCell(2);
+//			cell.setCellValue(kq.getDepartmentName());
+//			// ten nhan vien
+			
+			
 			cell = row.createCell(0);
-			cell.setCellValue(kq.getEmployeeCode());
-			// EmpName (B)
-			cell = row.createCell(1);
-			cell.setCellValue(kq.getEmployeeName());
-			// phong
-			cell = row.createCell(2);
-			cell.setCellValue(kq.getDepartmentName());
-			// ten nhan vien
-			cell = row.createCell(3);
 			cell.setCellValue(kq.getQuestion().getSurvey().getName());
 
-			cell = row.createCell(4);
+			cell = row.createCell(1);
 			cell.setCellValue(kq.getQuestion().getName());
 			// Nhom nang luc
-			cell = row.createCell(5);
+			cell = row.createCell(2);
 			cell.setCellValue(kq.getResult());
 
 			if (kq.getNote() != null) {
-				cell = row.createCell(6);
+				cell = row.createCell(3);
 				cell.setCellValue(kq.getNote());
 			}
 		}
