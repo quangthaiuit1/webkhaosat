@@ -90,6 +90,37 @@ public class UserResultService extends AbstractService<User_Result> {
 		return items;
 	}
 	
+	public List<User_Result> findByResult(long surveyId, String result) {
+
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<User_Result> cq = cb.createQuery(User_Result.class);
+		Root<User_Result> root = cq.from(User_Result.class);
+		List<Predicate> queries = new ArrayList<>();
+		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
+		queries.add(deleteQuery);
+		if (surveyId != 0) {
+			Predicate answerTypeQuery = cb.equal(root.get("question").get("survey").get("id"), surveyId);
+			queries.add(answerTypeQuery);
+		}
+		if (result != null) {
+			Predicate departmentNameQuery = cb.equal(root.get("result"), result);
+			queries.add(departmentNameQuery);
+		}
+		Predicate data[] = new Predicate[queries.size()];
+		for (int i = 0; i < queries.size(); i++) {
+			data[i] = queries.get(i);
+		}
+		Predicate finalPredicate = cb.and(data);
+		cq.select(root).where(finalPredicate).orderBy(cb.asc(root.get("employeeName")));
+		TypedQuery<User_Result> query = em.createQuery(cq);
+		List<User_Result> resultEnd = query.getResultList();
+		if(resultEnd.isEmpty()) {
+			return new ArrayList<>();
+		}else {
+			return resultEnd;
+		}
+	}
+	
 //	@SuppressWarnings("unchecked")
 //	public List<UserResultByDepartment> findByDepartmentCode(long surveyId, String departmentCode) {
 //		String sql = "SELECT u.employee_code,u.employee_name  FROM user_result as u where u.survey_id = ?1 and u.employee_code = ?2";
@@ -112,6 +143,38 @@ public class UserResultService extends AbstractService<User_Result> {
 		}
 		if (departmentCode != null) {
 			Predicate departmentNameQuery = cb.equal(root.get("departmentCode"), departmentCode);
+			queries.add(departmentNameQuery);
+		}
+		Predicate data[] = new Predicate[queries.size()];
+		for (int i = 0; i < queries.size(); i++) {
+			data[i] = queries.get(i);
+		}
+		Predicate finalPredicate = cb.and(data);
+		cq.where(finalPredicate);
+		cq.select(root.get("employeeCode")).distinct(true);
+//		cq.multiselect(root.get("employeeName"),root.get("employeeCode")).distinct(true);
+		TypedQuery<String> query = em.createQuery(cq);
+		List<String> result = query.getResultList();
+		if (!result.isEmpty()) {
+			return result;
+		} else {
+			return new ArrayList<>();
+		}
+	}
+	
+	public List<String> findByDepartmentName(long surveyId, String departmentName) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<String> cq = cb.createQuery(String.class);
+		Root<User_Result> root = cq.from(User_Result.class);
+		List<Predicate> queries = new ArrayList<>();
+		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
+		queries.add(deleteQuery);
+		if (surveyId != 0) {
+			Predicate answerTypeQuery = cb.equal(root.get("question").get("survey").get("id"), surveyId);
+			queries.add(answerTypeQuery);
+		}
+		if (departmentName != null) {
+			Predicate departmentNameQuery = cb.equal(root.get("departmentName"), departmentName);
 			queries.add(departmentNameQuery);
 		}
 		Predicate data[] = new Predicate[queries.size()];

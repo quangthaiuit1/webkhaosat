@@ -226,6 +226,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 							userResultTemp.setEmployeeCode(member.getCode());
 							userResultTemp.setEmployeeName(member.getName());
 							userResultTemp.setDepartmentName(member.getDepartment().getName());
+							userResultTemp.setDepartmentCode(member.getDepartment().getCode());
 							userResultTemp.setNote(noteRatingString[j]);
 //							USER_RESULT_SERVICE.create(userResultTemp);
 							listAddNew.add(userResultTemp);
@@ -244,6 +245,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 						userResultTemp.setEmployeeCode(member.getCode());
 						userResultTemp.setEmployeeName(member.getName());
 						userResultTemp.setDepartmentName(member.getDepartment().getName());
+						userResultTemp.setDepartmentCode(member.getDepartment().getCode());
 //						USER_RESULT_SERVICE.create(userResultTemp);
 						listAddNew.add(userResultTemp);
 					}
@@ -285,6 +287,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 				userResultTemp.setEmployeeCode(accountLogin.getMember().getCode());
 				userResultTemp.setEmployeeName(accountLogin.getMember().getName());
 				userResultTemp.setDepartmentName(accountLogin.getMember().getDepartment().getName());
+				userResultTemp.setDepartmentCode(accountLogin.getMember().getDepartment().getCode());
 //				USER_RESULT_SERVICE.create(userResultTemp);
 				listAddNew.add(userResultTemp);
 			}

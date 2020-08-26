@@ -80,8 +80,8 @@ public class ViewResultSurveyBean extends AbstractBean implements Serializable {
 
 	public void departmentSelect() throws RemoteException {
 		employeesByDepartment = new ArrayList<>();
-		List<String> userResultTemp = USER_RESULT_SERVICE.findByDepartmentCode(surveyId,
-				departmentSelected.getDepartmentCode());
+		List<String> userResultTemp = USER_RESULT_SERVICE.findByDepartmentName(surveyId,
+				departmentSelected.getDepartmentName());
 		// cast userResultTemp to list string
 		List<String> codeEmployees = new ArrayList<>();
 		for (int i = 0; i < userResultTemp.size(); i++) {

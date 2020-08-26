@@ -21,25 +21,25 @@
 								style="text-align: center; margin-left: 5px"></p></span> <br />
 					</div>
 					<div class="row"
-						style="width: 98%; margin-left: 0px; margin: 0 auto">
+						style="width: 98%; margin-left: 0px; margin: 0 auto;margin-right:10px">
 
 						<p:dataTable id="listSetofquestions" var="set1"
 							value="#{questionUserBean.surveysInExpired}"
 							rowIndexVar="rowIndex">
-							<p:column headerText="STT" style="text-align: center;width: 5%">
+							<p:column headerText="STT" style="text-align: center;width: 5%" priority="4">
 								<h:outputText value="#{rowIndex+1}" />
 							</p:column>
-							<p:column headerText="Tên bộ câu hỏi" style="">
+							<p:column headerText="Tên kỳ khảo sát" style="width:55%">
 								<h:outputText value="#{set1.survey.name}" />
 							</p:column>
-							<p:column headerText="Ngày bắt đầu" style="width: 15%">
+							<p:column headerText="Ngày bắt đầu" style="width: 15%" priority="3">
 								<center>
 									<h:outputText value="#{set1.survey.startDate}">
 										<f:convertDateTime pattern="dd.MM.yyyy" />
 									</h:outputText>
 								</center>
 							</p:column>
-							<p:column headerText="Ngày kết thúc" style="width: 15%">
+							<p:column headerText="Ngày kết thúc" style="width: 15%" priority="2">
 								<center>
 									<h:outputText value="#{set1.survey.endDate}">
 										<f:convertDateTime pattern="dd.MM.yyyy" />
@@ -47,10 +47,10 @@
 								</center>
 							</p:column>
 							<p:column headerText="..." style="text-align: center;width: 10%"
-								priority="3">
+							>
 								<p:linkButton outcome="KhaoSat" value="Thực hiện"
 									target="_blank"
-									style="color:#ffffff!important;background-color: #1a9e3d;border:1px solid #1a9e3d">
+									style="color:#ffffff!important;background-color: #1a9e3d;border:1px solid #1a9e3d;width:auto">
 									<f:param name="setofid" value="#{set1.survey.id}" />
 								</p:linkButton>
 							</p:column>

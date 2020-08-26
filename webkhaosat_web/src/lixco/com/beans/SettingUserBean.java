@@ -60,22 +60,29 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 	private String txt1;
 
 	private List<EmployeeDTO> employeesDTO;
+	private EmployeeDTO[] employeesDTOArray;
 	private List<EmployeeDTO> selectedsDelete;
 	private EmployeeDTO employeeDTOSelected;
 	private EmployeeDTO[] employeeBySurDTO;
 	private List<EmployeeDTO> employeeBySurListDTO;
 	private Set<EmployeeDTO> employeeBySurSetDTO;
-	private Set<Department> departmentList;
+//	private Set<Department> departmentList;
+	private List<Department> departmentList;
 	EmployeeServicePublic EMPLOYEE_SERVICEPUBLIC_DTO;
 
 	@Override
 	protected void initItem() {
-		employeesDTO = new ArrayList<EmployeeDTO>();
-
 		EMPLOYEE_SERVICEPUBLIC_DTO = new EmployeeServicePublicProxy();
+		employeesDTO = new ArrayList<EmployeeDTO>();
+		try {
+			employeesDTOArray = EMPLOYEE_SERVICEPUBLIC_DTO.findAll();
+			employeesDTO = new ArrayList<EmployeeDTO>(Arrays.asList(employeesDTOArray));
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+		}
 		employeeDTOSelected = new EmployeeDTO();
 		autocompleteEmployee = new Member();
-		departmentList = new HashSet<Department>();
+//		departmentList = new HashSet<Department>();
 		employeeBySurSetDTO = new HashSet<EmployeeDTO>();
 		departments = new ArrayList<>();
 
@@ -83,32 +90,48 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 //			allDepartment = DEPARTMENT_SERVICE.findAll();
 //			departmentsByLocate = filterDepartmentByLocate(allDepartment);
 
-			Department[] deps = DEPARTMENT_SERVICE.getAllDepartSubByParent("10001");
+			// chay chinh ne
+//			Department[] deps = DEPARTMENT_SERVICE.getAllDepartSubByParent("10001");
+//			for (int i = 0; i < deps.length; i++) {
+//				if (deps[i].getLevelDep().getLevel() <= 2) {
+//					departments.add(deps[i]);
+//					Department[] departments = DEPARTMENT_SERVICE.getAllDepartSubByParent(deps[i].getCode());
+//					List<String> codeDeps = new ArrayList<String>();
+//					if (departments != null)
+//						for (int j = 0; j < departments.length; j++) {
+//							codeDeps.add(departments[j].getCode());
+//						}
+//					if (deps[i].getLevelDep().getLevel() == 2) {
+//						codeDeps.add(deps[i].getCode());
+//						departmentList.add(deps[i]);
+//						String[] codearr = codeDeps.stream().toArray(String[]::new);
+//						EmployeeDTO[] employeeDTOs = EMPLOYEE_SERVICEPUBLIC_DTO.findByDep(codearr);
+//						if (employeeDTOs != null)
+//							for (int j = 0; j < employeeDTOs.length; j++) {
+//								employeeDTOs[j].setCodeDepart(deps[i].getCode());
+//								employeeDTOs[j].setNameDepart(deps[i].getName());
+//								this.employeesDTO.add(employeeDTOs[j]);
+//							}
+//					}
+//				}
+//			}
+			// end
+
+			// test department new
+			// Test department New
+			departmentList = new ArrayList<Department>();
+			Department[] deps = DEPARTMENT_SERVICE.findAll();
 			for (int i = 0; i < deps.length; i++) {
-				if (deps[i].getLevelDep().getLevel() <= 2) {
-					departments.add(deps[i]);
-					Department[] departments = DEPARTMENT_SERVICE.getAllDepartSubByParent(deps[i].getCode());
-					List<String> codeDeps = new ArrayList<String>();
-					if (departments != null)
-						for (int j = 0; j < departments.length; j++) {
-							codeDeps.add(departments[j].getCode());
-						}
-					if (deps[i].getLevelDep().getLevel() == 2) {
-						codeDeps.add(deps[i].getCode());
+				if (deps[i].getLevelDep() != null)
+					if (deps[i].getLevelDep().getLevel() > 1)
 						departmentList.add(deps[i]);
-						String[] codearr = codeDeps.stream().toArray(String[]::new);
-						EmployeeDTO[] employeeDTOs = EMPLOYEE_SERVICEPUBLIC_DTO.findByDep(codearr);
-						if (employeeDTOs != null)
-							for (int j = 0; j < employeeDTOs.length; j++) {
-								employeeDTOs[j].setCodeDepart(deps[i].getCode());
-								employeeDTOs[j].setNameDepart(deps[i].getName());
-								this.employeesDTO.add(employeeDTOs[j]);
-							}
-					}
-				}
 			}
-			if (departments.size() != 0) {
-				departments = DepartmentUtil.sort(departments);
+
+			// end test
+//			if (departments.size() != 0) {
+//				departments = DepartmentUtil.sort(departments);
+			if (departmentList.size() != 0) {
+				departmentList = DepartmentUtil.sort(departmentList);
 			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -321,42 +344,72 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		return results;
 	}
 
-	public void selectDep() {
-		for (Department dep : departmentList) {
-			if (dep.isSelect()) {
-				for (int i = 0; i < employeesDTO.size(); i++) {
-					try {
-						if (dep.getCode().equals(employeesDTO.get(i).getCodeDepart())) {
-							employeeBySurSetDTO.add(employeesDTO.get(i));
-
-							// convert hash set to arraylist
-							List<EmployeeDTO> usrAll = new ArrayList<EmployeeDTO>(employeeBySurSetDTO);
-							List<EmployeeDTO> usrAll1 = new ArrayList<>();
-							usrAll1.addAll(employeeBySurListDTO);
-							//add to list employee by survey
-							for(int j = 0; j < usrAll.size(); j++) {
-								//kiem tra trong list da co employee do chua
-								boolean check = false;
-								for(int l = 0; l < employeeBySurListDTO.size(); l++) {
-									if(employeeBySurListDTO.get(l).getCode().equals(usrAll.get(j).getCode())) {
-										check = true;
-										break;
-									}
-								}
-								if(check == false) {
-									usrAll1.add(usrAll.get(j));
-								}
-							}
-							employeeBySurListDTO = new ArrayList<>();
-							employeeBySurListDTO.addAll(usrAll1);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-
-				}
+	public void selectDep() throws RemoteException {
+		List<String> departList = new ArrayList<>();
+		for (int i = 0; i < departmentList.size(); i++) {
+			if (departmentList.get(i).isSelect()) {
+				departmentList.get(i).setSelect(false);
+				departList.add(departmentList.get(i).getCode());
 			}
 		}
+		String[] departmentCodeArray = departList.toArray(new String[departList.size()]);
+		EmployeeDTO[] employeesByDep = EMPLOYEE_SERVICEPUBLIC_DTO.findByDep(departmentCodeArray);
+
+		List<EmployeeDTO> tempList = new ArrayList<EmployeeDTO>(Arrays.asList(employeesByDep));
+		List<EmployeeDTO> usrAll1 = new ArrayList<>();
+		// them list hien tai dang co vao usrAll1
+		usrAll1.addAll(employeeBySurListDTO);
+		for (int j = 0; j < tempList.size(); j++) {
+//			// kiem tra trong list da co employee do chua
+			boolean check = false;
+			for (int l = 0; l < employeeBySurListDTO.size(); l++) {
+				if (employeeBySurListDTO.get(l).getCode().equals(tempList.get(j).getCode())) {
+					check = true;
+					break;
+				}
+			}
+			if (check == false) {
+				usrAll1.add(tempList.get(j));
+			}
+		}
+		employeeBySurListDTO = new ArrayList<>();
+		employeeBySurListDTO.addAll(usrAll1);
+
+//		for (Department dep : departmentList) {
+//			if (dep.isSelect()) {
+//				for (int i = 0; i < employeesDTO.size(); i++) {
+//					try {
+//						if (dep.getCode().equals(employeesDTO.get(i).getCodeDepart())) {
+//							employeeBySurSetDTO.add(employeesDTO.get(i));
+//
+//							// convert hash set to arraylist
+//							List<EmployeeDTO> usrAll = new ArrayList<EmployeeDTO>(employeeBySurSetDTO);
+//							List<EmployeeDTO> usrAll1 = new ArrayList<>();
+//							usrAll1.addAll(employeeBySurListDTO);
+//							// add to list employee by survey
+//							for (int j = 0; j < usrAll.size(); j++) {
+//								// kiem tra trong list da co employee do chua
+//								boolean check = false;
+//								for (int l = 0; l < employeeBySurListDTO.size(); l++) {
+//									if (employeeBySurListDTO.get(l).getCode().equals(usrAll.get(j).getCode())) {
+//										check = true;
+//										break;
+//									}
+//								}
+//								if (check == false) {
+//									usrAll1.add(usrAll.get(j));
+//								}
+//							}
+//							employeeBySurListDTO = new ArrayList<>();
+//							employeeBySurListDTO.addAll(usrAll1);
+//						}
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
+//
+//				}
+//			}
+//		}
 	}
 
 	public void ajaxEmp() {
@@ -374,10 +427,15 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 	}
 
 	public static String converViToEn(String s) {
-		String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
-		Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-		String result = pattern.matcher(temp).replaceAll("");
-		return pattern.matcher(result).replaceAll("").replaceAll("Đ", "D").replaceAll("đ", "d");
+		try {
+			String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
+			Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+			String result = pattern.matcher(temp).replaceAll("");
+			return pattern.matcher(result).replaceAll("").replaceAll("Đ", "D").replaceAll("đ", "d");
+		} catch (Exception e) {
+			return "";
+		}
+		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -392,6 +450,7 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		}
 		return linkedList;
 	}
+
 	// end new
 	// GET AND SET
 

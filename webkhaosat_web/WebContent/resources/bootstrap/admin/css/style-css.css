@@ -1,5 +1,9 @@
 /* WEB KHAO SAT */
 
+.ui-icon {
+	background-image: none!important;
+}
+
 .ui-widget-content .ui-state-default{
     border: 1px solid #909192;
     color: black!important;

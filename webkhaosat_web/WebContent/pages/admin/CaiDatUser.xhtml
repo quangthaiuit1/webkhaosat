@@ -48,7 +48,7 @@
 
 								<p:autoComplete style="float:right;margin-right:5px" id="autocompleteNhanVien"
 									value="#{settingUserBean.employeeDTOSelected}"
-									converter="abstractConverter" minQueryLength="3"
+									converter="abstractConverter" minQueryLength="5"
 									completeMethod="#{settingUserBean.completeEmployee}" var="p"
 									itemLabel="#{p.name}" itemValue="#{p}" forceSelection="true">
 									<p:ajax event="itemSelect"
