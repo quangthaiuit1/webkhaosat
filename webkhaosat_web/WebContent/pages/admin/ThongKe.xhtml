@@ -44,15 +44,26 @@
 										</div>
 									</div>
 									<div
-										style="width: 100%; line-height: 1px; margin-top: 20px; margin-bottom: 10px; float: left;margin-left: 3%"
+										style="width: 100%; line-height: 1px; margin-top: 20px; margin-bottom: 10px; float: left; margin-left: 3%"
 										class="row">
 										<div style="width: 95%;">
-											<h:outputText value="Số lượng nhân viên đã hoàn thành khảo sát: " />
+											<h:outputText
+												value="Số lượng nhân viên đã hoàn thành khảo sát: " />
 											<h:outputText
 												style="margin-left:5px;color:red;font-size:15px;font-weight:bold"
 												value="#{statisticalBean.soluongdaKS}" />
 										</div>
 									</div>
+									<div
+										style="width: 100%; line-height: 1px; margin-top: 20px; margin-bottom: 10px; margin-left: 25%"
+										class="row">
+										<p:commandButton value="Danh sách NV chưa hoàn thành" immediate="true"
+											style="width:50%;color: #fff!important;background-color: #d79d39;border-color:#d79d39"
+											ajax="false" id="btnXuatExcel"
+											actionListener="#{statisticalBean.danhSachChuaHoanThanh()}" />
+									</div>
+
+
 								</p:fieldset>
 							</center>
 						</div>

@@ -61,12 +61,20 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 		if (surveySelected == null || surveySelected.getName() == null) {
 			surveySelected = allSurvey.get(0);
 		}
-		// khong y kien
+		// y kien
 		List<User_Result> listKetQua = new ArrayList<>();
 		if (loaiBaoCao.equals("YK")) {
-			listKetQua = USER_RESULT_SERVICE.findByResult(surveySelected.getId(), "Ý kiến khác");
+			listKetQua = USER_RESULT_SERVICE.findByResult(surveySelected.getId(), null);
+			List<User_Result> ykienkhac= new ArrayList<>();
+			for(User_Result ur : listKetQua) {
+				if(ur.getNote() != null) {
+					ykienkhac.add(ur);
+				}
+			}
+			listKetQua = new ArrayList<>();
+			listKetQua.addAll(ykienkhac);
 		}
-		// Tuyen duong
+		// khong y kien
 		if (loaiBaoCao.equals("KYK")) {
 			listKetQua = USER_RESULT_SERVICE.findByResult(surveySelected.getId(), null);
 		}
@@ -89,33 +97,33 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 		CellStyle styleContent = workbook.createCellStyle();
 		row = sheet.createRow(rownum);
 
-//		// EmpNo
-//		cell = row.createCell(0);
-//		cell.setCellValue("Mã NV");
-//		// xep loai// EmpName
-//		cell = row.createCell(1);
-//		cell.setCellValue("Tên NV");
-//		cell.setCellStyle(style);
-//		// Salary
-//		cell = row.createCell(2);
-//		cell.setCellValue("Phòng ban");
-//		cell.setCellStyle(style);
-//		
+		// EmpNo
+		cell = row.createCell(0);
+		cell.setCellValue("Mã NV");
+		// xep loai// EmpName
+		cell = row.createCell(1);
+		cell.setCellValue("Tên NV");
+		cell.setCellStyle(style);
+		// Salary
+		cell = row.createCell(2);
+		cell.setCellValue("Phòng ban");
+		cell.setCellStyle(style);
+		
 		
 		// Grade
-		cell = row.createCell(0);
+		cell = row.createCell(3);
 		cell.setCellValue("Kỳ khảo sát");
 		cell.setCellStyle(style);
 		// Bonus
-		cell = row.createCell(1);
+		cell = row.createCell(4);
 		cell.setCellValue("Câu hỏi");
 		cell.setCellStyle(style);
 		// xep loai
-		cell = row.createCell(2);
+		cell = row.createCell(5);
 		cell.setCellValue("Kết quả");
 		cell.setCellStyle(style);
 
-		cell = row.createCell(3);
+		cell = row.createCell(6);
 		cell.setCellValue("Ý kiến");
 		cell.setCellStyle(style);
 //		 Data
@@ -124,29 +132,29 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 			rownum++;
 			row = sheet.createRow(rownum);
 			
-//			// EmpNo (A)
-//			cell = row.createCell(0);
-//			cell.setCellValue(kq.getEmployeeCode());
-//			// EmpName (B)
-//			cell = row.createCell(1);
-//			cell.setCellValue(kq.getEmployeeName());
-//			// phong
-//			cell = row.createCell(2);
-//			cell.setCellValue(kq.getDepartmentName());
-//			// ten nhan vien
-			
-			
+			// EmpNo (A)
 			cell = row.createCell(0);
+			cell.setCellValue(kq.getEmployeeCode());
+			// EmpName (B)
+			cell = row.createCell(1);
+			cell.setCellValue(kq.getEmployeeName());
+			// phong
+			cell = row.createCell(2);
+			cell.setCellValue(kq.getDepartmentName());
+			// ten nhan vien
+			
+			
+			cell = row.createCell(3);
 			cell.setCellValue(kq.getQuestion().getSurvey().getName());
 
-			cell = row.createCell(1);
+			cell = row.createCell(4);
 			cell.setCellValue(kq.getQuestion().getName());
 			// Nhom nang luc
-			cell = row.createCell(2);
+			cell = row.createCell(5);
 			cell.setCellValue(kq.getResult());
 
 			if (kq.getNote() != null) {
-				cell = row.createCell(3);
+				cell = row.createCell(6);
 				cell.setCellValue(kq.getNote());
 			}
 		}

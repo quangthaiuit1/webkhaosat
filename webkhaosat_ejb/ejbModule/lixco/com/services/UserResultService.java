@@ -1,7 +1,9 @@
 package lixco.com.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
@@ -120,6 +122,59 @@ public class UserResultService extends AbstractService<User_Result> {
 			return resultEnd;
 		}
 	}
+	//thong ke so luong da khao sat
+	@SuppressWarnings("unchecked")
+	public List<User_Result> findCompletedByDistinctNative(long surveyId) {
+		String sql = "Select root.id,root.created_date,root.created_user,root.isdeleted,root.modify_date,root.status,root.employee_code,root.result,root.question_id,root.departmentName, root.employee_name, root.note,root.department_code from user_result as root, question as q, survey as s where q.survey_id = ?1 and q.id = root.question_id and q.survey_id = s.id group by employee_name";
+		Query query = em.createNativeQuery(sql, User_Result.class).setParameter(1, surveyId);
+		List<User_Result> items = query.getResultList();
+//		List<String> abc = new ArrayList<>();
+//		//test
+//		for(User_Result u : items) {
+//			abc.add(u.getEmployeeName());
+//		}
+//		Set<String> set = new HashSet<String>(abc);
+//		System.out.println("set: " +set.size());
+//		//end
+//		System.out.println("list: " +items.size());
+		if(items.isEmpty()) {
+			return new ArrayList<>();
+		}else {
+			return items;
+		}
+	}
+	
+	public List<User_Result> findCompletedByDistinct(long surveyId, String result) {
+
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<User_Result> cq = cb.createQuery(User_Result.class);
+		Root<User_Result> root = cq.from(User_Result.class);
+		List<Predicate> queries = new ArrayList<>();
+		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
+		queries.add(deleteQuery);
+		if (surveyId != 0) {
+			Predicate answerTypeQuery = cb.equal(root.get("question").get("survey").get("id"), surveyId);
+			queries.add(answerTypeQuery);
+		}
+		if (result != null) {
+			Predicate departmentNameQuery = cb.equal(root.get("result"), result);
+			queries.add(departmentNameQuery);
+		}
+		Predicate data[] = new Predicate[queries.size()];
+		for (int i = 0; i < queries.size(); i++) {
+			data[i] = queries.get(i);
+		}
+		Predicate finalPredicate = cb.and(data);
+		cq.select(root).where(finalPredicate).orderBy(cb.asc(root.get("employeeName")));
+		TypedQuery<User_Result> query = em.createQuery(cq);
+		List<User_Result> resultEnd = query.getResultList();
+		if(resultEnd.isEmpty()) {
+			return new ArrayList<>();
+		}else {
+			return resultEnd;
+		}
+	}
+	
 	public int findByCountResult(long surveyId) {
 
 		CriteriaBuilder cb = em.getCriteriaBuilder();

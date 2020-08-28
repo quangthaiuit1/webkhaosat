@@ -8,13 +8,23 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import lixco.com.entities.Question;
 import lixco.com.entities.Rating;
@@ -22,6 +32,7 @@ import lixco.com.entities.RatingQuantity;
 import lixco.com.entities.Statistical;
 import lixco.com.entities.StatisticalEnd;
 import lixco.com.entities.Survey;
+import lixco.com.entities.User_Result;
 import trong.lixco.com.servicepublic.EmployeeDTO;
 
 @ManagedBean
@@ -40,6 +51,8 @@ public class StatisticalBean extends AbstractBean implements Serializable {
 	private static ObjectMapper mapper = new ObjectMapper();
 	private int toanboKS = 0;
 	private int soluongdaKS = 0;
+	private List<User_Result> listDaKhaoSat;
+	private List<User_Result> listChuaHoanThanhKhaoSat;
 
 	@Override
 	protected void initItem() {
@@ -48,7 +61,8 @@ public class StatisticalBean extends AbstractBean implements Serializable {
 		statisticalBegin = USER_RESULT_SERVICE.getStatistical(surveyId);
 		statisticalEndFirst = getListStatisticalBegin(surveyId);
 		statisticalEndSecond = castListStatisticalEnd(statisticalBegin, statisticalEndFirst);
-		soluongdaKS = USER_RESULT_SERVICE.findByCountResult(surveyId);
+//		soluongdaKS = USER_RESULT_SERVICE.findByCountResult(surveyId);
+		soluongdaKS = USER_RESULT_SERVICE.findCompletedByDistinctNative(surveyId).size();
 
 		// Thong ke so lieu
 		try {
@@ -67,6 +81,157 @@ public class StatisticalBean extends AbstractBean implements Serializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private static XSSFCellStyle createStyleForTitle(XSSFWorkbook workbook) {
+		XSSFFont font = workbook.createFont();
+		font.setBold(true);
+		XSSFCellStyle style = workbook.createCellStyle();
+		style.setFont(font);
+		return style;
+	}
+
+//	public void danhSachChuaHoanThanh() throws IOException {
+//		listDaKhaoSat = USER_RESULT_SERVICE.findByResult(surveyId, null);
+//		List<User_Result> listChuaHoanThanh = new ArrayList<>();
+//		for(int i = 0; i < listDaKhaoSat.size(); i++) {
+//			boolean check = false;
+//			for(int j = 0; j < employeeBySurListDTO.size(); j++) {
+//				if(employeeBySurListDTO.get(j).getCode().equals(listDaKhaoSat.get(i).getEmployeeCode())) {
+//					check =true;
+//					break;
+//				}
+//			}
+//			if(check == false) {
+//				listChuaHoanThanh.add(listDaKhaoSat.get(i));
+//			}
+//		}
+//		
+//
+//		XSSFWorkbook workbook = new XSSFWorkbook();
+//		XSSFSheet sheet = null;
+//		sheet = workbook.createSheet("DS NV Chưa hoàn thành KS");
+//		int rownum = 0;
+//		Cell cell;
+//		Row row;
+//		XSSFCellStyle style = createStyleForTitle(workbook);
+//		style.setAlignment(CellStyle.ALIGN_CENTER);
+//
+//		CellStyle styleContent = workbook.createCellStyle();
+//		row = sheet.createRow(rownum);
+//
+////		// EmpNo
+//		cell = row.createCell(0);
+//		cell.setCellValue("Mã NV");
+//		// xep loai// EmpName
+//		cell = row.createCell(1);
+//		cell.setCellValue("Tên NV");
+//		cell.setCellStyle(style);
+//		// Salary
+//		cell = row.createCell(2);
+//		cell.setCellValue("Phòng ban");
+//		cell.setCellStyle(style);
+////		
+//		
+////		 Data
+//		for (User_Result kq : listChuaHoanThanh) {
+//			Gson gson = new Gson();
+//			rownum++;
+//			row = sheet.createRow(rownum);
+//			
+//			// EmpNo (A)
+//			cell = row.createCell(0);
+//			cell.setCellValue(kq.getEmployeeCode());
+//			// EmpName (B)
+//			cell = row.createCell(1);
+//			cell.setCellValue(kq.getEmployeeName());
+//			// phong
+//			cell = row.createCell(2);
+//			cell.setCellValue(kq.getDepartmentName());
+//			// ten nhan vien
+//			
+//		}
+//
+//		String filename = "NVChuahoanthanh.xlsx";
+//		FacesContext facesContext = FacesContext.getCurrentInstance();
+//		ExternalContext externalContext = facesContext.getExternalContext();
+//		externalContext.setResponseContentType("application/vnd.ms-excel");
+//		externalContext.setResponseHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+//		workbook.write(externalContext.getResponseOutputStream());
+//		// cancel progress
+//		facesContext.responseComplete();
+//	}
+
+	public void danhSachChuaHoanThanh() throws IOException {
+		listDaKhaoSat = USER_RESULT_SERVICE.findCompletedByDistinctNative(surveyId);
+		List<EmployeeDTO> listChuaHoanThanh = new ArrayList<>();
+		for (int i = 0; i < employeeBySurListDTO.size(); i++) {
+			if (employeeBySurListDTO.get(i).getName() != null) {
+				boolean check = false;
+				for (int j = 0; j < listDaKhaoSat.size(); j++) {
+					if (employeeBySurListDTO.get(i).getCode().equals(listDaKhaoSat.get(j).getEmployeeCode())) {
+						check = true;
+						break;
+					}
+				}
+				if (check == false) {
+					listChuaHoanThanh.add(employeeBySurListDTO.get(i));
+				}
+			}
+		}
+
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = null;
+		sheet = workbook.createSheet("DS NV Chưa hoàn thành KS");
+		int rownum = 0;
+		Cell cell;
+		Row row;
+		XSSFCellStyle style = createStyleForTitle(workbook);
+		style.setAlignment(CellStyle.ALIGN_CENTER);
+
+		CellStyle styleContent = workbook.createCellStyle();
+		row = sheet.createRow(rownum);
+
+//		// EmpNo
+		cell = row.createCell(0);
+		cell.setCellValue("Mã NV");
+		// xep loai// EmpName
+		cell = row.createCell(1);
+		cell.setCellValue("Tên NV");
+		cell.setCellStyle(style);
+		// Salary
+		cell = row.createCell(2);
+		cell.setCellValue("Phòng ban");
+		cell.setCellStyle(style);
+//		
+
+//		 Data
+		for (EmployeeDTO kq : listChuaHoanThanh) {
+			Gson gson = new Gson();
+			rownum++;
+			row = sheet.createRow(rownum);
+
+			// EmpNo (A)
+			cell = row.createCell(0);
+			cell.setCellValue(kq.getCode());
+			// EmpName (B)
+			cell = row.createCell(1);
+			cell.setCellValue(kq.getName());
+			// phong
+			cell = row.createCell(2);
+			cell.setCellValue(kq.getNameDepart());
+			// ten nhan vien
+
+		}
+
+		String filename = "NVChuahoanthanh.xlsx";
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		ExternalContext externalContext = facesContext.getExternalContext();
+		externalContext.setResponseContentType("application/vnd.ms-excel");
+		externalContext.setResponseHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+		workbook.write(externalContext.getResponseOutputStream());
+		// cancel progress
+		facesContext.responseComplete();
 	}
 
 //Tao bo cau hoi

@@ -70,7 +70,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 		try {
 			setofId = getParamSetOfId();
 			surveyPlaying = SURVEY_SERVICE.findById(setofId);
-			if(surveyPlaying.getDescription() == null || StringUtils.isEmpty(surveyPlaying.getDescription())) {
+			if (surveyPlaying.getDescription() == null || StringUtils.isEmpty(surveyPlaying.getDescription())) {
 				checkNullDescription = false;
 			}
 			// Lay y kien
@@ -209,16 +209,18 @@ public class ExcuteSurveyBean extends AbstractBean {
 			}
 
 			for (int j = 0; j < ketquaPhanDanhGiaRating.length; j++) {
-				int lastElement = ketquaPhanDanhGiaRating.length;
-				if (StringUtils.isEmpty(ketquaPhanDanhGiaRating[lastElement - 1].getName())) {
-					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-							"Vui lòng hoàn thành toàn bộ khảo sát.");
-					PrimeFaces.current().dialog().showMessageDynamic(message);
-					return;
+//				int lastElement = ketquaPhanDanhGiaRating.length;
+				if (j != 0) {
+					if (StringUtils.isEmpty(ketquaPhanDanhGiaRating[j].getName())) {
+						FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
+								"Vui lòng hoàn thành toàn bộ khảo sát.");
+						PrimeFaces.current().dialog().showMessageDynamic(message);
+						return;
+					}
 				}
-				if (!StringUtils.isEmpty(ketquaPhanDanhGiaRating[j].getName())) {
-					if(ketquaPhanDanhGiaRating[j].getType_rating().getId() == ConfigQuestionType.DAP_AN_LAY_Y_KIEN) {
-						if(StringUtils.isNotEmpty(noteRatingString[j])) {
+				if (StringUtils.isNotEmpty(ketquaPhanDanhGiaRating[j].getName())) {
+					if (ketquaPhanDanhGiaRating[j].getType_rating().getId() == ConfigQuestionType.DAP_AN_LAY_Y_KIEN) {
+						if (StringUtils.isNotEmpty(noteRatingString[j])) {
 							User_Result userResultTemp = new User_Result();
 							userResultTemp.setCreatedDate(getDate());
 							userResultTemp.setResult(ketquaPhanDanhGiaRating[j].getName());
@@ -231,13 +233,13 @@ public class ExcuteSurveyBean extends AbstractBean {
 //							USER_RESULT_SERVICE.create(userResultTemp);
 							listAddNew.add(userResultTemp);
 							noteRatingString[j] = "";
-						}else {
+						} else {
 							FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 									"Anh/chị vui lòng cho biết ý kiến!.");
 							PrimeFaces.current().dialog().showMessageDynamic(message);
 							return;
 						}
-					}else {
+					} else {
 						User_Result userResultTemp = new User_Result();
 						userResultTemp.setCreatedDate(getDate());
 						userResultTemp.setResult(ketquaPhanDanhGiaRating[j].getName());

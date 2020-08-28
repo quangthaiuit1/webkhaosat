@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lixco.com.beans.entity.DepartmentByLocate;
 import lixco.com.entities.Survey;
+import lixco.com.entities.User_Result;
 import trong.lixco.com.account.servicepublics.Department;
 import trong.lixco.com.account.servicepublics.Member;
 import trong.lixco.com.servicepublic.EmployeeDTO;
@@ -66,6 +67,9 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 	private EmployeeDTO[] employeeBySurDTO;
 	private List<EmployeeDTO> employeeBySurListDTO;
 	private Set<EmployeeDTO> employeeBySurSetDTO;
+	
+	//List giu danh sach de xoa duoi database
+	private List<EmployeeDTO> deleteUserResultByEmployeeSelected;
 //	private Set<Department> departmentList;
 	private List<Department> departmentList;
 	EmployeeServicePublic EMPLOYEE_SERVICEPUBLIC_DTO;
@@ -74,6 +78,7 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 	protected void initItem() {
 		EMPLOYEE_SERVICEPUBLIC_DTO = new EmployeeServicePublicProxy();
 		employeesDTO = new ArrayList<EmployeeDTO>();
+		deleteUserResultByEmployeeSelected = new ArrayList<>();
 		try {
 			employeesDTOArray = EMPLOYEE_SERVICEPUBLIC_DTO.findAll();
 			employeesDTO = new ArrayList<EmployeeDTO>(Arrays.asList(employeesDTOArray));
@@ -241,6 +246,18 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		String a = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.employeeBySurListDTO);
 		surveyPlaying.setUsersJson(a);
 		SURVEY_SERVICE.update(surveyPlaying);
+
+		// xoa ket qua duoi DB
+		for (EmployeeDTO m : deleteUserResultByEmployeeSelected) {
+			List<User_Result> delete = USER_RESULT_SERVICE.find(surveyId, 0, m.getCode(), null);
+			if (!delete.isEmpty()) {
+				for(User_Result ur : delete)
+				USER_RESULT_SERVICE.delete(ur);
+			}
+		}
+		
+		deleteUserResultByEmployeeSelected = new ArrayList<>();
+		
 		notifyUpdateSuccess();
 	}
 
@@ -310,6 +327,7 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		}
 
 		this.employeeBySurListDTO = maps.values().stream().collect(Collectors.toList());
+		deleteUserResultByEmployeeSelected.addAll(selectedsDelete);
 	}
 
 	public List<Member> completeTest(String query) throws RemoteException {
@@ -435,7 +453,7 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		} catch (Exception e) {
 			return "";
 		}
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
