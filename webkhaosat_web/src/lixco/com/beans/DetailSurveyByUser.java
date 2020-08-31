@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.logging.Logger;
 
+import lixco.com.entities.UserResultDetail;
 import lixco.com.entities.User_Result;
 import trong.lixco.com.account.servicepublics.Member;
 
@@ -22,15 +23,17 @@ public class DetailSurveyByUser extends AbstractBean implements Serializable {
 	private String employeeCode;
 	private Member employeePlaying;
 	private long surveyId;
-	private List<User_Result> userResultByUser;
+	private List<UserResultDetail> userResultByUser;
 
 	@Override
 	protected void initItem() {
 		try {
 			surveyId = getParamSetOfId();
 			employeeCode = getParamUserCode();
-			userResultByUser = USER_RESULT_SERVICE.find(surveyId, 0L, employeeCode,null);
+			
 			employeePlaying = EMPLOYEE_SERVICE.findByCode(employeeCode);
+			List<User_Result> temp = USER_RESULT_SERVICE.find(surveyId, employeeCode, null);
+			userResultByUser = USER_RESULT_DETAI_SERVICE.find(temp.get(0).getId(), 0L, 0L);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -65,11 +68,11 @@ public class DetailSurveyByUser extends AbstractBean implements Serializable {
 		this.surveyId = surveyId;
 	}
 
-	public List<User_Result> getUserResultByUser() {
+	public List<UserResultDetail> getUserResultByUser() {
 		return userResultByUser;
 	}
 
-	public void setUserResultByUser(List<User_Result> userResultByUser) {
+	public void setUserResultByUser(List<UserResultDetail> userResultByUser) {
 		this.userResultByUser = userResultByUser;
 	}
 

@@ -58,11 +58,11 @@ public class StatisticalBean extends AbstractBean implements Serializable {
 	protected void initItem() {
 		surveyId = getParamSetOfId();
 		surveyPlaying = SURVEY_SERVICE.findById(surveyId);
-		statisticalBegin = USER_RESULT_SERVICE.getStatistical(surveyId);
-		statisticalEndFirst = getListStatisticalBegin(surveyId);
-		statisticalEndSecond = castListStatisticalEnd(statisticalBegin, statisticalEndFirst);
+//		statisticalBegin = USER_RESULT_SERVICE.getStatistical(surveyId);
+//		statisticalEndFirst = getListStatisticalBegin(surveyId);
+//		statisticalEndSecond = castListStatisticalEnd(statisticalBegin, statisticalEndFirst);
 //		soluongdaKS = USER_RESULT_SERVICE.findByCountResult(surveyId);
-		soluongdaKS = USER_RESULT_SERVICE.findCompletedByDistinctNative(surveyId).size();
+		soluongdaKS = USER_RESULT_SERVICE.find(surveyId, null, null).size();
 
 		// Thong ke so lieu
 		try {
@@ -163,7 +163,7 @@ public class StatisticalBean extends AbstractBean implements Serializable {
 //	}
 
 	public void danhSachChuaHoanThanh() throws IOException {
-		listDaKhaoSat = USER_RESULT_SERVICE.findCompletedByDistinctNative(surveyId);
+		listDaKhaoSat = USER_RESULT_SERVICE.findByResult(surveyId,null);
 		List<EmployeeDTO> listChuaHoanThanh = new ArrayList<>();
 		for (int i = 0; i < employeeBySurListDTO.size(); i++) {
 			if (employeeBySurListDTO.get(i).getName() != null) {
@@ -235,45 +235,45 @@ public class StatisticalBean extends AbstractBean implements Serializable {
 	}
 
 //Tao bo cau hoi
-	public List<StatisticalEnd> getListStatisticalBegin(long surveyId) {
-		List<StatisticalEnd> sts = new ArrayList<>();
-		List<Question> quests = QUESTION_SERVICE.find(null, surveyId, null);
-		for (Question q : quests) {
-			if (q.getQuestionType().getId() != 1 && q.getQuestionType().getId() != 4) {
-				StatisticalEnd stNew = new StatisticalEnd();
-				stNew.setQuestion(q);
-				List<Rating> rts = RATING_SERVICE.find(q.getId(), 0L);
-				List<RatingQuantity> raQuas = new ArrayList<>();
-				for (Rating r : rts) {
-					RatingQuantity raQuaTemp = new RatingQuantity();
-					raQuaTemp.setRating(r);
-					raQuaTemp.setQuantity(0L);
-					raQuas.add(raQuaTemp);
-				}
-				stNew.setRatingQuantities(raQuas);
-				sts.add(stNew);
-			}
-		}
-		return sts;
-	}
+//	public List<StatisticalEnd> getListStatisticalBegin(long surveyId) {
+//		List<StatisticalEnd> sts = new ArrayList<>();
+//		List<Question> quests = QUESTION_SERVICE.find(null, surveyId, null);
+//		for (Question q : quests) {
+//			if (q.getQuestionType().getId() != 1 && q.getQuestionType().getId() != 4) {
+//				StatisticalEnd stNew = new StatisticalEnd();
+//				stNew.setQuestion(q);
+//				List<Rating> rts = RATING_SERVICE.find(q.getId(), 0L);
+//				List<RatingQuantity> raQuas = new ArrayList<>();
+//				for (Rating r : rts) {
+//					RatingQuantity raQuaTemp = new RatingQuantity();
+//					raQuaTemp.setRating(r);
+//					raQuaTemp.setQuantity(0L);
+//					raQuas.add(raQuaTemp);
+//				}
+//				stNew.setRatingQuantities(raQuas);
+//				sts.add(stNew);
+//			}
+//		}
+//		return sts;
+//	}
 
 // Tao ra danh sach bo thong ke
-	public List<StatisticalEnd> castListStatisticalEnd(List<Statistical> statisticals, List<StatisticalEnd> sts) {
-
-		for (int i = 0; i < sts.size(); i++) {
-			for (int j = 0; j < sts.get(i).getRatingQuantities().size(); j++) {
-				for (int g = 0; g < statisticals.size(); g++) {
-					if (statisticals.get(g).getQuestionId() == sts.get(i).getQuestion().getId()) {
-						if (sts.get(i).getRatingQuantities().get(j).getRating().getName()
-								.equals(statisticals.get(g).getResult())) {
-							sts.get(i).getRatingQuantities().get(j).setQuantity(statisticals.get(g).getQuantity());
-						}
-					}
-				}
-			}
-		}
-		return sts;
-	}
+//	public List<StatisticalEnd> castListStatisticalEnd(List<Statistical> statisticals, List<StatisticalEnd> sts) {
+//
+//		for (int i = 0; i < sts.size(); i++) {
+//			for (int j = 0; j < sts.get(i).getRatingQuantities().size(); j++) {
+//				for (int g = 0; g < statisticals.size(); g++) {
+//					if (statisticals.get(g).getQuestionId() == sts.get(i).getQuestion().getId()) {
+//						if (sts.get(i).getRatingQuantities().get(j).getRating().getName()
+//								.equals(statisticals.get(g).getResult())) {
+//							sts.get(i).getRatingQuantities().get(j).setQuantity(statisticals.get(g).getQuantity());
+//						}
+//					}
+//				}
+//			}
+//		}
+//		return sts;
+//	}
 
 	@Override
 	protected Logger getLogger() {

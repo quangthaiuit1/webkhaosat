@@ -48,7 +48,7 @@ public class UserResultService extends AbstractService<User_Result> {
 		return ct;
 	}
 
-	public List<User_Result> find(long surveyId, long questionTypeId, String employeeCode, String departmentName) {
+	public List<User_Result> find(long surveyId, String employeeCode, String departmentName) {
 
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<User_Result> cq = cb.createQuery(User_Result.class);
@@ -57,13 +57,8 @@ public class UserResultService extends AbstractService<User_Result> {
 		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
 		queries.add(deleteQuery);
 		if (surveyId != 0) {
-			Predicate answerTypeQuery = cb.equal(root.get("question").get("survey").get("id"), surveyId);
+			Predicate answerTypeQuery = cb.equal(root.get("survey").get("id"), surveyId);
 			queries.add(answerTypeQuery);
-		}
-		if (questionTypeId != 0) {
-			Predicate questionTypeIdQuery = cb.equal(root.get("question").get("questionType").get("id"),
-					questionTypeId);
-			queries.add(questionTypeIdQuery);
 		}
 		if (employeeCode != null) {
 			Predicate employeeCodeQuery = cb.equal(root.get("employeeCode"), employeeCode);
@@ -82,15 +77,47 @@ public class UserResultService extends AbstractService<User_Result> {
 		TypedQuery<User_Result> query = em.createQuery(cq);
 		return query.getResultList();
 	}
+	
+	public User_Result findByEmployeeCode(long surveyId, String employeeCode) {
+
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<User_Result> cq = cb.createQuery(User_Result.class);
+		Root<User_Result> root = cq.from(User_Result.class);
+		List<Predicate> queries = new ArrayList<>();
+		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
+		queries.add(deleteQuery);
+		if (surveyId != 0) {
+			Predicate answerTypeQuery = cb.equal(root.get("survey").get("id"), surveyId);
+			queries.add(answerTypeQuery);
+		}
+		if (employeeCode != null) {
+			Predicate employeeCodeQuery = cb.equal(root.get("employeeCode"), employeeCode);
+			queries.add(employeeCodeQuery);
+		}
+		Predicate data[] = new Predicate[queries.size()];
+		for (int i = 0; i < queries.size(); i++) {
+			data[i] = queries.get(i);
+		}
+		Predicate finalPredicate = cb.and(data);
+		cq.where(finalPredicate);
+		TypedQuery<User_Result> query = em.createQuery(cq);
+		List<User_Result> result = query.getResultList();
+		if(result.isEmpty()) {
+			return null;
+		}else {
+			return result.get(0);
+		}
+	}
+
 
 	// Thong ke -> query thuan
-	@SuppressWarnings("unchecked")
-	public List<Statistical> getStatistical(long surveyId) {
-		String sql = "Select root.id,q.id as questionId,s.name as surveyName, q.name questionName, root.result as result, count(root.result) as quantity from user_result as root, question as q, survey as s where q.survey_id = ?1 and q.id = root.question_id and q.survey_id = s.id group by root.question_id, root.result";
-		Query query = em.createNativeQuery(sql, Statistical.class).setParameter(1, surveyId);
-		List<Statistical> items = query.getResultList();
-		return items;
-	}
+//	@SuppressWarnings("unchecked")
+//	public List<Statistical> getStatistical(long surveyId) {
+//		String sql = "Select root.id,q.id as questionId,s.name as surveyName, q.name questionName, root.result as result, count(root.result) as quantity from user_result as root, question as q, survey as s where q.survey_id = ?1 and q.id = root.question_id and q.survey_id = s.id group by root.question_id, root.result";
+//		Query query = em.createNativeQuery(sql, Statistical.class).setParameter(1, surveyId);
+//		List<Statistical> items = query.getResultList();
+//		return items;
+//	}
 	
 	public List<User_Result> findByResult(long surveyId, String result) {
 
@@ -101,7 +128,7 @@ public class UserResultService extends AbstractService<User_Result> {
 		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
 		queries.add(deleteQuery);
 		if (surveyId != 0) {
-			Predicate answerTypeQuery = cb.equal(root.get("question").get("survey").get("id"), surveyId);
+			Predicate answerTypeQuery = cb.equal(root.get("survey").get("id"), surveyId);
 			queries.add(answerTypeQuery);
 		}
 		if (result != null) {
@@ -128,15 +155,6 @@ public class UserResultService extends AbstractService<User_Result> {
 		String sql = "Select root.id,root.created_date,root.created_user,root.isdeleted,root.modify_date,root.status,root.employee_code,root.result,root.question_id,root.departmentName, root.employee_name, root.note,root.department_code from user_result as root, question as q, survey as s where q.survey_id = ?1 and q.id = root.question_id and q.survey_id = s.id group by employee_name";
 		Query query = em.createNativeQuery(sql, User_Result.class).setParameter(1, surveyId);
 		List<User_Result> items = query.getResultList();
-//		List<String> abc = new ArrayList<>();
-//		//test
-//		for(User_Result u : items) {
-//			abc.add(u.getEmployeeName());
-//		}
-//		Set<String> set = new HashSet<String>(abc);
-//		System.out.println("set: " +set.size());
-//		//end
-//		System.out.println("list: " +items.size());
 		if(items.isEmpty()) {
 			return new ArrayList<>();
 		}else {
@@ -153,7 +171,7 @@ public class UserResultService extends AbstractService<User_Result> {
 		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
 		queries.add(deleteQuery);
 		if (surveyId != 0) {
-			Predicate answerTypeQuery = cb.equal(root.get("question").get("survey").get("id"), surveyId);
+			Predicate answerTypeQuery = cb.equal(root.get("survey").get("id"), surveyId);
 			queries.add(answerTypeQuery);
 		}
 		if (result != null) {
@@ -184,7 +202,7 @@ public class UserResultService extends AbstractService<User_Result> {
 		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
 		queries.add(deleteQuery);
 		if (surveyId != 0) {
-			Predicate answerTypeQuery = cb.equal(root.get("question").get("survey").get("id"), surveyId);
+			Predicate answerTypeQuery = cb.equal(root.get("survey").get("id"), surveyId);
 			queries.add(answerTypeQuery);
 		}
 		Predicate data[] = new Predicate[queries.size()];
@@ -219,7 +237,7 @@ public class UserResultService extends AbstractService<User_Result> {
 		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
 		queries.add(deleteQuery);
 		if (surveyId != 0) {
-			Predicate answerTypeQuery = cb.equal(root.get("question").get("survey").get("id"), surveyId);
+			Predicate answerTypeQuery = cb.equal(root.get("survey").get("id"), surveyId);
 			queries.add(answerTypeQuery);
 		}
 		if (departmentCode != null) {
@@ -251,7 +269,7 @@ public class UserResultService extends AbstractService<User_Result> {
 		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
 		queries.add(deleteQuery);
 		if (surveyId != 0) {
-			Predicate answerTypeQuery = cb.equal(root.get("question").get("survey").get("id"), surveyId);
+			Predicate answerTypeQuery = cb.equal(root.get("survey").get("id"), surveyId);
 			queries.add(answerTypeQuery);
 		}
 		if (departmentName != null) {

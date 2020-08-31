@@ -26,6 +26,7 @@ import lixco.com.services.QuestionService;
 import lixco.com.services.QuestionTypeService;
 import lixco.com.services.RatingService;
 import lixco.com.services.SurveyService;
+import lixco.com.services.UserResulDetailService;
 import lixco.com.services.UserResultService;
 import trong.lixco.com.account.servicepublics.Account;
 import trong.lixco.com.account.servicepublics.AccountServicePublic;
@@ -69,6 +70,9 @@ public abstract class AbstractBean implements Serializable {
 
 	@Inject
 	protected UserResultService USER_RESULT_SERVICE;
+	
+	@Inject
+	protected UserResulDetailService USER_RESULT_DETAI_SERVICE;
 	
 	@PostConstruct
 	public void init() {

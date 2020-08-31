@@ -249,7 +249,7 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 
 		// xoa ket qua duoi DB
 		for (EmployeeDTO m : deleteUserResultByEmployeeSelected) {
-			List<User_Result> delete = USER_RESULT_SERVICE.find(surveyId, 0, m.getCode(), null);
+			List<User_Result> delete = USER_RESULT_SERVICE.find(surveyId, m.getCode(), null);
 			if (!delete.isEmpty()) {
 				for(User_Result ur : delete)
 				USER_RESULT_SERVICE.delete(ur);

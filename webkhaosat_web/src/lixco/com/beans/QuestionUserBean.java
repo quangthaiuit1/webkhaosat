@@ -2,6 +2,8 @@ package lixco.com.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -40,6 +42,17 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 			
 			accountLogin = getSession();
 			managerSurveyUser = getListSurvey(accountLogin);
+			
+			//sort time desc
+			Collections.sort(surveysInExpired, new Comparator<ManagerSurveyUser>()
+		    {
+		        @Override
+		        public int compare(ManagerSurveyUser d1, ManagerSurveyUser d2)
+		        {
+		            return d2.getSurvey().getEndDate().compareTo(d1.getSurvey().getEndDate());//use the name specified in the pojo class for getting the date in the place of 'getdate'
+		        }
+		    });
+			
 			surveysIncomplete = getListSurveyIncomplete(managerSurveyUser);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -109,7 +122,7 @@ public class QuestionUserBean extends AbstractBean implements Serializable {
 	}
 //Kiem tra hoan thanh
 	public boolean checkSurveyComplete(long surveyid, String employeeCode) {
-		List<User_Result> check = USER_RESULT_SERVICE.find(surveyid, 0L, employeeCode,null);
+		List<User_Result> check = USER_RESULT_SERVICE.find(surveyid, employeeCode,null);
 		if(check.isEmpty()) {
 			return false;
 		}

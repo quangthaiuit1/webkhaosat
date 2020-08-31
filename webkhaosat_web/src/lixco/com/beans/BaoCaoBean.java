@@ -23,6 +23,7 @@ import org.jboss.logging.Logger;
 import com.google.gson.Gson;
 
 import lixco.com.entities.Survey;
+import lixco.com.entities.UserResultDetail;
 import lixco.com.entities.User_Result;
 
 @ManagedBean
@@ -54,7 +55,7 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 	public void baoCaoNangLucCanDaoTao() throws IOException {
 //		PrimeFaces.current().executeScript("start().click()");
 		if (loaiBaoCao.equals("")) {
-			loaiBaoCao = "KYK";
+			loaiBaoCao = "TB";
 		}
 		// handle data
 		// neu khong chon ky khao sat nao
@@ -62,30 +63,38 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 			surveySelected = allSurvey.get(0);
 		}
 		// y kien
-		List<User_Result> listKetQua = new ArrayList<>();
-		if (loaiBaoCao.equals("YK")) {
-			listKetQua = USER_RESULT_SERVICE.findByResult(surveySelected.getId(), null);
-			List<User_Result> ykienkhac= new ArrayList<>();
-			for(User_Result ur : listKetQua) {
-				if(ur.getNote() != null) {
+		List<UserResultDetail> listKetQua = new ArrayList<>();
+		// toan bo
+		if (loaiBaoCao.equals("TB")) {
+			listKetQua = USER_RESULT_DETAI_SERVICE.find(0L, surveySelected.getId(), 0L);
+		}
+		// y kien khac
+		if (loaiBaoCao.equals("YKK")) {
+			listKetQua = USER_RESULT_DETAI_SERVICE.find(0L, surveySelected.getId(), 0L);
+			List<UserResultDetail> ykienkhac = new ArrayList<>();
+			for (UserResultDetail ur : listKetQua) {
+				if (ur.getNote() != null) {
 					ykienkhac.add(ur);
 				}
 			}
 			listKetQua = new ArrayList<>();
 			listKetQua.addAll(ykienkhac);
 		}
-		// khong y kien
-		if (loaiBaoCao.equals("KYK")) {
-			listKetQua = USER_RESULT_SERVICE.findByResult(surveySelected.getId(), null);
+		// cau hoi lay y kien
+		if (loaiBaoCao.equals("LYK")) {
+			listKetQua = USER_RESULT_DETAI_SERVICE.findDapAnLayYKien(surveySelected.getId());
 		}
 
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = null;
-		if (loaiBaoCao.equals("KYK")) {
+		if (loaiBaoCao.equals("TB")) {
 			sheet = workbook.createSheet("Báo cáo toàn bộ");
 		}
-		if (loaiBaoCao.equals("YK")) {
+		if (loaiBaoCao.equals("YKK")) {
 			sheet = workbook.createSheet("Báo cáo ý kiến khác");
+		}
+		if (loaiBaoCao.equals("LYK")) {
+			sheet = workbook.createSheet("Báo cáo lấy ý kiến");
 		}
 
 		int rownum = 0;
@@ -108,8 +117,7 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 		cell = row.createCell(2);
 		cell.setCellValue("Phòng ban");
 		cell.setCellStyle(style);
-		
-		
+
 		// Grade
 		cell = row.createCell(3);
 		cell.setCellValue("Kỳ khảo sát");
@@ -124,38 +132,50 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 		cell.setCellStyle(style);
 
 		cell = row.createCell(6);
-		cell.setCellValue("Ý kiến");
+		cell.setCellValue("Lấy ý kiến");
+		cell.setCellStyle(style);
+
+		cell = row.createCell(7);
+		cell.setCellValue("Ý kiến khác");
 		cell.setCellStyle(style);
 //		 Data
-		for (User_Result kq : listKetQua) {
-			Gson gson = new Gson();
-			rownum++;
-			row = sheet.createRow(rownum);
-			
-			// EmpNo (A)
-			cell = row.createCell(0);
-			cell.setCellValue(kq.getEmployeeCode());
-			// EmpName (B)
-			cell = row.createCell(1);
-			cell.setCellValue(kq.getEmployeeName());
-			// phong
-			cell = row.createCell(2);
-			cell.setCellValue(kq.getDepartmentName());
-			// ten nhan vien
-			
-			
-			cell = row.createCell(3);
-			cell.setCellValue(kq.getQuestion().getSurvey().getName());
+		if (!listKetQua.isEmpty() && listKetQua != null) {
+			for (UserResultDetail kq : listKetQua) {
+				Gson gson = new Gson();
+				rownum++;
+				row = sheet.createRow(rownum);
 
-			cell = row.createCell(4);
-			cell.setCellValue(kq.getQuestion().getName());
-			// Nhom nang luc
-			cell = row.createCell(5);
-			cell.setCellValue(kq.getResult());
+				// EmpNo (A)
+				cell = row.createCell(0);
+				cell.setCellValue(kq.getUser_result().getEmployeeCode());
+				// EmpName (B)
+				cell = row.createCell(1);
+				cell.setCellValue(kq.getUser_result().getEmployeeName());
+				// phong
+				cell = row.createCell(2);
+				cell.setCellValue(kq.getUser_result().getDepartmentName());
+				// ten nhan vien
 
-			if (kq.getNote() != null) {
-				cell = row.createCell(6);
-				cell.setCellValue(kq.getNote());
+				cell = row.createCell(3);
+				cell.setCellValue(kq.getQuestion().getSurvey().getName());
+
+				cell = row.createCell(4);
+				cell.setCellValue(kq.getQuestion().getName());
+				// Nhom nang luc
+
+				if (kq.getRating() != null) {
+					cell = row.createCell(5);
+					cell.setCellValue(kq.getRating().getName());
+
+				}
+				if (kq.getLay_y_kien() != null) {
+					cell = row.createCell(6);
+					cell.setCellValue(kq.getLay_y_kien());
+				}
+				if (kq.getNote() != null) {
+					cell = row.createCell(7);
+					cell.setCellValue(kq.getNote());
+				}
 			}
 		}
 

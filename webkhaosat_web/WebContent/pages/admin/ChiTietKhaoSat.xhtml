@@ -52,9 +52,16 @@
 							<p:column headerText="Câu hỏi">
 								<h:outputText value="#{ur.question.name}" />
 							</p:column>
-							<p:column headerText="Trả lời">
-								<h:outputText value="#{ur.result}" />
+							<p:column headerText="Trả lời câu hỏi có đáp án">
+								<h:outputText value="#{ur.rating.name}" />
 							</p:column>
+							<p:column headerText="Trả lời câu hỏi ý kiến">
+								<h:outputText value="#{ur.lay_y_kien}" />
+							</p:column>
+							<p:column headerText="Ý kiến khác (Đáp án lấy ý kiến)">
+								<h:outputText value="#{ur.note}" />
+							</p:column>
+							
 
 						</p:dataTable>
 					</div>

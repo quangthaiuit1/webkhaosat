@@ -51,11 +51,11 @@ public class QuestionService extends AbstractService<Question>{
 		List<Predicate> queries = new ArrayList<>();
 		Predicate deleteQuery = cb.equal(root.get("isDeleted"), false);
 		queries.add(deleteQuery);
-		if (questionTypeId != null) {
+		if (questionTypeId != 0) {
 			Predicate questionTypeQuery = cb.equal(root.get("questionType").get("id"), questionTypeId);
 			queries.add(questionTypeQuery);
 		}
-		if(surveyId != null) {
+		if(surveyId != 0) {
 			Predicate surveyIdQuery = cb.equal(root.get("survey").get("id"), surveyId);
 			queries.add(surveyIdQuery);
 		}

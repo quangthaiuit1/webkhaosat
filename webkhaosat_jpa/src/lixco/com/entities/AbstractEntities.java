@@ -26,9 +26,12 @@ public class AbstractEntities {
 	
 	@Column(name = "created_user")
 	protected String createdUser;
+	
+	@Column(name = "modify_user")
+	protected String modifiedUser;
 
 	@Column(name = "isdeleted")
-	protected boolean isDeleted;
+	protected boolean isDeleted = false;
 	protected String status;	
 	
 	public long getId() {
@@ -60,6 +63,18 @@ public class AbstractEntities {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getCreatedUser() {
+		return createdUser;
+	}
+	public void setCreatedUser(String createdUser) {
+		this.createdUser = createdUser;
+	}
+	public String getModifiedUser() {
+		return modifiedUser;
+	}
+	public void setModifiedUser(String modifiedUser) {
+		this.modifiedUser = modifiedUser;
 	}
 	@Override
 	public boolean equals(Object obj) {

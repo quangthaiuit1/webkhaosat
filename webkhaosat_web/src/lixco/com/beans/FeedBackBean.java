@@ -31,7 +31,7 @@ public class FeedBackBean extends AbstractBean implements Serializable{
 	@Override
 	protected void initItem() {
 		surveyId = getParamSetOfId();
-		feedbacksTemp = USER_RESULT_SERVICE.find(surveyId, 1, null,null);
+		feedbacksTemp = USER_RESULT_SERVICE.find(surveyId, null,null);
 		feedbacks = createListFeedback(feedbacksTemp);
 		try {
 			departmentsArray = DEPARTMENT_SERVICE.findAll();

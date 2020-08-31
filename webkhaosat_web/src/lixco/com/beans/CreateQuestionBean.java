@@ -23,6 +23,7 @@ import lixco.com.entities.Rating;
 import lixco.com.entities.Survey;
 import lixco.com.entities.TypeRating;
 import lixco.com.services.TypeRatingService;
+import trong.lixco.com.account.servicepublics.Member;
 
 @ManagedBean
 @ViewScoped
@@ -36,14 +37,17 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 	private String questionNameNew; // Danh sach bien hung gia tri
 	private String[] answersNew; // Bien hung dap an khi tao moi
 	private List<Rating> answerNewList;
+	private List<Rating> answerMultipleChoice;
 	private List<TypeRating> typeRatings;
 	private TypeRating typeRatingSelected;
 	private Rating ratingSelected;
+	private Member member;
 	
 	//Cac loai cau hoi
 	private long LAY_Y_KIEN;
 	private long THANG_DIEM;
 	private long DANH_GIA;
+	private long MULTIPLE_CHOICE;
 
 	@Inject
 	private TypeRatingService TYPE_RATING_SERVICE;
@@ -51,9 +55,11 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 	@Override
 	protected void initItem() {
 		try {
+			member = getAccount().getMember();
 			LAY_Y_KIEN = ConfigQuestionType.LAY_Y_KIEN;
 			THANG_DIEM = ConfigQuestionType.THANG_DIEM;
 			DANH_GIA = ConfigQuestionType.DANH_GIA;
+			MULTIPLE_CHOICE = ConfigQuestionType.MULTIPLE_CHOICE;
 			setofId = getParamSetOfId();
 			
 		} catch (Exception e) {
@@ -63,9 +69,12 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 
 		// update new : danh sach dap an khi tao moi
 		answerNewList = new ArrayList<>();
+		answerMultipleChoice = new ArrayList<>();
 		Rating firstTemp = new Rating();
 		firstTemp.setType_rating(typeRatings.get(1));
 		answerNewList.add(firstTemp);
+		//danh sach multiple choice khi tao moi
+		answerMultipleChoice.add(firstTemp);
 
 		ratingSelected = new Rating();
 
@@ -85,6 +94,7 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 		tempQ.setSurvey(tempSet);
 		tempQ.setQuestionType(questionTypeSelected);
 		tempQ.setCreatedDate(getDate());
+		tempQ.setCreatedUser(member.getCode());
 		tempQ.setName(questionNameNew);
 		tempQ.setDeleted(false);
 		// Danh gia || Thang diem
@@ -126,6 +136,48 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 			}
 			answerNewList = new ArrayList<>();
 			addRowNew();
+			questionNameNew = "";
+			return;
+		}
+		// nhieu dap an
+		if (questionTypeTempTest == ConfigQuestionType.MULTIPLE_CHOICE) {
+			List<Rating> ratingsTemp = new ArrayList<>();
+			//check coi co dap an nao hay khong
+			if (answerMultipleChoice.isEmpty()) {
+				addRowNew();
+				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
+						"Vui lòng nhập đáp án!.");
+				PrimeFaces.current().dialog().showMessageDynamic(message);
+				return;
+			}
+			
+			//kiem tra dap an nao bi null thi bo
+			for(Rating r : answerMultipleChoice) {
+				if(StringUtils.isNotEmpty(r.getName()) && r.getType_rating() != null) {
+					ratingsTemp.add(r);
+				}
+			}
+			//cap nhat lai danh sach co dap an
+			this.answerMultipleChoice = new ArrayList<>();
+			this.answerMultipleChoice.addAll(ratingsTemp);
+			
+			//dap an hop le moi cho them cau hoi
+			if(!this.answerMultipleChoice.isEmpty()) {
+				tempQ = QUESTION_SERVICE.create(tempQ);
+			}
+			if(tempQ.getId() != 0) {
+				for(Rating r: answerMultipleChoice) {
+					r.setQuestion(tempQ);
+					RATING_SERVICE.create(r);
+				}
+				answerMultipleChoice = new ArrayList<>();
+				addRowNewAnswerMultipleChoice();
+				questionNameNew = "";
+				notifyAddSuccess();
+				return;
+			}
+			answerMultipleChoice = new ArrayList<>();
+			addRowNewAnswerMultipleChoice();
 			questionNameNew = "";
 			return;
 		}
@@ -184,6 +236,16 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 			PrimeFaces.current().executeScript("PF('dialogChoose').show()");
 		}
 	}
+	
+	public void handleRatingSelectedMultipleChoice(Rating item) {
+		ratingSelected = item;
+		if (StringUtils.isEmpty(item.getName())) {
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng nhập đáp án.");
+			PrimeFaces.current().dialog().showMessageDynamic(message);
+		}else {
+			PrimeFaces.current().executeScript("PF('dialogChooseMultipleChoice').show()");
+		}
+	}
 
 	public void deleteRow(Rating item) {
 		if(StringUtils.isNotEmpty(item.getName())) {
@@ -203,11 +265,26 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 		abc.setType_rating(typeRatings.get(1));
 		answerNewList.add(abc);
 	}
+	
+	public void addRowNewAnswerMultipleChoice() {
+		Rating abc = new Rating();
+		abc.setType_rating(typeRatings.get(1));
+		answerMultipleChoice.add(abc);
+	}
+
 
 	public void handleChoose() {
 		for(int i =0; i < answerNewList.size(); i++) {
 			if(answerNewList.get(i).getName().equals(ratingSelected.getName())) {
 				answerNewList.get(i).setType_rating(typeRatingSelected);
+			}
+		}
+	}
+	
+	public void handleChooseMultipleChoice() {
+		for(int i =0; i < answerMultipleChoice.size(); i++) {
+			if(answerMultipleChoice.get(i).getName().equals(ratingSelected.getName())) {
+				answerMultipleChoice.get(i).setType_rating(typeRatingSelected);
 			}
 		}
 	}
@@ -315,4 +392,19 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 		DANH_GIA = dANH_GIA;
 	}
 
+	public long getMULTIPLE_CHOICE() {
+		return MULTIPLE_CHOICE;
+	}
+
+	public void setMULTIPLE_CHOICE(long mULTIPLE_CHOICE) {
+		MULTIPLE_CHOICE = mULTIPLE_CHOICE;
+	}
+
+	public List<Rating> getAnswerMultipleChoice() {
+		return answerMultipleChoice;
+	}
+
+	public void setAnswerMultipleChoice(List<Rating> answerMultipleChoice) {
+		this.answerMultipleChoice = answerMultipleChoice;
+	}
 }

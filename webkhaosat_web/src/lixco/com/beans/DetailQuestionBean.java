@@ -63,7 +63,7 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 		listRatingByQuestion = new ArrayList<>();
 		try {
 			setofId = getParamSetOfId();
-			listQuestionBySet = QUESTION_SERVICE.find(null, setofId, null);
+			listQuestionBySet = QUESTION_SERVICE.find(0L, setofId, null);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -80,7 +80,7 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 	// Xoa Cau hoi
 	public void deleteQuestion() {
 		QUESTION_SERVICE.delete(questionDeleted);
-		listQuestionBySet = QUESTION_SERVICE.find(null, setofId, null);
+		listQuestionBySet = QUESTION_SERVICE.find(0L, setofId, null);
 		PrimeFaces.current().executeScript("PF('dialogDeleteQuest').hide()");
 		notifyDeleteSuccess();
 	}
@@ -133,6 +133,10 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 		if (questionSelected.getQuestionType().getId() == ConfigQuestionType.DANH_GIA) {
 			listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId(), 0L);
 			// Reset ds dap ap cua loai cau hoi
+			listAnswersByQuestion = new ArrayList<>();
+		}
+		if(questionSelected.getQuestionType().getId() == ConfigQuestionType.MULTIPLE_CHOICE) {
+			listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId(), 0L);
 			listAnswersByQuestion = new ArrayList<>();
 		}
 		if (questionSelected.getQuestionType().getId() == ConfigQuestionType.THANG_DIEM) {

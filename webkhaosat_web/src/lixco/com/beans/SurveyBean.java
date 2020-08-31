@@ -15,6 +15,7 @@ import org.primefaces.PrimeFaces;
 
 import lixco.com.entities.Survey;
 import lixco.com.entities.User_Result;
+import trong.lixco.com.account.servicepublics.Member;
 
 @ManagedBean
 @ViewScoped
@@ -38,11 +39,13 @@ public class SurveyBean extends AbstractBean implements Serializable {
 	private List<User_Result> userResult1; // ket qua khao sat theo id bo khao sat
 	private List<User_Result> userResult2; // List sau filter
 	private List<User_Result> userResultTest; // test select user
+	private Member member;
 	// CAC BIEN HUNG GIA TRI TAM THOI
 	// Trong
 
 	@Override
 	public void initItem() {
+		member = getAccount().getMember();
 		// khoi tao doi tuong hung gia tri khi khong co gia tri van khong bi loi
 		surveySelected3 = new Survey();
 		surveyNew = new Survey();
@@ -67,7 +70,7 @@ public class SurveyBean extends AbstractBean implements Serializable {
 	// Tao ky khao sat
 	public void createSurvey() {
 		try {
-			surveyNew.setDeleted(false);
+			surveyNew.setCreatedUser(member.getCode());;
 			surveyNew.setCreatedDate(getDate());
 			SURVEY_SERVICE.create(surveyNew);
 			surveys1 = SURVEY_SERVICE.findAllByFilter();
@@ -80,6 +83,7 @@ public class SurveyBean extends AbstractBean implements Serializable {
 	// sua ky khao sat
 	public void updatesurvey() {
 		surveyUpdated.setModifiedDate(getDate());
+		surveyUpdated.setModifiedUser(member.getCode());
 		Date temp = surveyUpdated.getEndDate();
 		System.out.println(temp);
 		SURVEY_SERVICE.update(surveyUpdated);
