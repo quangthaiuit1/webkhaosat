@@ -34,10 +34,10 @@ import trong.lixco.com.account.servicepublics.Member;
 public class ExcuteSurveyBean extends AbstractBean {
 
 	private static final long serialVersionUID = 1L;
-	private List<Question> questionsType1; // Cau hoi lay y kien
-	private List<Question> questionsType2; // Cau hoi danh gia
-	private List<Question> questionsType4; // Cau hoi thang diem
-	private List<Question> questionsType3;// Cau hoi multiple choice
+	private List<Question> questionsTypeLayYKien; // Cau hoi lay y kien
+	private List<Question> questionsTypeDanhGia; // Cau hoi danh gia
+	private List<Question> questionsTypeThangDiem; // Cau hoi thang diem
+	private List<Question> questionsTypeMultipleChoice;// Cau hoi multiple choice
 	private List<QuestionAndRating> questionAndMultipleChoiceAnswer;
 	private List<QuestionAndRating> questionAndAnswerRating; // bo cau hoi phan 1
 	private List<QuestionSlider> questionAndAnswerSlider;// thanng diem
@@ -56,15 +56,15 @@ public class ExcuteSurveyBean extends AbstractBean {
 	private List<UserResultDetail> ketquaPhanLayYKien;
 
 	private List<Answer> answers2; // Toan bo cau tra loi cua phan 3
-	private List<Rating> answers1; // Toan bo cau tra loi cua phan 1
 	private Long setofId;
 	private Survey surveyPlaying;
 	// danh gia
-	private boolean checkNullPhan1;
+	private boolean checkNullPhanDanhGia;
 	// multiple choice
-	private boolean checkNullPhan2;
+	private boolean checkNullPhanNhieuDapAn;
 	// lay y kien
-	private boolean checkNullPhan3;
+	private boolean checkNullPhanThangDiem;
+	private boolean checkNullPhanLayYKien;
 	private boolean checkNullAll;
 	private boolean checkNullDescription = false;
 	private boolean notifyComplete;
@@ -91,56 +91,59 @@ public class ExcuteSurveyBean extends AbstractBean {
 			}
 			// Lay y kien
 			long layYKien = new Long(ConfigQuestionType.LAY_Y_KIEN);
-			questionsType1 = getListQuestionByType(layYKien, setofId);
-			dapAnLayYKienStringArray = new String[questionsType1.size() + 1];
+			questionsTypeLayYKien = getListQuestionByType(layYKien, setofId);
+			dapAnLayYKienStringArray = new String[questionsTypeLayYKien.size() + 1];
 			// Danh gia
 			long danhGia = new Long(ConfigQuestionType.DANH_GIA);
-			questionsType2 = getListQuestionByType(danhGia, setofId);
+			questionsTypeDanhGia = getListQuestionByType(danhGia, setofId);
 			// Thang diem
 			long thangDiem = new Long(ConfigQuestionType.THANG_DIEM);
-			questionsType4 = getListQuestionByType(thangDiem, setofId);
+			questionsTypeThangDiem = getListQuestionByType(thangDiem, setofId);
 
 			long multipleChoice = new Long(ConfigQuestionType.MULTIPLE_CHOICE);
-			questionsType3 = getListQuestionByType(multipleChoice, setofId);
+			questionsTypeMultipleChoice = getListQuestionByType(multipleChoice, setofId);
 
 			// Kiem tra null de check view
-			if (questionsType2.isEmpty()) {
-				checkNullPhan1 = true;
+			if (questionsTypeDanhGia.isEmpty()) {
+				checkNullPhanDanhGia = true;
 			}
-			if (questionsType3.isEmpty()) {
-				checkNullPhan2 = true;
+			if (questionsTypeMultipleChoice.isEmpty()) {
+				checkNullPhanNhieuDapAn = true;
 			}
-			if (questionsType1.isEmpty()) {
-				checkNullPhan3 = true;
+			if (questionsTypeLayYKien.isEmpty()) {
+				checkNullPhanLayYKien = true;
 			}
-			if (checkNullPhan1 == true && checkNullPhan2 == true && checkNullPhan3 == true) {
+			if (questionsTypeThangDiem.isEmpty()) {
+				checkNullPhanThangDiem = true;
+			}
+			if (checkNullPhanDanhGia == true && checkNullPhanNhieuDapAn == true && checkNullPhanLayYKien == true
+					&& checkNullPhanThangDiem == true) {
 				checkNullAll = true;
 			}
 
-			ketquaPhanDanhGia = new String[questionsType2.size() + 1];
+			ketquaPhanDanhGia = new String[questionsTypeDanhGia.size() + 1];
 			// test
-			noteRating = new Boolean[questionsType2.size() + 1];
-			noteRatingString = new String[questionsType2.size() + 1];
+			noteRating = new Boolean[questionsTypeDanhGia.size() + 1];
+			noteRatingString = new String[questionsTypeDanhGia.size() + 1];
 			for (int i = 0; i < noteRating.length; i++) {
 				noteRating[i] = false;
 			}
 
 			// Dap an multiple choice
-			ketquaMultipleChoiceString2Chieu = new String[questionsType3.size() + 1][10];
-			noteRatingMultipleChoice = new String[questionsType3.size() + 1];
-			noteBooleanMultipleChoice = new Boolean[questionsType3.size() + 1];
+			ketquaMultipleChoiceString2Chieu = new String[questionsTypeMultipleChoice.size() + 1][10];
+			noteRatingMultipleChoice = new String[questionsTypeMultipleChoice.size() + 1];
+			noteBooleanMultipleChoice = new Boolean[questionsTypeMultipleChoice.size() + 1];
 			for (int i = 0; i < noteRatingMultipleChoice.length; i++) {
 				noteBooleanMultipleChoice[i] = false;
 			}
 
-			ketquaPhanThangDiem = new String[questionsType4.size() + 1];
+			ketquaPhanThangDiem = new String[questionsTypeThangDiem.size() + 1];
 
-			answers1 = RATING_SERVICE.find(0L, setofId);
 			// Bo cau hoi phan danh gia
 			questionAndAnswerRating = new ArrayList<>();
 			questionAndMultipleChoiceAnswer = new ArrayList<>();
 			questionAndAnswerSlider = new ArrayList<>();
-			buildSetOfQuestionByType(questionsType2, questionsType4, questionsType3);
+			buildSetOfQuestionByType(questionsTypeDanhGia, questionsTypeThangDiem, questionsTypeMultipleChoice);
 			// excute load lai data
 
 		} catch (Exception e) {
@@ -187,8 +190,8 @@ public class ExcuteSurveyBean extends AbstractBean {
 			questionAndAnswerRating.add(tempQA);
 			if (isCompleted) {
 				// gan dap an da chon vao bo cau hoi
-				UserResultDetail urd = USER_RESULT_DETAI_SERVICE.find(0L, 0L, questionsTypeDanhGia.get(i).getId())
-						.get(0);
+				UserResultDetail urd = USER_RESULT_DETAI_SERVICE
+						.find(checkComplete.getId(), 0L, questionsTypeDanhGia.get(i).getId()).get(0);
 				// gan y kien vao cho o nhap y kien
 				if (urd.getRating().getType_rating().getId() == ConfigQuestionType.DAP_AN_LAY_Y_KIEN) {
 					this.ketquaPhanDanhGia[i + 1] = String.valueOf(urd.getRating().getId());
@@ -210,7 +213,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 			questionAndMultipleChoiceAnswer.add(tempQA);
 			if (isCompleted) {
 				// gan dap an da chon vao bo cau hoi
-				List<UserResultDetail> urd = USER_RESULT_DETAI_SERVICE.find(0L, 0L,
+				List<UserResultDetail> urd = USER_RESULT_DETAI_SERVICE.find(checkComplete.getId(), 0L,
 						questionsTypeMultipleChoice.get(i).getId());
 				for (int l = 0; l < urd.size(); l++) {
 					if (urd.get(l).getRating().getType_rating().getId() == ConfigQuestionType.DAP_AN_LAY_Y_KIEN) {
@@ -227,8 +230,9 @@ public class ExcuteSurveyBean extends AbstractBean {
 		}
 		if (isCompleted) {
 			// Bo cau hoi lay y kien
-			for (int j = 0; j < questionsType1.size(); j++) {
-				List<UserResultDetail> urd = USER_RESULT_DETAI_SERVICE.find(0L, 0L, questionsType1.get(j).getId());
+			for (int j = 0; j < questionsTypeLayYKien.size(); j++) {
+				List<UserResultDetail> urd = USER_RESULT_DETAI_SERVICE.find(checkComplete.getId(), 0L,
+						questionsTypeLayYKien.get(j).getId());
 				if (!urd.isEmpty()) {
 					dapAnLayYKienStringArray[j + 1] = urd.get(0).getLay_y_kien();
 				}
@@ -237,16 +241,26 @@ public class ExcuteSurveyBean extends AbstractBean {
 		}
 
 		// Bo câu hoi thang diem
-		for (Question q : questionsTypeThangDiem) {
+		for (int j = 0; j < questionsTypeThangDiem.size(); j++) {
 			QuestionSlider qTemp = new QuestionSlider();
 			List<Integer> intTemp = new ArrayList<>();
-			for (Rating r : answers1) {
-				if (q.getId() == r.getQuestion().getId()) {
+			List<Rating> answerTemp = RATING_SERVICE.find(questionsTypeThangDiem.get(j).getId(), 0L);
+			for (Rating r : answerTemp) {
+				if (questionsTypeThangDiem.get(j).getId() == r.getQuestion().getId()) {
 					intTemp.add(Integer.parseInt(r.getName()));
 				}
 			}
+			if (isCompleted) {
+				// gan ket qua da khao sat vao
+				List<UserResultDetail> detail = USER_RESULT_DETAI_SERVICE.find(checkComplete.getId(), 0l,
+						questionsTypeThangDiem.get(j).getId());
+				if (!detail.isEmpty()) {
+					ketquaPhanThangDiem[j + 1] = String.valueOf(detail.get(0).getThangdiem());
+				}
+			}
+
 			// hoi chuoi (*_*)
-			qTemp.setQuestion(q);
+			qTemp.setQuestion(questionsTypeThangDiem.get(j));
 			if (intTemp.get(0) > intTemp.get(1)) {
 				qTemp.setMin(intTemp.get(1));
 				qTemp.setMax(intTemp.get(0));
@@ -287,7 +301,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 							userResultDetailTemp.setQuestion(temp.getQuestion());
 							userResultDetailTemp.setNote(noteRatingString[j]);
 							listAddNew.add(userResultDetailTemp);
-							noteRatingString[j] = "";
+//							noteRatingString[j] = "";
 						} else {
 							FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 									"Anh/chị vui lòng cho biết ý kiến!.");
@@ -303,10 +317,31 @@ public class ExcuteSurveyBean extends AbstractBean {
 					}
 				}
 			}
+
+			// phan thang diem
+			for (int j = 0; j < ketquaPhanThangDiem.length; j++) {
+				if (j != 0) {
+					if (StringUtils.isNotEmpty(ketquaPhanThangDiem[j])) {
+						int ketquathangdiem = Integer.parseInt(ketquaPhanThangDiem[j]);
+						UserResultDetail userResultDetailTemp = new UserResultDetail();
+						userResultDetailTemp.setCreatedDate(getDate());
+						userResultDetailTemp.setThangdiem(ketquathangdiem);
+						;
+						userResultDetailTemp.setQuestion(questionsTypeThangDiem.get(j - 1));
+						listAddNew.add(userResultDetailTemp);
+					} else {
+						FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
+								"Vui lòng hoàn thành toàn bộ khảo sát.");
+						PrimeFaces.current().dialog().showMessageDynamic(message);
+						return;
+					}
+				}
+			}
+
 			// phan multiple choice
 			for (int j = 0; j < ketquaMultipleChoiceString2Chieu.length; j++) {
 				if (j != 0) {
-					if (StringUtils.isEmpty(ketquaMultipleChoiceString2Chieu[j][0])) {
+					if (ketquaMultipleChoiceString2Chieu[j].length == 0) {
 						FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 								"Vui lòng hoàn thành toàn bộ khảo sát.");
 						PrimeFaces.current().dialog().showMessageDynamic(message);
@@ -326,7 +361,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 									userResultDetailTemp.setQuestion(temp.getQuestion());
 									userResultDetailTemp.setNote(noteRatingMultipleChoice[j]);
 									listAddNew.add(userResultDetailTemp);
-									noteRatingString[j] = "";
+//									noteRatingString[j] = "";
 								} else {
 									FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 											"Anh/chị vui lòng cho biết ý kiến!.");
@@ -345,12 +380,12 @@ public class ExcuteSurveyBean extends AbstractBean {
 				}
 			}
 			// phan lay y kien
-			for (int j = 0; j < questionsType1.size(); j++) {
+			for (int j = 0; j < questionsTypeLayYKien.size(); j++) {
 				if (dapAnLayYKienStringArray[j + 1] != null
 						&& StringUtils.isNotEmpty(dapAnLayYKienStringArray[j + 1])) {
 					UserResultDetail userResultDetailTemp = new UserResultDetail();
 					userResultDetailTemp.setCreatedDate(getDate());
-					userResultDetailTemp.setQuestion(questionsType1.get(j));
+					userResultDetailTemp.setQuestion(questionsTypeLayYKien.get(j));
 					userResultDetailTemp.setLay_y_kien(dapAnLayYKienStringArray[j + 1]);
 					listAddNew.add(userResultDetailTemp);
 				}
@@ -386,13 +421,87 @@ public class ExcuteSurveyBean extends AbstractBean {
 			if (checkAdd.getId() != 0) {
 				for (UserResultDetail urd : listAddNew) {
 					urd.setCreatedDate(getDate());
+					// set user result to detail
 					urd.setUser_result(checkAdd);
 					urd.setSurvey(surveyPlaying);
 					USER_RESULT_DETAI_SERVICE.create(urd);
 				}
 			}
-			notifyComplete = true;
-			PrimeFaces.current().executeScript("PF('dialogCompleteSurvey').show();");
+			// reset lai
+			noteRatingString = new String[questionsTypeDanhGia.size() + 1];
+			noteRatingMultipleChoice = new String[questionsTypeMultipleChoice.size() + 1];
+
+//LOAD LAI TRANG // hoi chuoi ke di
+			ketquaPhanLayYKien = new ArrayList<>();
+			try {
+				if (surveyPlaying.getDescription() == null || StringUtils.isEmpty(surveyPlaying.getDescription())) {
+					checkNullDescription = false;
+				}
+				// Lay y kien
+				long layYKien = new Long(ConfigQuestionType.LAY_Y_KIEN);
+				questionsTypeLayYKien = getListQuestionByType(layYKien, setofId);
+				dapAnLayYKienStringArray = new String[questionsTypeLayYKien.size() + 1];
+				// Danh gia
+				long danhGia = new Long(ConfigQuestionType.DANH_GIA);
+				questionsTypeDanhGia = getListQuestionByType(danhGia, setofId);
+				// Thang diem
+				long thangDiem = new Long(ConfigQuestionType.THANG_DIEM);
+				questionsTypeThangDiem = getListQuestionByType(thangDiem, setofId);
+
+				long multipleChoice = new Long(ConfigQuestionType.MULTIPLE_CHOICE);
+				questionsTypeMultipleChoice = getListQuestionByType(multipleChoice, setofId);
+
+				// Kiem tra null de check view
+				if (questionsTypeDanhGia.isEmpty()) {
+					checkNullPhanDanhGia = true;
+				}
+				if (questionsTypeMultipleChoice.isEmpty()) {
+					checkNullPhanNhieuDapAn = true;
+				}
+				if (questionsTypeLayYKien.isEmpty()) {
+					checkNullPhanLayYKien = true;
+				}
+				if (questionsTypeThangDiem.isEmpty()) {
+					checkNullPhanThangDiem = true;
+				}
+				if (checkNullPhanDanhGia == true && checkNullPhanNhieuDapAn == true && checkNullPhanLayYKien == true
+						&& checkNullPhanThangDiem == true) {
+					checkNullAll = true;
+				}
+
+				ketquaPhanDanhGia = new String[questionsTypeDanhGia.size() + 1];
+				// test
+				noteRating = new Boolean[questionsTypeDanhGia.size() + 1];
+				noteRatingString = new String[questionsTypeDanhGia.size() + 1];
+				for (int i = 0; i < noteRating.length; i++) {
+					noteRating[i] = false;
+				}
+
+				// Dap an multiple choice
+				ketquaMultipleChoiceString2Chieu = new String[questionsTypeMultipleChoice.size() + 1][10];
+				noteRatingMultipleChoice = new String[questionsTypeMultipleChoice.size() + 1];
+				noteBooleanMultipleChoice = new Boolean[questionsTypeMultipleChoice.size() + 1];
+				for (int i = 0; i < noteRatingMultipleChoice.length; i++) {
+					noteBooleanMultipleChoice[i] = false;
+				}
+
+				ketquaPhanThangDiem = new String[questionsTypeThangDiem.size() + 1];
+
+				// Bo cau hoi phan danh gia
+				questionAndAnswerRating = new ArrayList<>();
+				questionAndMultipleChoiceAnswer = new ArrayList<>();
+				questionAndAnswerSlider = new ArrayList<>();
+				buildSetOfQuestionByType(questionsTypeDanhGia, questionsTypeThangDiem, questionsTypeMultipleChoice);
+				// excute load lai data
+				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
+						"Bạn đã hoàn thành khảo sát");
+				PrimeFaces.current().dialog().showMessageDynamic(message);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+//END LOAD LAI TRANG
+//			PrimeFaces.current().executeScript("PF('dialogCompleteSurvey').show();");
 		}
 
 	}
@@ -418,10 +527,10 @@ public class ExcuteSurveyBean extends AbstractBean {
 		}
 		if (checkYKienKhac) {
 			noteBooleanMultipleChoice[id] = true;
-			PrimeFaces.current().ajax().update(":total");
+			PrimeFaces.current().ajax().update("total:panelGrid2_" + id);
 		} else {
 			noteBooleanMultipleChoice[id] = false;
-			PrimeFaces.current().ajax().update(":total");
+			PrimeFaces.current().ajax().update("total:panelGrid2_" + id);
 		}
 	}
 
@@ -433,10 +542,10 @@ public class ExcuteSurveyBean extends AbstractBean {
 
 		if (temp.getType_rating().getId() == ConfigQuestionType.DAP_AN_LAY_Y_KIEN) {
 			noteRating[id] = true;
-			PrimeFaces.current().ajax().update(":total");
+			PrimeFaces.current().ajax().update("total:panelGrid1_" + id);
 		} else {
 			noteRating[id] = false;
-			PrimeFaces.current().ajax().update(":total");
+			PrimeFaces.current().ajax().update("total:panelGrid1_" + id);
 		}
 
 		// Gan dap an vao list ket qua phan danh gia
@@ -466,29 +575,6 @@ public class ExcuteSurveyBean extends AbstractBean {
 	}
 
 //GET AND SET
-	public List<Question> getQuestionsType1() {
-		return questionsType1;
-	}
-
-	public void setQuestionsType1(List<Question> questionsType1) {
-		this.questionsType1 = questionsType1;
-	}
-
-	public List<Question> getQuestionsType2() {
-		return questionsType2;
-	}
-
-	public void setQuestionsType2(List<Question> questionsType2) {
-		this.questionsType2 = questionsType2;
-	}
-
-	public List<Question> getQuestionsType4() {
-		return questionsType4;
-	}
-
-	public void setQuestionsType4(List<Question> questionsType4) {
-		this.questionsType4 = questionsType4;
-	}
 
 	public String[] getKetquaPhanDanhGia() {
 		return ketquaPhanDanhGia;
@@ -530,14 +616,6 @@ public class ExcuteSurveyBean extends AbstractBean {
 		this.answers2 = answers2;
 	}
 
-	public List<Rating> getAnswers1() {
-		return answers1;
-	}
-
-	public void setAnswers1(List<Rating> answers1) {
-		this.answers1 = answers1;
-	}
-
 	public List<QuestionAndRating> getQuestionAndAnswerRating() {
 		return questionAndAnswerRating;
 	}
@@ -568,30 +646,6 @@ public class ExcuteSurveyBean extends AbstractBean {
 
 	public void setSurveyPlaying(Survey surveyPlaying) {
 		this.surveyPlaying = surveyPlaying;
-	}
-
-	public boolean isCheckNullPhan1() {
-		return checkNullPhan1;
-	}
-
-	public void setCheckNullPhan1(boolean checkNullPhan1) {
-		this.checkNullPhan1 = checkNullPhan1;
-	}
-
-	public boolean isCheckNullPhan2() {
-		return checkNullPhan2;
-	}
-
-	public void setCheckNullPhan2(boolean checkNullPhan2) {
-		this.checkNullPhan2 = checkNullPhan2;
-	}
-
-	public boolean isCheckNullPhan3() {
-		return checkNullPhan3;
-	}
-
-	public void setCheckNullPhan3(boolean checkNullPhan3) {
-		this.checkNullPhan3 = checkNullPhan3;
 	}
 
 	public Account getAccountLogin() {
@@ -658,12 +712,12 @@ public class ExcuteSurveyBean extends AbstractBean {
 		this.checkNullDescription = checkNullDescription;
 	}
 
-	public List<Question> getQuestionsType3() {
-		return questionsType3;
+	public List<Question> getquestionsTypeMultipleChoice() {
+		return questionsTypeMultipleChoice;
 	}
 
-	public void setQuestionsType3(List<Question> questionsType3) {
-		this.questionsType3 = questionsType3;
+	public void setquestionsTypeMultipleChoice(List<Question> questionsTypeMultipleChoice) {
+		this.questionsTypeMultipleChoice = questionsTypeMultipleChoice;
 	}
 
 	public List<QuestionAndRating> getQuestionAndMultipleChoiceAnswer() {
@@ -720,6 +774,70 @@ public class ExcuteSurveyBean extends AbstractBean {
 
 	public void setDapAnLayYKienStringArray(String[] dapAnLayYKienStringArray) {
 		this.dapAnLayYKienStringArray = dapAnLayYKienStringArray;
+	}
+
+	public List<Question> getQuestionsTypeLayYKien() {
+		return questionsTypeLayYKien;
+	}
+
+	public void setQuestionsTypeLayYKien(List<Question> questionsTypeLayYKien) {
+		this.questionsTypeLayYKien = questionsTypeLayYKien;
+	}
+
+	public List<Question> getQuestionsTypeDanhGia() {
+		return questionsTypeDanhGia;
+	}
+
+	public void setQuestionsTypeDanhGia(List<Question> questionsTypeDanhGia) {
+		this.questionsTypeDanhGia = questionsTypeDanhGia;
+	}
+
+	public List<Question> getQuestionsTypeThangDiem() {
+		return questionsTypeThangDiem;
+	}
+
+	public void setQuestionsTypeThangDiem(List<Question> questionsTypeThangDiem) {
+		this.questionsTypeThangDiem = questionsTypeThangDiem;
+	}
+
+	public List<Question> getQuestionsTypeMultipleChoice() {
+		return questionsTypeMultipleChoice;
+	}
+
+	public void setQuestionsTypeMultipleChoice(List<Question> questionsTypeMultipleChoice) {
+		this.questionsTypeMultipleChoice = questionsTypeMultipleChoice;
+	}
+
+	public boolean isCheckNullPhanDanhGia() {
+		return checkNullPhanDanhGia;
+	}
+
+	public void setCheckNullPhanDanhGia(boolean checkNullPhanDanhGia) {
+		this.checkNullPhanDanhGia = checkNullPhanDanhGia;
+	}
+
+	public boolean isCheckNullPhanNhieuDapAn() {
+		return checkNullPhanNhieuDapAn;
+	}
+
+	public void setCheckNullPhanNhieuDapAn(boolean checkNullPhanNhieuDapAn) {
+		this.checkNullPhanNhieuDapAn = checkNullPhanNhieuDapAn;
+	}
+
+	public boolean isCheckNullPhanThangDiem() {
+		return checkNullPhanThangDiem;
+	}
+
+	public void setCheckNullPhanThangDiem(boolean checkNullPhanThangDiem) {
+		this.checkNullPhanThangDiem = checkNullPhanThangDiem;
+	}
+
+	public boolean isCheckNullPhanLayYKien() {
+		return checkNullPhanLayYKien;
+	}
+
+	public void setCheckNullPhanLayYKien(boolean checkNullPhanLayYKien) {
+		this.checkNullPhanLayYKien = checkNullPhanLayYKien;
 	}
 
 	@Override

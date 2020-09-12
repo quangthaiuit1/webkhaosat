@@ -81,7 +81,7 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 		// end
 
 		// Danh sach dap an tao moi
-		answersNew = new String[5];
+		answersNew = new String[2];
 		// Danh sach loai cau hoi truy van tu DB
 		questionTypeList1 = QUESTIONTYPE_SERVICE.findAllByFilter();
 	}
@@ -97,8 +97,8 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 		tempQ.setCreatedUser(member.getCode());
 		tempQ.setName(questionNameNew);
 		tempQ.setDeleted(false);
-		// Danh gia || Thang diem
-		if (questionTypeTempTest == ConfigQuestionType.DANH_GIA || questionTypeTempTest == ConfigQuestionType.THANG_DIEM) {
+		// Danh gia 
+		if (questionTypeTempTest == ConfigQuestionType.DANH_GIA) {
 			
 			List<Rating> ratingsTemp = new ArrayList<>();
 			for(Rating r : answerNewList) {
@@ -139,6 +139,42 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 			questionNameNew = "";
 			return;
 		}
+		//Thang diem
+		if(questionTypeTempTest == ConfigQuestionType.THANG_DIEM) {
+			Question tempQuest = QUESTION_SERVICE.create(tempQ);
+			//kiem tra thu nhap du min max chua
+			boolean check = true;
+			for(int l = 0; l < answersNew.length; l++) {
+				if(StringUtils.isEmpty(answersNew[l])) {
+					check = false;
+				}
+			}
+			for(int l = 0; l < answersNew.length; l++) {
+				if(check) {
+					Rating rtNew = new Rating();
+					rtNew.setCreatedDate(getDate());
+					rtNew.setCreatedUser(member.getCode());
+					rtNew.setName(answersNew[l]);
+					rtNew.setQuestion(tempQuest);
+					//loai dap an khong y kien
+					TypeRating typeRating = TYPE_RATING_SERVICE.findById(2);
+					rtNew.setType_rating(typeRating);
+					RATING_SERVICE.create(rtNew);
+				}else {
+					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
+							"Vui lòng nhập đáp án!.");
+					PrimeFaces.current().dialog().showMessageDynamic(message);
+					return;
+				}
+			}
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
+					"Thành công.");
+			PrimeFaces.current().dialog().showMessageDynamic(message);
+			questionNameNew = "";
+			answersNew = new String[2];
+			return;
+		}
+		
 		// nhieu dap an
 		if (questionTypeTempTest == ConfigQuestionType.MULTIPLE_CHOICE) {
 			List<Rating> ratingsTemp = new ArrayList<>();
@@ -185,7 +221,7 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 		// Lay y kien
 		if (questionTypeTempTest == ConfigQuestionType.LAY_Y_KIEN) {
 			QUESTION_SERVICE.create(tempQ);
-			questionNameNew = null;
+			questionNameNew = "";
 			notifyAddSuccess();
 			return;
 		}

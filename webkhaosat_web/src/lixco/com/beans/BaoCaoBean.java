@@ -130,12 +130,16 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 		cell = row.createCell(5);
 		cell.setCellValue("Kết quả");
 		cell.setCellStyle(style);
-
+		
 		cell = row.createCell(6);
-		cell.setCellValue("Lấy ý kiến");
+		cell.setCellValue("Thang điểm");
 		cell.setCellStyle(style);
 
 		cell = row.createCell(7);
+		cell.setCellValue("Lấy ý kiến");
+		cell.setCellStyle(style);
+
+		cell = row.createCell(8);
 		cell.setCellValue("Ý kiến khác");
 		cell.setCellStyle(style);
 //		 Data
@@ -168,12 +172,16 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 					cell.setCellValue(kq.getRating().getName());
 
 				}
-				if (kq.getLay_y_kien() != null) {
+				if(kq.getThangdiem() != 0) {
 					cell = row.createCell(6);
+					cell.setCellValue(kq.getThangdiem());
+				}
+				if (kq.getLay_y_kien() != null) {
+					cell = row.createCell(7);
 					cell.setCellValue(kq.getLay_y_kien());
 				}
 				if (kq.getNote() != null) {
-					cell = row.createCell(7);
+					cell = row.createCell(8);
 					cell.setCellValue(kq.getNote());
 				}
 			}
@@ -188,16 +196,6 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 		// cancel progress
 		facesContext.responseComplete();
 	}
-
-//	public void ajaxLoaiKyKhaoSat() {
-//		if (surveySelected != null) {
-//			try {
-//				kyDanhGiaNangLucs = kyDanhGiaService.findRange(loaiKyDanhGiaNangLuc);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
 
 	@Override
 	protected Logger getLogger() {

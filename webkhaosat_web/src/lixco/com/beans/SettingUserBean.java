@@ -67,8 +67,8 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 	private EmployeeDTO[] employeeBySurDTO;
 	private List<EmployeeDTO> employeeBySurListDTO;
 	private Set<EmployeeDTO> employeeBySurSetDTO;
-	
-	//List giu danh sach de xoa duoi database
+
+	// List giu danh sach de xoa duoi database
 	private List<EmployeeDTO> deleteUserResultByEmployeeSelected;
 //	private Set<Department> departmentList;
 	private List<Department> departmentList;
@@ -251,13 +251,13 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		for (EmployeeDTO m : deleteUserResultByEmployeeSelected) {
 			List<User_Result> delete = USER_RESULT_SERVICE.find(surveyId, m.getCode(), null);
 			if (!delete.isEmpty()) {
-				for(User_Result ur : delete)
-				USER_RESULT_SERVICE.delete(ur);
+				for (User_Result ur : delete)
+					USER_RESULT_SERVICE.delete(ur);
 			}
 		}
-		
+
 		deleteUserResultByEmployeeSelected = new ArrayList<>();
-		
+
 		notifyUpdateSuccess();
 	}
 
@@ -363,71 +363,40 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 	}
 
 	public void selectDep() throws RemoteException {
-		List<String> departList = new ArrayList<>();
-		for (int i = 0; i < departmentList.size(); i++) {
-			if (departmentList.get(i).isSelect()) {
-				departmentList.get(i).setSelect(false);
-				departList.add(departmentList.get(i).getCode());
-			}
-		}
-		String[] departmentCodeArray = departList.toArray(new String[departList.size()]);
-		EmployeeDTO[] employeesByDep = EMPLOYEE_SERVICEPUBLIC_DTO.findByDep(departmentCodeArray);
-
-		List<EmployeeDTO> tempList = new ArrayList<EmployeeDTO>(Arrays.asList(employeesByDep));
-		List<EmployeeDTO> usrAll1 = new ArrayList<>();
-		// them list hien tai dang co vao usrAll1
-		usrAll1.addAll(employeeBySurListDTO);
-		for (int j = 0; j < tempList.size(); j++) {
-//			// kiem tra trong list da co employee do chua
-			boolean check = false;
-			for (int l = 0; l < employeeBySurListDTO.size(); l++) {
-				if (employeeBySurListDTO.get(l).getCode().equals(tempList.get(j).getCode())) {
-					check = true;
-					break;
+		try {
+			List<String> departList = new ArrayList<>();
+			for (int i = 0; i < departmentList.size(); i++) {
+				if (departmentList.get(i).isSelect()) {
+					departmentList.get(i).setSelect(false);
+					departList.add(departmentList.get(i).getCode());
 				}
 			}
-			if (check == false) {
-				usrAll1.add(tempList.get(j));
-			}
-		}
-		employeeBySurListDTO = new ArrayList<>();
-		employeeBySurListDTO.addAll(usrAll1);
+			String[] departmentCodeArray = departList.toArray(new String[departList.size()]);
+			EmployeeDTO[] employeesByDep = EMPLOYEE_SERVICEPUBLIC_DTO.findByDep(departmentCodeArray);
 
-//		for (Department dep : departmentList) {
-//			if (dep.isSelect()) {
-//				for (int i = 0; i < employeesDTO.size(); i++) {
-//					try {
-//						if (dep.getCode().equals(employeesDTO.get(i).getCodeDepart())) {
-//							employeeBySurSetDTO.add(employeesDTO.get(i));
-//
-//							// convert hash set to arraylist
-//							List<EmployeeDTO> usrAll = new ArrayList<EmployeeDTO>(employeeBySurSetDTO);
-//							List<EmployeeDTO> usrAll1 = new ArrayList<>();
-//							usrAll1.addAll(employeeBySurListDTO);
-//							// add to list employee by survey
-//							for (int j = 0; j < usrAll.size(); j++) {
-//								// kiem tra trong list da co employee do chua
-//								boolean check = false;
-//								for (int l = 0; l < employeeBySurListDTO.size(); l++) {
-//									if (employeeBySurListDTO.get(l).getCode().equals(usrAll.get(j).getCode())) {
-//										check = true;
-//										break;
-//									}
-//								}
-//								if (check == false) {
-//									usrAll1.add(usrAll.get(j));
-//								}
-//							}
-//							employeeBySurListDTO = new ArrayList<>();
-//							employeeBySurListDTO.addAll(usrAll1);
-//						}
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//
-//				}
-//			}
-//		}
+			if (employeesByDep.length != 0) {
+				List<EmployeeDTO> tempList = new ArrayList<EmployeeDTO>(Arrays.asList(employeesByDep));
+				List<EmployeeDTO> usrAll1 = new ArrayList<>();
+				// them list hien tai dang co vao usrAll1
+				usrAll1.addAll(employeeBySurListDTO);
+				for (int j = 0; j < tempList.size(); j++) {
+//					// kiem tra trong list da co employee do chua
+					boolean check = false;
+					for (int l = 0; l < employeeBySurListDTO.size(); l++) {
+						if (employeeBySurListDTO.get(l).getCode().equals(tempList.get(j).getCode())) {
+							check = true;
+							break;
+						}
+					}
+					if (check == false) {
+						usrAll1.add(tempList.get(j));
+					}
+				}
+				employeeBySurListDTO = new ArrayList<>();
+				employeeBySurListDTO.addAll(usrAll1);
+			}
+		} catch (Exception e) {
+		}
 	}
 
 	public void ajaxEmp() {
