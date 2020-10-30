@@ -20,6 +20,7 @@
 <h:body>
 	<ui:composition template="common.xhtml">
 		<ui:define name="content">
+			<p:growl id="growlIndexAdmin" showDetail="true" sticky="false" />
 			<h:form id="formIndex">
 				<div class="row"
 					style="width: 90%; box-shadow: 0px 0px 5px #000;; margin: 0 auto; border-radius: 5px; margin-top: 20px; margin-bottom: 15px;">
@@ -63,14 +64,14 @@
 							<p:column headerText="Ngày tạo" style="width: 13%">
 								<center>
 									<h:outputText value="#{set1.createdDate}">
-										<f:convertDateTime pattern="dd.MM.yyyy"/>
+										<f:convertDateTime pattern="dd.MM.yyyy" />
 									</h:outputText>
 								</center>
 							</p:column>
 							<p:column headerText="Ngày bắt đầu" style="width: 13%">
 								<center>
 									<h:outputText value="#{set1.startDate}">
-										<f:convertDateTime pattern="dd.MM.yyyy"/>
+										<f:convertDateTime pattern="dd.MM.yyyy" />
 									</h:outputText>
 								</center>
 							</p:column>
@@ -211,13 +212,13 @@
 									</div>
 									<div class="col-sm-12 col-md-6 col-lg-6">
 										<p:commandButton icon="fa fa-check" value="Cập nhật"
-											update="formIndex:listSurvey"
+											oncomplete="PF('dialogUpdateSetof').hide();"
+											update="formIndex:listSurvey,growlIndexAdmin"
 											style="color: #fff!important;background-color: #28a745;border-color:#28a745"
 											action="#{surveyBean.updatesurvey()}" />
 									</div>
 								</div>
 							</p:outputPanel>
-
 						</p:dialog>
 						<!--Ket thuc DIALOG update  -->
 						<!--Dialog xoa ky khao sat  -->
@@ -233,7 +234,8 @@
 									</div>
 									<div style="width: 48%">
 										<p:commandButton icon="fa fa-check" value="Đồng ý"
-											update="formIndex:listSurvey"
+											oncomplete="PF('dialogDeleteSetof').hide();"
+											update="formIndex:listSurvey,growlIndexAdmin"
 											style="color: #fff!important;background-color: #28a745;border-color:#28a745"
 											action="#{surveyBean.deleteSurvey}" />
 									</div>

@@ -28,18 +28,67 @@
 	border-color: #208eb6 ! important;
 	color: white;
 }
+
+p {
+	font-size: 55px !important;
+}
+
+span.group-name {
+	font-size: 40px;
+}
+
+span.ui-button-text.ui-c {
+	font-size: 45px;
+}
+
+.ui-growl-message {
+	font-size: 35px;
+}
+
+label {
+	font-size: 50px;
+}
+
+.ui-inputfield {
+	font-size: 50px;
+}
+
+.ui-radiobutton {
+	width: 65px
+}
+
+.ui-radiobutton .ui-radiobutton-box {
+	width: 50px;
+	height: 50px;
+}
+
+.ui-chkbox {
+	width: 65px
+}
+
+.ui-chkbox .ui-chkbox-box {
+	width: 50px;
+	height: 50px;
+}
+
+.row {
+	font-size: 50px;
+}
 </style>
 </h:head>
 <h:body
-	style="background-color: #eee;width: 60%;margin: 0 auto;padding-top: 0px">
+	style="background-color: #eee;width: 100%;margin: 0 auto;padding-top: 0px">
 	<p:growl id="growlKhaoSat" showDetail="true" sticky="false" />
 	<h:form id="total">
-		<div class="row" style="background-color: #15aad3; margin-top: 5px">
-			<div style="" class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-				<h:graphicImage library="images" name="logo-lixco.png" height="auto" />
+		<div class="row"
+			style="background-color: #15aad3; margin-top: 5px; text-align: center">
+			<div style="width: 100%">
+				<h:graphicImage library="images" name="logo-lixco.png"
+					height="120px" />
 			</div>
-			<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-				<h5 style="color: white; margin-top: 20px; margin-left: 13%">CÔNG
+			<div style="width: 100%">
+				<h5
+					style="color: white; margin-top: 10px; margin-left: 2%; font-size: 55px; text-align: center">CÔNG
 					TY CỔ PHẦN BỘT GIẶT LIX</h5>
 			</div>
 		</div>
@@ -53,7 +102,7 @@
 							style="color:#FFCC00;font-size:36px;" />
 					</p:notificationBar>
 					<h4
-						style="text-align: center; color: #1F83D9; margin-top: 10px; font-weight: bold">PHIẾU
+						style="text-align: center; color: #1F83D9; margin-top: 10px; font-weight: bold; font-size: 50px">PHIẾU
 						KHẢO SÁT</h4>
 					<c:if test="#{excuteSurveyBean.checkNullDescription == false}">
 						<p>#{excuteSurveyBean.surveyPlaying.description}</p>
@@ -64,8 +113,8 @@
 					<div class="row"
 						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 						<span class="group-name"
-							style="margin: 0 auto; margin-bottom: 15px">PHẦN KHẢO SÁT:
-							ĐÁNH GIÁ</span> <span class="group-description"><p
+							style="margin: 0 auto; margin-bottom: 15px; margin-top: 20px">PHẦN
+							KHẢO SÁT: ĐÁNH GIÁ</span> <span class="group-description"><p
 								style="text-align: center;"></p> </span>
 						<div class="row"
 							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.surveyPlaying.titleRating}</div>
@@ -88,7 +137,7 @@
 								</c:if>
 							</div>
 							<div class="row" style="width: 100%; margin-left: 10px">
-								<h:panelGrid columns="1" style="margin-bottom:10px;width:70%"
+								<h:panelGrid columns="1" style="margin-bottom:10px;width:100%"
 									cellpadding="5" id="panelGrid1_#{evenCount}">
 									<p:selectOneRadio id="id1_#{evenCount}"
 										value="#{excuteSurveyBean.ketquaPhanDanhGia[evenCount]}"
@@ -102,7 +151,7 @@
 									<p:inputTextarea id="inputTextNote_#{evenCount}"
 										placeholder="Anh/chị vui lòng cho biết ý kiến!"
 										rendered="#{excuteSurveyBean.noteRating[evenCount]}"
-										style="margin-left: 10px;margin-bottom: 5px;width:100%"
+										style="margin-left: 5px;margin-bottom: 5px;width:98%"
 										value="#{excuteSurveyBean.noteRatingString[evenCount]}">
 										<p:ajax process="@this" />
 									</p:inputTextarea>
@@ -119,8 +168,9 @@
 						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 						<div class="row" style="width: 100%">
 							<span class="group-name"
-								style="margin: 0 auto; margin-bottom: 15px">PHẦN KHẢO
-								SÁT: CÓ THỂ CHỌN NHIỀU ĐÁP ÁN</span> <span class="group-description"><p
+								style="margin: 0 auto; margin-bottom: 15px; margin-top: 20px; width: 90%; text-align: center">PHẦN
+								KHẢO SÁT: CÓ THỂ CHỌN NHIỀU ĐÁP ÁN</span> <span
+								class="group-description"><p
 									style="text-align: center; margin-left: 5px"></p></span>
 						</div>
 						<div class="row"
@@ -154,7 +204,7 @@
 								</c:if>
 							</div>
 							<div class="row" style="width: 100%; margin-left: 10px">
-								<h:panelGrid columns="1" style="margin-bottom:10px;width:70%"
+								<h:panelGrid columns="1" style="margin-bottom:10px;width:100%"
 									cellpadding="5" id="panelGrid2_#{indexBeginFrom1}">
 
 									<p:selectManyCheckbox id="id2_#{evenCount2}"
@@ -169,7 +219,7 @@
 									<p:inputTextarea id="inputTextNote1_#{evenCount2}"
 										placeholder="Anh/chị vui lòng cho biết ý kiến!"
 										rendered="#{excuteSurveyBean.noteBooleanMultipleChoice[indexBeginFrom1]}"
-										style="margin-left: 10px;margin-bottom: 5px;width:100%"
+										style="margin-left: 5px;margin-bottom: 5px;width:98%"
 										value="#{excuteSurveyBean.noteRatingMultipleChoice[indexBeginFrom1]}">
 										<p:ajax process="@this" />
 									</p:inputTextarea>
@@ -188,8 +238,8 @@
 						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 						<div class="row" style="width: 100%">
 							<span class="group-name"
-								style="margin: 0 auto; margin-bottom: 15px">PHẦN KHẢO
-								SÁT: THANG ĐIỂM</span> <span class="group-description"><p
+								style="margin: 0 auto; margin-bottom: 15px; margin-top: 20px">PHẦN
+								KHẢO SÁT: THANG ĐIỂM</span> <span class="group-description"><p
 									style="text-align: center; margin-left: 5px"></p></span>
 						</div>
 						<div class="row"
@@ -258,8 +308,8 @@
 						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
 						<div class="row" style="width: 100%">
 							<span class="group-name"
-								style="margin: 0 auto; margin-bottom: 15px">PHẦN KHẢO
-								SÁT: LẤY Ý KIẾN</span> <span class="group-description"><p
+								style="margin: 0 auto; margin-bottom: 15px; margin-top: 20px">PHẦN
+								KHẢO SÁT: LẤY Ý KIẾN</span> <span class="group-description"><p
 									style="text-align: center; margin-left: 5px"></p></span>
 						</div>
 						<div class="row"
@@ -320,7 +370,7 @@
 							</c:if>
 							<br />
 							<p:inputTextarea id="id2_#{evenCount4}"
-								style="margin-bottom: 5px;width: 80%;margin-left:10px" rows="6"
+								style="margin-bottom: 5px;width: 98%;margin-left:10px" rows="6"
 								cols="33"
 								value="#{excuteSurveyBean.dapAnLayYKienStringArray[indexQuestionLayYKien]}" />
 							<br />
@@ -329,8 +379,8 @@
 				</c:if>
 				<!-- Het phan 4 -->
 				<div class="row"
-					style="margin: 0 auto; margin-bottom: 30px; margin-top: 10px;">
-					<p:commandButton style="color: white" value="Hoàn thành"
+					style="margin: 0 auto; margin-bottom: 30px; margin-top: 10px; width: 100%">
+					<p:commandButton style="color: white;width:50%" value="Hoàn thành"
 						update="total,growlKhaoSat" icon="fa fa-check" process="@form"
 						action="#{excuteSurveyBean.completeSurvey}" />
 				</div>
@@ -357,18 +407,18 @@
 				<center>
 					<h:outputText value="CÔNG 
 				TY CỔ PHẦN BỘT GIẶT LIX"
-						style="color: white; margin-top: 10px" />
+						style="color: white; margin-top: 10px;font-size:35px" />
 				</center>
 				<center>
 					<h:outputText
-						style="text-align: center; color: white;margin-bottom:5px"
+						style="text-align: center; color: white;margin-bottom:5px;font-size:40px"
 						value=" Số 3 Đường Số 2, P. Linh Trung, Q. Thủ Đức, TP. HCM."
 						styleClass="fa fa-location-arrow">
 					</h:outputText>
 				</center>
 				<center>
 					<h:outputText
-						style="text-align: center; color: white;margin-bottom:5px"
+						style="text-align: center; color: white;margin-bottom:5px;font-size:40px"
 						value=" 028 - 38 964 072" styleClass="fa fa-phone-square">
 					</h:outputText>
 				</center>

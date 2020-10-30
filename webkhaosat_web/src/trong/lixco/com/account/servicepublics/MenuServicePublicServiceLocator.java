@@ -8,7 +8,6 @@
 package trong.lixco.com.account.servicepublics;
 
 import general.StaticPath;
-import net.xml.java.com.SerializationConnect;
 
 public class MenuServicePublicServiceLocator extends org.apache.axis.client.Service implements trong.lixco.com.account.servicepublics.MenuServicePublicService {
 

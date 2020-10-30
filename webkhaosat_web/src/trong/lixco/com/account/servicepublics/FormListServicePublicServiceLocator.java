@@ -8,7 +8,6 @@
 package trong.lixco.com.account.servicepublics;
 
 import general.StaticPath;
-import net.xml.java.com.SerializationConnect;
 
 public class FormListServicePublicServiceLocator extends org.apache.axis.client.Service implements trong.lixco.com.account.servicepublics.FormListServicePublicService {
 
@@ -45,7 +44,7 @@ public class FormListServicePublicServiceLocator extends org.apache.axis.client.
     public trong.lixco.com.account.servicepublics.FormListServicePublic getFormListServicePublicPort() throws javax.xml.rpc.ServiceException {
        java.net.URL endpoint = null;
         try {
-        	if (new SerializationConnect().connect(FormListServicePublicPort_address))
+//        	if (new SerializationConnect().connect(FormListServicePublicPort_address))
             endpoint = new java.net.URL(FormListServicePublicPort_address);
         }
         catch (java.net.MalformedURLException e) {

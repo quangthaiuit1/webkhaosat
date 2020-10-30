@@ -13,12 +13,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 
+import lixco.com.beans.entitystatic.MessageView;
 import lixco.com.config.ConfigQuestionType;
 import lixco.com.entities.Answer;
 import lixco.com.entities.Question;
@@ -26,14 +28,16 @@ import lixco.com.entities.QuestionType;
 import lixco.com.entities.Rating;
 import lixco.com.entities.Survey;
 import lixco.com.entities.TypeRating;
+import lixco.com.entities.User_Result;
+import lixco.com.services.RatingService;
 import lixco.com.services.TypeRatingService;
 import trong.lixco.com.account.servicepublics.Member;
 import trong.lixco.com.util.Notify;
 import trong.lixco.com.util.ResizeImage;
 
-@ManagedBean
-@ViewScoped
-public class CreateQuestionBean extends AbstractBean implements Serializable {
+@Named
+@org.omnifaces.cdi.ViewScoped
+public class CreateQuestionBackupBean extends AbstractBean {
 
 	private static final long serialVersionUID = 1L;
 	private Long setofId;
@@ -58,8 +62,10 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 	private long DANH_GIA;
 	private long MULTIPLE_CHOICE;
 
-	@EJB
+	@Inject
 	private TypeRatingService TYPE_RATING_SERVICE;
+	@Inject
+	protected RatingService RATING_SERVICE_NEW;
 
 	@Override
 	protected void initItem() {
@@ -118,167 +124,170 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 
 	// Them cau hoi
 	public void createQuestion() {
-//		System.out.println(questionNewEntity);
-		
-		Question tempQ = new Question();
-		Survey tempSet = new Survey();
-		tempSet = SURVEY_SERVICE.findById(setofId);
-		tempQ.setSurvey(tempSet);
-		tempQ.setQuestionType(questionTypeSelected);
-		tempQ.setCreatedDate(getDate());
-		tempQ.setCreatedUser(member.getCode());
-		tempQ.setName(questionNameNew);
-		tempQ.setDeleted(false);
-		// Danh gia
-		if (questionTypeTempTest == ConfigQuestionType.DANH_GIA) {
-
-			List<Rating> ratingsTemp = new ArrayList<>();
-			for (Rating r : answerNewList) {
-				if (StringUtils.isNotEmpty(r.getName()) && r.getType_rating() != null) {
-					ratingsTemp.add(r);
-				}
-			}
-			// cap nhat lai danh sach co dap an
-			this.answerNewList = new ArrayList<>();
-			this.answerNewList.addAll(ratingsTemp);
-
-			// check coi co dap an nao hay khong
-			if (answerNewList.isEmpty()) {
-				addRowNew();
-				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-						"Vui lòng nhập đáp án!.");
-				PrimeFaces.current().dialog().showMessageDynamic(message);
+		try {
+			Survey tempSet = new Survey();
+			tempSet = SURVEY_SERVICE.findById(setofId);
+			// kiem tra ky khao sat da co nguoi lam hay chua
+			List<User_Result> isComplete = USER_RESULT_SERVICE.findByResult(tempSet.getId(), null);
+			if (!isComplete.isEmpty()) {
+				MessageView.ERROR("Không thể thêm câu hỏi mới!");
 				return;
 			}
+			questionNewEntity.setSurvey(tempSet);
+			questionNewEntity.setQuestionType(questionTypeSelected);
+			questionNewEntity.setCreatedDate(getDate());
+			questionNewEntity.setCreatedUser(member.getCode());
+			questionNewEntity.setDeleted(false);
+			// Danh gia
+			if (questionTypeTempTest == ConfigQuestionType.DANH_GIA) {
 
-			// dap an hop le moi cho them cau hoi
-			if (!this.answerNewList.isEmpty()) {
-				tempQ = QUESTION_SERVICE.create(tempQ);
-			}
-			if (tempQ.getId() != 0) {
+				List<Rating> ratingsTemp = new ArrayList<>();
 				for (Rating r : answerNewList) {
-					r.setQuestion(tempQ);
-					RATING_SERVICE.create(r);
+					if (StringUtils.isNotEmpty(r.getName()) && r.getType_rating() != null) {
+						ratingsTemp.add(r);
+					}
+				}
+				// cap nhat lai danh sach co dap an
+				this.answerNewList = new ArrayList<>();
+				this.answerNewList.addAll(ratingsTemp);
+
+				// check coi co dap an nao hay khong
+				if (answerNewList.isEmpty()) {
+					addRowNew();
+					MessageView.ERROR("Vui lòng nhập đáp án!");
+					return;
+				}
+
+				// dap an hop le moi cho them cau hoi
+				if (!this.answerNewList.isEmpty()) {
+					questionNewEntity = QUESTION_SERVICE.create(questionNewEntity);
+				}
+				if (questionNewEntity.getId() != 0) {
+					for (Rating r : answerNewList) {
+						r.setQuestion(questionNewEntity);
+						RATING_SERVICE.create(r);
+					}
+					answerNewList = new ArrayList<>();
+					addRowNew();
+					// questionNameNew = "";
+					questionNewEntity = new Question();
+					MessageView.INFO("Thành công");
+					return;
 				}
 				answerNewList = new ArrayList<>();
 				addRowNew();
-				questionNameNew = "";
-				notifyAddSuccess();
+				// questionNameNew = "";
+				questionNewEntity = new Question();
 				return;
 			}
-			answerNewList = new ArrayList<>();
-			addRowNew();
-			questionNameNew = "";
-			return;
-		}
-		// Thang diem
-		if (questionTypeTempTest == ConfigQuestionType.THANG_DIEM) {
-			Question tempQuest = QUESTION_SERVICE.create(tempQ);
-			// kiem tra thu nhap du min max chua
-			boolean check = true;
-			for (int l = 0; l < answersNew.length; l++) {
-				if (StringUtils.isEmpty(answersNew[l])) {
-					check = false;
+			// Thang diem
+			if (questionTypeTempTest == ConfigQuestionType.THANG_DIEM) {
+				Question tempQuest = QUESTION_SERVICE.create(questionNewEntity);
+				// kiem tra thu nhap du min max chua
+				boolean check = true;
+				for (int l = 0; l < answersNew.length; l++) {
+					if (StringUtils.isEmpty(answersNew[l])) {
+						check = false;
+					}
 				}
+				for (int l = 0; l < answersNew.length; l++) {
+					if (check) {
+						Rating rtNew = new Rating();
+						rtNew.setCreatedDate(getDate());
+						rtNew.setCreatedUser(member.getCode());
+						rtNew.setName(answersNew[l]);
+						rtNew.setQuestion(tempQuest);
+						// loai dap an khong y kien
+						TypeRating typeRating = TYPE_RATING_SERVICE.findById(2);
+						rtNew.setType_rating(typeRating);
+						RATING_SERVICE.create(rtNew);
+					} else {
+						MessageView.ERROR("Vui lòng nhập đáp án!");
+						return;
+					}
+				}
+				MessageView.INFO("Thành công");
+				// questionNameNew = "";
+				questionNewEntity = new Question();
+				answersNew = new String[2];
+				return;
 			}
-			for (int l = 0; l < answersNew.length; l++) {
-				if (check) {
-					Rating rtNew = new Rating();
-					rtNew.setCreatedDate(getDate());
-					rtNew.setCreatedUser(member.getCode());
-					rtNew.setName(answersNew[l]);
-					rtNew.setQuestion(tempQuest);
-					// loai dap an khong y kien
-					TypeRating typeRating = TYPE_RATING_SERVICE.findById(2);
-					rtNew.setType_rating(typeRating);
-					RATING_SERVICE.create(rtNew);
-				} else {
-					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-							"Vui lòng nhập đáp án!.");
-					PrimeFaces.current().dialog().showMessageDynamic(message);
+
+			// nhieu dap an
+			if (questionTypeTempTest == ConfigQuestionType.MULTIPLE_CHOICE) {
+				List<Rating> ratingsTemp = new ArrayList<>();
+				// check coi co dap an nao hay khong
+				if (answerMultipleChoice.isEmpty()) {
+					addRowNew();
+					MessageView.ERROR("Vui lòng nhập đáp án!");
 					return;
 				}
-			}
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Thành công.");
-			PrimeFaces.current().dialog().showMessageDynamic(message);
-			questionNameNew = "";
-			answersNew = new String[2];
-			return;
-		}
 
-		// nhieu dap an
-		if (questionTypeTempTest == ConfigQuestionType.MULTIPLE_CHOICE) {
-			List<Rating> ratingsTemp = new ArrayList<>();
-			// check coi co dap an nao hay khong
-			if (answerMultipleChoice.isEmpty()) {
-				addRowNew();
-				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-						"Vui lòng nhập đáp án!.");
-				PrimeFaces.current().dialog().showMessageDynamic(message);
-				return;
-			}
-
-			// kiem tra dap an nao bi null thi bo
-			for (Rating r : answerMultipleChoice) {
-				if (StringUtils.isNotEmpty(r.getName()) && r.getType_rating() != null) {
-					ratingsTemp.add(r);
-				}
-			}
-			// cap nhat lai danh sach co dap an
-			this.answerMultipleChoice = new ArrayList<>();
-			this.answerMultipleChoice.addAll(ratingsTemp);
-
-			// dap an hop le moi cho them cau hoi
-			if (!this.answerMultipleChoice.isEmpty()) {
-				tempQ = QUESTION_SERVICE.create(tempQ);
-			}
-			if (tempQ.getId() != 0) {
+				// kiem tra dap an nao bi null thi bo
 				for (Rating r : answerMultipleChoice) {
-					r.setQuestion(tempQ);
-					RATING_SERVICE.create(r);
+					if (StringUtils.isNotEmpty(r.getName()) && r.getType_rating() != null) {
+						ratingsTemp.add(r);
+					}
+				}
+				// cap nhat lai danh sach co dap an
+				this.answerMultipleChoice = new ArrayList<>();
+				this.answerMultipleChoice.addAll(ratingsTemp);
+
+				// dap an hop le moi cho them cau hoi
+				if (!this.answerMultipleChoice.isEmpty()) {
+					questionNewEntity = QUESTION_SERVICE.create(questionNewEntity);
+				}
+				if (questionNewEntity.getId() != 0) {
+					for (Rating r : answerMultipleChoice) {
+						r.setQuestion(questionNewEntity);
+						RATING_SERVICE_NEW.create(r);
+					}
+					answerMultipleChoice = new ArrayList<>();
+					addRowNewAnswerMultipleChoice();
+					// questionNameNew = "";
+					questionNewEntity = new Question();
+					MessageView.INFO("Thành công");
+					return;
 				}
 				answerMultipleChoice = new ArrayList<>();
 				addRowNewAnswerMultipleChoice();
-				questionNameNew = "";
-				notifyAddSuccess();
+				// questionNameNew = "";
+				questionNewEntity = new Question();
 				return;
 			}
-			answerMultipleChoice = new ArrayList<>();
-			addRowNewAnswerMultipleChoice();
-			questionNameNew = "";
-			return;
-		}
 
-		// Lay y kien
-		if (questionTypeTempTest == ConfigQuestionType.LAY_Y_KIEN) {
-			QUESTION_SERVICE.create(tempQ);
-			questionNameNew = "";
-			notifyAddSuccess();
-			return;
-		}
-		// Dang test Co dap an
-		if (questionTypeTempTest == 3) {
-			if (StringUtils.isEmpty(answersNew[0])) {
-				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-						"Vui lòng nhập đán án.");
-				PrimeFaces.current().dialog().showMessageDynamic(message);
+			// Lay y kien
+			if (questionTypeTempTest == ConfigQuestionType.LAY_Y_KIEN) {
+				QUESTION_SERVICE.create(questionNewEntity);
+				// questionNameNew = "";
+				questionNewEntity = new Question();
+				MessageView.INFO("Thành công");
 				return;
 			}
-			tempQ = QUESTION_SERVICE.create(tempQ);
-			for (int i = 0; i < answersNew.length; i++) {
-				if (StringUtils.isNotEmpty(answersNew[i])) {
-					Answer tempAnswer = new Answer();
-					tempAnswer.setCreatedDate(getDate());
-					tempAnswer.setDeleted(false);
-					tempAnswer.setName(answersNew[i]);
-					tempAnswer.setQuestion(tempQ);
-					ANSWER_SERVICE.create(tempAnswer);
+			// Dang test Co dap an
+			if (questionTypeTempTest == 3) {
+				if (StringUtils.isEmpty(answersNew[0])) {
+					MessageView.ERROR("Vui lòng nhập đáp án!");
+					return;
 				}
+				questionNewEntity = QUESTION_SERVICE.create(questionNewEntity);
+				for (int i = 0; i < answersNew.length; i++) {
+					if (StringUtils.isNotEmpty(answersNew[i])) {
+						Answer tempAnswer = new Answer();
+						tempAnswer.setCreatedDate(getDate());
+						tempAnswer.setDeleted(false);
+						tempAnswer.setName(answersNew[i]);
+						tempAnswer.setQuestion(questionNewEntity);
+						ANSWER_SERVICE.create(tempAnswer);
+					}
+				}
+				answersNew = new String[5];
+				questionNameNew = null;
+				MessageView.INFO("Thành công");
+				return;
 			}
-			answersNew = new String[5];
-			questionNameNew = null;
-			notifyAddSuccess();
-			return;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -291,9 +300,15 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 
 	public void selectedQuestionType() throws IOException {
 		questionTypeTempTest = questionTypeSelected.getId();
+		if (questionTypeTempTest == ConfigQuestionType.MULTIPLE_CHOICE) {
+			answerMultipleChoice = new ArrayList<>();
+			Rating firstTemp1 = new Rating();
+			firstTemp1.setType_rating(typeRatings.get(1));
+			answerMultipleChoice.add(firstTemp1);
+		}
 	}
 
-//New update
+	// New update
 	public void handleRatingSelected(Rating item) {
 		ratingSelected = item;
 		if (StringUtils.isEmpty(item.getName())) {
@@ -340,10 +355,14 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 	}
 
 	public void handleChoose() {
-		for (int i = 0; i < answerNewList.size(); i++) {
-			if (answerNewList.get(i).getName().equals(ratingSelected.getName())) {
-				answerNewList.get(i).setType_rating(typeRatingSelected);
+		try {
+			for (int i = 0; i < answerNewList.size(); i++) {
+				if (answerNewList.get(i).getName().equals(ratingSelected.getName())) {
+					answerNewList.get(i).setType_rating(typeRatingSelected);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -354,8 +373,8 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 			}
 		}
 	}
-//End new update
-//GET AND SET
+	// End new update
+	// GET AND SET
 
 	@Override
 	protected Logger getLogger() {

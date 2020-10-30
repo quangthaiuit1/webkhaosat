@@ -24,6 +24,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/lixco/Desktop/netjavacom.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/netjavacom.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

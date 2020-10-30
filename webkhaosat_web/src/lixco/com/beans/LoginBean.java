@@ -38,7 +38,7 @@ public class LoginBean extends AbstractBean {
 			FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 			FacesContext fContext = FacesContext.getCurrentInstance();
 			ExternalContext extContext = fContext.getExternalContext();
-			extContext.redirect("http://192.168.0.5/account/pages/Start.jsf");
+			extContext.redirect("http://erp.lixco.com/account/index.jsf");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

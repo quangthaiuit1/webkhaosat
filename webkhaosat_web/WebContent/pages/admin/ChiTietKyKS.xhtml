@@ -21,6 +21,7 @@
 <h:body>
 	<ui:composition template="common.xhtml">
 		<ui:define name="content">
+			<p:growl id="growlCreateQuestion" showDetail="true" sticky="false" />
 			<h:form id="createQuestion">
 				<p:fieldset style="width:90%;margin-left:5%">
 					<p:fieldset legend="Kỳ khảo sát"
@@ -93,35 +94,74 @@
 										</p:fieldset>
 									</p:fieldset>
 									<!-- DIALOG cap nhat cau hoi -->
-									<p:dialog header="Cập nhật" id="updateQuest" width="600"
-										widgetVar="dialogUpdateQuest" modal="true" showEffect="fade"
-										hideEffect="fade" resizable="true">
-										<p:outputPanel id="editQuest" style="text-align:center;">
-											<div class="row" style="margin-bottom: 15px">
-												<div class="col-sm-12 col-md-4 col-lg-3">
-													<h:outputText value="Tên câu hỏi" />
+									<p:dialog header="Cập nhật câu hỏi" id="updateQuest"
+										width="600" widgetVar="dialogUpdateQuest" modal="true"
+										showEffect="fade" hideEffect="fade" resizable="true">
+										<h:form id="formCapNhatCauHoi">
+											<p:outputPanel id="editQuest" style="text-align:center;">
+												<div class="row" style="margin-bottom: 15px">
+													<div class="col-sm-12 col-md-4 col-lg-3">
+														<h:outputText value="Tên câu hỏi" />
+													</div>
+													<div class="col-sm-12 col-md-8 col-lg-9">
+														<p:inputTextarea
+															style="width:100%!important;color: black!important"
+															id="inputEditQuestName"
+															value="#{detailQuestionBean.questionUpdated.name}">
+															<p:ajax process="@this" />
+														</p:inputTextarea>
+													</div>
 												</div>
-												<div class="col-sm-12 col-md-8 col-lg-9">
-													<p:inputText
-														style="width: 100%!important;color: black!important"
-														id="inputEditQuestName"
-														value="#{detailQuestionBean.questionUpdated.name}" />
+												<div class="row" style="margin-bottom: 20px">
+													<div class="col-sm-12 col-md-4 col-lg-3">
+														<h:outputText value="Hình ảnh" />
+													</div>
+													<div class="col-sm-12 col-md-8 col-lg-9">
+														<img
+															src="data:image/jpg;base64, #{detailQuestionBean.questionUpdated.imageString()}"
+															style="max-width: 200px; max-height: 200px; object-fit: contain; margin-top: 5px" />
+														<br />
+														<div style="margin-top: 20px">
+															<p:commandLink
+																style="color: #ef3f3c;
+    											font-weight: bold;font-size:16px"
+																value="Đổi hình ảnh"
+																oncomplete="PF('dlavatar1').show();" />
+														</div>
+													</div>
 												</div>
-											</div>
-											<div class="row" style="width: 50%; margin: 0 auto">
-												<div class="col-sm-12 col-md-6 col-lg-6">
-													<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
-														style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545;color:white!important"
-														oncomplete="PF('dialogUpdateQuest').hide();" />
+												<div class="row" style="width: 50%; margin: 0 auto">
+													<div class="col-sm-12 col-md-6 col-lg-6">
+														<p:commandButton icon="fa fa-remove" value="Hủy bỏ"
+															style=" margin-left: 0%;color: #fff;background-color: #dc3545;border-color: #dc3545;color:white!important"
+															oncomplete="PF('dialogUpdateQuest').hide();" />
+													</div>
+													<div class="col-sm-12 col-md-6 col-lg-6">
+														<p:commandButton icon="fa fa-check"
+															oncomplete="PF('dialogUpdateQuest').hide();"
+															update="createQuestion:listQuestions,growlCreateQuestion"
+															value="Cập nhật"
+															style="color: #fff;background-color: #28a745;border-color:#28a745;color:white!important"
+															action="#{detailQuestionBean.updateQuesion}"
+															process="formCapNhatCauHoi" />
+													</div>
 												</div>
-												<div class="col-sm-12 col-md-6 col-lg-6">
-													<p:commandButton icon="fa fa-check"
-														update="createQuestion:listQuestions" value="Cập nhật"
-														style="color: #fff;background-color: #28a745;border-color:#28a745;color:white!important"
-														action="#{detailQuestionBean.updateQuesion}" />
-												</div>
-											</div>
-										</p:outputPanel>
+											</p:outputPanel>
+										</h:form>
+									</p:dialog>
+									<p:dialog widgetVar="dlavatar1" id="updateHinhAnh"
+										resizable="false" header="Tải hình ảnh">
+										<h:form id="formHinhAnhUpdate" enctype="multipart/form-data">
+											<p:fileUpload style="text-align:center" id="fileupload"
+												dragDropSupport="true"
+												update="createQuestion:formCapNhatCauHoi,createQuestion:updateHinhAnh"
+												allowTypes="/(\.|\/)(jpg|JPG|png|PNG)$/"
+												label="Chọn file từ máy tính" cancelLabel="Huỷ"
+												uploadLabel="Tải lên" fileLimit="1"
+												fileUploadListener="#{detailQuestionBean.uploadAlbumUpdate}"
+												mode="advanced" sizeLimit="10000480000000">
+											</p:fileUpload>
+										</h:form>
 									</p:dialog>
 									<!--Ket thuc DIALOG update  -->
 									<!--Dialog xoa cau hoi  -->
@@ -138,7 +178,8 @@
 												</div>
 												<div style="width: 48%">
 													<p:commandButton icon="fa fa-check" value="Đồng ý"
-														update="createQuestion:listQuestions"
+														oncomplete="PF('dialogDeleteQuest').hide();"
+														update="createQuestion:listQuestions,growlCreateQuestion"
 														style="color: #fff;background-color: #28a745;border-color:#28a745;color:white!important"
 														action="#{detailQuestionBean.deleteQuestion}" />
 												</div>
@@ -157,7 +198,8 @@
 												style="float:right;color: #fff;background-color: #d79d39;border-color:#d79d39;color:white!important"
 												type="submit" value="Lưu/cập nhật" process="@form"
 												action="#{detailQuestionBean.updateRatingNew()}"
-												update="createQuestion" icon="fa fa-save" immediate="true" />
+												update="createQuestion,growlCreateQuestion"
+												icon="fa fa-save" immediate="true" />
 											<p:commandButton id="btnAdd" type="submit"
 												value="Thêm câu trả lời" process="@form"
 												style="float:right;color: #fff;border: 1px solid #007bff;background-color: #007bff;color:white!important"
@@ -230,7 +272,7 @@
 										header="Chọn loại câu hỏi" id="idDialogFoodChoose1">
 										<h:form>
 											<p:dataTable var="item"
-												value="#{createQuestionBean.typeRatings}"
+												value="#{createQuestionBackupBean.typeRatings}"
 												selectionMode="single"
 												selection="#{detailQuestionBean.typeRatingSelected}"
 												rowKey="#{item.id}" id="dtChoose">
@@ -241,7 +283,7 @@
 												</p:column>
 												<f:facet name="footer">
 													<p:commandButton
-														action="#{createQuestionBean.handleChoose()}"
+														action="#{createQuestionBackupBean.handleChoose()}"
 														oncomplete="PF('dialogChoose1').hide();" process="@this"
 														value="Thêm" styleClass="btsave"
 														style="text-decoration: underline;color: #fff;background-color: #007bff;border-color:#007bff" />

@@ -69,6 +69,8 @@ public class AuthorizationManager implements Serializable {
 		uriUnprotected.add("/webkhaosat_web/pages/TrangChu.jsf");
 		uriUnprotected.add("/webkhaosat_web/pages/web/index.jsf");
 		uriUnprotected.add("/webkhaosat_web/pages/web/KhaoSat.jsf");
+		uriUnprotected.add("/webkhaosat_web/pages/web/khaosatmobile.jsf");
+		uriUnprotected.add("/webkhaosat_web/pages/web/indexmobile.jsf");
 	}
 
 	public Program getProgram() {
@@ -109,7 +111,7 @@ public class AuthorizationManager implements Serializable {
 		boolean allow = false;
 		try {
 			Program[] programs = accountServicePublic.findProgramByAccount(account);
-			
+
 			if (programs != null) {
 				for (int i = 0; i < programs.length; i++) {
 					if ("webkhaosat".equals(programs[i].getName())) {
