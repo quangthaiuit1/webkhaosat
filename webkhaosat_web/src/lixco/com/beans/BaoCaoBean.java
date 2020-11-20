@@ -9,7 +9,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -24,7 +23,9 @@ import com.google.gson.Gson;
 
 import lixco.com.entities.Survey;
 import lixco.com.entities.UserResultDetail;
-import lixco.com.entities.User_Result;
+import trong.lixco.com.account.servicepublics.Department;
+import trong.lixco.com.account.servicepublics.DepartmentServicePublic;
+import trong.lixco.com.account.servicepublics.DepartmentServicePublicProxy;
 
 @ManagedBean
 @ViewScoped
@@ -34,6 +35,7 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 	private List<Survey> allSurvey;
 	private Survey surveySelected;
 	private String loaiBaoCao;
+	DepartmentServicePublic departmentServicePublic;
 
 	@Override
 	protected void initItem() {
@@ -42,6 +44,7 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 		if (allSurvey.isEmpty() || allSurvey == null) {
 			allSurvey = new ArrayList<Survey>();
 		}
+		departmentServicePublic = new DepartmentServicePublicProxy();
 	}
 
 	private static XSSFCellStyle createStyleForTitle(XSSFWorkbook workbook) {
@@ -53,7 +56,7 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 	}
 
 	public void baoCaoNangLucCanDaoTao() throws IOException {
-//		PrimeFaces.current().executeScript("start().click()");
+		// PrimeFaces.current().executeScript("start().click()");
 		if (loaiBaoCao.equals("")) {
 			loaiBaoCao = "TB";
 		}
@@ -130,7 +133,7 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 		cell = row.createCell(5);
 		cell.setCellValue("Kết quả");
 		cell.setCellStyle(style);
-		
+
 		cell = row.createCell(6);
 		cell.setCellValue("Thang điểm");
 		cell.setCellStyle(style);
@@ -142,7 +145,7 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 		cell = row.createCell(8);
 		cell.setCellValue("Ý kiến khác");
 		cell.setCellStyle(style);
-//		 Data
+		// Data
 		if (!listKetQua.isEmpty() && listKetQua != null) {
 			for (UserResultDetail kq : listKetQua) {
 				Gson gson = new Gson();
@@ -157,8 +160,18 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 				cell.setCellValue(kq.getUser_result().getEmployeeName());
 				// phong
 				cell = row.createCell(2);
-				cell.setCellValue(kq.getUser_result().getDepartmentName());
-				// ten nhan vien
+				// xu ly phong theo du lieu moi
+				Department dep = departmentServicePublic.findByCode("code", kq.getUser_result().getDepartmentCode());
+				if (dep == null) {
+					cell.setCellValue(kq.getUser_result().getDepartmentName());
+				} else {
+					if (dep.getLevelDep().getLevel() == 2) {
+						cell.setCellValue(kq.getUser_result().getDepartmentName());
+					}
+					if (dep.getLevelDep().getLevel() == 3) {
+						cell.setCellValue(dep.getDepartment().getName());
+					}
+				}
 
 				cell = row.createCell(3);
 				cell.setCellValue(kq.getQuestion().getSurvey().getName());
@@ -172,7 +185,7 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 					cell.setCellValue(kq.getRating().getName());
 
 				}
-				if(kq.getThangdiem() != 0) {
+				if (kq.getThangdiem() != 0) {
 					cell = row.createCell(6);
 					cell.setCellValue(kq.getThangdiem());
 				}

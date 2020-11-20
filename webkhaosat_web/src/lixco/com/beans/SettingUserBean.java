@@ -31,6 +31,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lixco.com.beans.entity.DepartmentByLocate;
+import lixco.com.beans.entitystatic.MessageView;
+import lixco.com.beans.servicetrong.DepartmentData;
+import lixco.com.beans.servicetrong.DepartmentDataService;
 import lixco.com.entities.Survey;
 import lixco.com.entities.User_Result;
 import trong.lixco.com.account.servicepublics.Department;
@@ -70,7 +73,7 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 
 	// List giu danh sach de xoa duoi database
 	private List<EmployeeDTO> deleteUserResultByEmployeeSelected;
-//	private Set<Department> departmentList;
+	// private Set<Department> departmentList;
 	private List<Department> departmentList;
 	EmployeeServicePublic EMPLOYEE_SERVICEPUBLIC_DTO;
 
@@ -87,39 +90,42 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		}
 		employeeDTOSelected = new EmployeeDTO();
 		autocompleteEmployee = new Member();
-//		departmentList = new HashSet<Department>();
+		// departmentList = new HashSet<Department>();
 		employeeBySurSetDTO = new HashSet<EmployeeDTO>();
 		departments = new ArrayList<>();
 
 		try {
-//			allDepartment = DEPARTMENT_SERVICE.findAll();
-//			departmentsByLocate = filterDepartmentByLocate(allDepartment);
+			// allDepartment = DEPARTMENT_SERVICE.findAll();
+			// departmentsByLocate = filterDepartmentByLocate(allDepartment);
 
 			// chay chinh ne
-//			Department[] deps = DEPARTMENT_SERVICE.getAllDepartSubByParent("10001");
-//			for (int i = 0; i < deps.length; i++) {
-//				if (deps[i].getLevelDep().getLevel() <= 2) {
-//					departments.add(deps[i]);
-//					Department[] departments = DEPARTMENT_SERVICE.getAllDepartSubByParent(deps[i].getCode());
-//					List<String> codeDeps = new ArrayList<String>();
-//					if (departments != null)
-//						for (int j = 0; j < departments.length; j++) {
-//							codeDeps.add(departments[j].getCode());
-//						}
-//					if (deps[i].getLevelDep().getLevel() == 2) {
-//						codeDeps.add(deps[i].getCode());
-//						departmentList.add(deps[i]);
-//						String[] codearr = codeDeps.stream().toArray(String[]::new);
-//						EmployeeDTO[] employeeDTOs = EMPLOYEE_SERVICEPUBLIC_DTO.findByDep(codearr);
-//						if (employeeDTOs != null)
-//							for (int j = 0; j < employeeDTOs.length; j++) {
-//								employeeDTOs[j].setCodeDepart(deps[i].getCode());
-//								employeeDTOs[j].setNameDepart(deps[i].getName());
-//								this.employeesDTO.add(employeeDTOs[j]);
-//							}
-//					}
-//				}
-//			}
+			// Department[] deps =
+			// DEPARTMENT_SERVICE.getAllDepartSubByParent("10001");
+			// for (int i = 0; i < deps.length; i++) {
+			// if (deps[i].getLevelDep().getLevel() <= 2) {
+			// departments.add(deps[i]);
+			// Department[] departments =
+			// DEPARTMENT_SERVICE.getAllDepartSubByParent(deps[i].getCode());
+			// List<String> codeDeps = new ArrayList<String>();
+			// if (departments != null)
+			// for (int j = 0; j < departments.length; j++) {
+			// codeDeps.add(departments[j].getCode());
+			// }
+			// if (deps[i].getLevelDep().getLevel() == 2) {
+			// codeDeps.add(deps[i].getCode());
+			// departmentList.add(deps[i]);
+			// String[] codearr = codeDeps.stream().toArray(String[]::new);
+			// EmployeeDTO[] employeeDTOs =
+			// EMPLOYEE_SERVICEPUBLIC_DTO.findByDep(codearr);
+			// if (employeeDTOs != null)
+			// for (int j = 0; j < employeeDTOs.length; j++) {
+			// employeeDTOs[j].setCodeDepart(deps[i].getCode());
+			// employeeDTOs[j].setNameDepart(deps[i].getName());
+			// this.employeesDTO.add(employeeDTOs[j]);
+			// }
+			// }
+			// }
+			// }
 			// end
 
 			// test department new
@@ -133,8 +139,8 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 			}
 
 			// end test
-//			if (departments.size() != 0) {
-//				departments = DepartmentUtil.sort(departments);
+			// if (departments.size() != 0) {
+			// departments = DepartmentUtil.sort(departments);
 			if (departmentList.size() != 0) {
 				departmentList = DepartmentUtil.sort(departmentList);
 			}
@@ -146,13 +152,14 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		surveyId = getParamSetOfId();
 		surveyPlaying = SURVEY_SERVICE.findById(surveyId);
 		try {
-//			if (StringUtils.isEmpty(surveyPlaying.getUsersJson())) {
-//				employeesBySurList = new ArrayList<>();
-//			} else {
-//				employeesBySur = mapper.readValue(surveyPlaying.getUsersJson(), Member[].class);
-//				employeesBySurList = new ArrayList<>();
-//				employeesBySurList = Arrays.asList(employeesBySur);
-//			}
+			// if (StringUtils.isEmpty(surveyPlaying.getUsersJson())) {
+			// employeesBySurList = new ArrayList<>();
+			// } else {
+			// employeesBySur = mapper.readValue(surveyPlaying.getUsersJson(),
+			// Member[].class);
+			// employeesBySurList = new ArrayList<>();
+			// employeesBySurList = Arrays.asList(employeesBySur);
+			// }
 			if (StringUtils.isEmpty(surveyPlaying.getUsersJson())) {
 				employeeBySurListDTO = new ArrayList<EmployeeDTO>();
 			} else {
@@ -169,7 +176,7 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		}
 	}
 
-// Cast array-> arrayList
+	// Cast array-> arrayList
 	public List<Department> castToArrayList(Department[] departArray) {
 		List<Department> depatmentsTemp = new ArrayList<>();
 		for (Department d : departArray) {
@@ -177,9 +184,9 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		}
 		return depatmentsTemp;
 	}
-//Tao 
+	// Tao
 
-//Loc phong ban theo khu vuc
+	// Loc phong ban theo khu vuc
 	public List<DepartmentByLocate> filterDepartmentByLocate(Department[] allDepartment) {
 		List<DepartmentByLocate> departmentsTemp = new ArrayList<>();
 		for (Department d : allDepartment) {
@@ -201,13 +208,14 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 					dT.setLocateName("TRỤ SỞ HỒ CHÍ MINH");
 					departmentsTemp.add(dT);
 				}
-				// departmentsTemp.add(dT); khong de duoi nay duoc vi se bi trung danh sach
+				// departmentsTemp.add(dT); khong de duoi nay duoc vi se bi
+				// trung danh sach
 			}
 		}
 		return departmentsTemp;
 	}
 
-// Them nhan vien
+	// Them nhan vien
 	public void addEmployee() throws JsonParseException, JsonMappingException, IOException {
 
 		try {
@@ -237,11 +245,13 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 
 	public void saveOrUpdate() throws JsonParseException, JsonMappingException, IOException {
 		// convert JSON to Array objects
-		// Member[] employeesOld = mapper.readValue(surveyPlaying.getUsersJson(),
+		// Member[] employeesOld =
+		// mapper.readValue(surveyPlaying.getUsersJson(),
 		// Member[].class);
 
 		// convert Array object to JSON
-//		String a = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.employeesBySurList);
+		// String a =
+		// mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.employeesBySurList);
 
 		String a = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this.employeeBySurListDTO);
 		surveyPlaying.setUsersJson(a);
@@ -272,49 +282,51 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 		autocompleteEmployee = new Member();
 	}
 
-//	public List<String> splitStringMediaIdsToList(String strMediaIds) {
-//		if ("".equals(strMediaIds)) {
-//			return new ArrayList<>();
-//		}
-//		return Stream.of(strMediaIds.split(",")).map(x -> x).collect(Collectors.toList());
-//	}
+	// public List<String> splitStringMediaIdsToList(String strMediaIds) {
+	// if ("".equals(strMediaIds)) {
+	// return new ArrayList<>();
+	// }
+	// return Stream.of(strMediaIds.split(",")).map(x ->
+	// x).collect(Collectors.toList());
+	// }
 
-// List user ban dau - > tach dau
-//	public List<Employee> handleListuserBySurvey(long surveyId) {
-//		
-//		// target Nhan vien
-//		
-////		String[] parts = surveyPlaying.getListUserOrDeparments().split(",");
-//////		List<String> parts = splitStringMediaIdsToList(surveyPlaying.getListUserOrDeparments());
-////		
-////		// Them nguoi dung thuoc bo cau hoi vao danh sach
-////		for (String i : parts) {
-////			Member memberTemp;
-////			try {
-////				System.out.println("start: ");
-////				long begin = System.currentTimeMillis();
-////				memberTemp = EMPLOYEE_SERVICE.findByCode(i);
-////				System.out.println(System.currentTimeMillis() - begin);
-////				System.out.println("end: ");
-////				employeeBySur.add(memberTemp);
-////			} catch (RemoteException e) {
-////				e.printStackTrace();
-////			}
-////		}
-//		return employeeBySur;
-//	}
+	// List user ban dau - > tach dau
+	// public List<Employee> handleListuserBySurvey(long surveyId) {
+	//
+	// // target Nhan vien
+	//
+	//// String[] parts = surveyPlaying.getListUserOrDeparments().split(",");
+	////// List<String> parts =
+	// splitStringMediaIdsToList(surveyPlaying.getListUserOrDeparments());
+	////
+	//// // Them nguoi dung thuoc bo cau hoi vao danh sach
+	//// for (String i : parts) {
+	//// Member memberTemp;
+	//// try {
+	//// System.out.println("start: ");
+	//// long begin = System.currentTimeMillis();
+	//// memberTemp = EMPLOYEE_SERVICE.findByCode(i);
+	//// System.out.println(System.currentTimeMillis() - begin);
+	//// System.out.println("end: ");
+	//// employeeBySur.add(memberTemp);
+	//// } catch (RemoteException e) {
+	//// e.printStackTrace();
+	//// }
+	//// }
+	// return employeeBySur;
+	// }
 
-// Xoa Employee 
+	// Xoa Employee
 	public void deleteEmployees() {
-//		Map<Long, Member> maps = new HashMap<Long, Member>();
-//		for (Member i : employeesBySurList) {
-//			maps.put(i.getId(), i);
-//		}
-//		for (Member m : selectedDelete) {
-//			if (maps.containsKey(m.getId())) {
-//				maps.remove(m.getId());
-//			}
-//		}
+		// Map<Long, Member> maps = new HashMap<Long, Member>();
+		// for (Member i : employeesBySurList) {
+		// maps.put(i.getId(), i);
+		// }
+		// for (Member m : selectedDelete) {
+		// if (maps.containsKey(m.getId())) {
+		// maps.remove(m.getId());
+		// }
+		// }
 
 		Map<Long, EmployeeDTO> maps = new HashMap<Long, EmployeeDTO>();
 		for (EmployeeDTO i : employeeBySurListDTO) {
@@ -367,8 +379,24 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 			List<String> departList = new ArrayList<>();
 			for (int i = 0; i < departmentList.size(); i++) {
 				if (departmentList.get(i).isSelect()) {
+					// xu ly tim nhan vien theo phong ban moi
+					if (departmentList.get(i).getLevelDep().getLevel() == 2) {
+						DepartmentData[] departmentHCMArray = DepartmentDataService
+								.timtheophongquanly(departmentList.get(i).getCode());
+						if (departmentHCMArray != null) {
+							for (DepartmentData d : departmentHCMArray) {
+								departList.add(d.getCode());
+							}
+						} else {
+							departList.add(departmentList.get(i).getCode());
+						}
+					}
+					if (departmentList.get(i).getLevelDep().getLevel() == 3) {
+						departList.add(departmentList.get(i).getCode());
+					}
+
 					departmentList.get(i).setSelect(false);
-					departList.add(departmentList.get(i).getCode());
+					// departList.add(departmentList.get(i).getCode());
 				}
 			}
 			String[] departmentCodeArray = departList.toArray(new String[departList.size()]);
@@ -380,7 +408,7 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 				// them list hien tai dang co vao usrAll1
 				usrAll1.addAll(employeeBySurListDTO);
 				for (int j = 0; j < tempList.size(); j++) {
-//					// kiem tra trong list da co employee do chua
+					// // kiem tra trong list da co employee do chua
 					boolean check = false;
 					for (int l = 0; l < employeeBySurListDTO.size(); l++) {
 						if (employeeBySurListDTO.get(l).getCode().equals(tempList.get(j).getCode())) {
@@ -394,6 +422,10 @@ public class SettingUserBean extends AbstractBean implements Serializable {
 				}
 				employeeBySurListDTO = new ArrayList<>();
 				employeeBySurListDTO.addAll(usrAll1);
+			}
+			// phong ban khong co nhan vien nao
+			else {
+				MessageView.WARN("Không có nhân viên nào!");
 			}
 		} catch (Exception e) {
 		}

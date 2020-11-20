@@ -1,19 +1,23 @@
 package lixco.com.beans;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
 import org.primefaces.PrimeFaces;
+import org.primefaces.event.FileUploadEvent;
 
 import lixco.com.config.ConfigQuestionType;
 import lixco.com.entities.Answer;
@@ -24,6 +28,8 @@ import lixco.com.entities.Survey;
 import lixco.com.entities.TypeRating;
 import lixco.com.services.TypeRatingService;
 import trong.lixco.com.account.servicepublics.Member;
+import trong.lixco.com.util.Notify;
+import trong.lixco.com.util.ResizeImage;
 
 @ManagedBean
 @ViewScoped
@@ -42,14 +48,17 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 	private TypeRating typeRatingSelected;
 	private Rating ratingSelected;
 	private Member member;
-	
-	//Cac loai cau hoi
+	private Notify notify;
+
+	private Question questionNewEntity;
+
+	// Cac loai cau hoi
 	private long LAY_Y_KIEN;
 	private long THANG_DIEM;
 	private long DANH_GIA;
 	private long MULTIPLE_CHOICE;
 
-	@Inject
+	@EJB
 	private TypeRatingService TYPE_RATING_SERVICE;
 
 	@Override
@@ -61,7 +70,7 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 			DANH_GIA = ConfigQuestionType.DANH_GIA;
 			MULTIPLE_CHOICE = ConfigQuestionType.MULTIPLE_CHOICE;
 			setofId = getParamSetOfId();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -73,7 +82,7 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 		Rating firstTemp = new Rating();
 		firstTemp.setType_rating(typeRatings.get(1));
 		answerNewList.add(firstTemp);
-		//danh sach multiple choice khi tao moi
+		// danh sach multiple choice khi tao moi
 		answerMultipleChoice.add(firstTemp);
 
 		ratingSelected = new Rating();
@@ -84,10 +93,33 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 		answersNew = new String[2];
 		// Danh sach loai cau hoi truy van tu DB
 		questionTypeList1 = QUESTIONTYPE_SERVICE.findAllByFilter();
+		// code new
+		questionNewEntity = new Question();
+		notify = new Notify(FacesContext.getCurrentInstance());
 	}
+
+	// UPLOAD IMAGE
+
+	public void uploadAlbum(FileUploadEvent event) {
+		notify = new Notify(FacesContext.getCurrentInstance());
+		try (InputStream input = event.getFile().getInputstream()) {
+			byte[] file = ResizeImage.toByteArray(input);
+			questionNewEntity.setImage(file);
+			PrimeFaces current = PrimeFaces.current();
+			current.executeScript("PF('dlavatar').hide();");
+		} catch (Exception e) {
+			e.printStackTrace();
+			notify.error();
+		}
+
+	}
+
+	// END UPLOAD IMAGE
 
 	// Them cau hoi
 	public void createQuestion() {
+//		System.out.println(questionNewEntity);
+		
 		Question tempQ = new Question();
 		Survey tempSet = new Survey();
 		tempSet = SURVEY_SERVICE.findById(setofId);
@@ -97,20 +129,20 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 		tempQ.setCreatedUser(member.getCode());
 		tempQ.setName(questionNameNew);
 		tempQ.setDeleted(false);
-		// Danh gia 
+		// Danh gia
 		if (questionTypeTempTest == ConfigQuestionType.DANH_GIA) {
-			
+
 			List<Rating> ratingsTemp = new ArrayList<>();
-			for(Rating r : answerNewList) {
-				if(StringUtils.isNotEmpty(r.getName()) && r.getType_rating() != null) {
+			for (Rating r : answerNewList) {
+				if (StringUtils.isNotEmpty(r.getName()) && r.getType_rating() != null) {
 					ratingsTemp.add(r);
 				}
 			}
-			//cap nhat lai danh sach co dap an
+			// cap nhat lai danh sach co dap an
 			this.answerNewList = new ArrayList<>();
 			this.answerNewList.addAll(ratingsTemp);
-			
-			//check coi co dap an nao hay khong
+
+			// check coi co dap an nao hay khong
 			if (answerNewList.isEmpty()) {
 				addRowNew();
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
@@ -118,13 +150,13 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 				PrimeFaces.current().dialog().showMessageDynamic(message);
 				return;
 			}
-			
-			//dap an hop le moi cho them cau hoi
-			if(!this.answerNewList.isEmpty()) {
+
+			// dap an hop le moi cho them cau hoi
+			if (!this.answerNewList.isEmpty()) {
 				tempQ = QUESTION_SERVICE.create(tempQ);
 			}
-			if(tempQ.getId() != 0) {
-				for(Rating r: answerNewList) {
+			if (tempQ.getId() != 0) {
+				for (Rating r : answerNewList) {
 					r.setQuestion(tempQ);
 					RATING_SERVICE.create(r);
 				}
@@ -139,46 +171,45 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 			questionNameNew = "";
 			return;
 		}
-		//Thang diem
-		if(questionTypeTempTest == ConfigQuestionType.THANG_DIEM) {
+		// Thang diem
+		if (questionTypeTempTest == ConfigQuestionType.THANG_DIEM) {
 			Question tempQuest = QUESTION_SERVICE.create(tempQ);
-			//kiem tra thu nhap du min max chua
+			// kiem tra thu nhap du min max chua
 			boolean check = true;
-			for(int l = 0; l < answersNew.length; l++) {
-				if(StringUtils.isEmpty(answersNew[l])) {
+			for (int l = 0; l < answersNew.length; l++) {
+				if (StringUtils.isEmpty(answersNew[l])) {
 					check = false;
 				}
 			}
-			for(int l = 0; l < answersNew.length; l++) {
-				if(check) {
+			for (int l = 0; l < answersNew.length; l++) {
+				if (check) {
 					Rating rtNew = new Rating();
 					rtNew.setCreatedDate(getDate());
 					rtNew.setCreatedUser(member.getCode());
 					rtNew.setName(answersNew[l]);
 					rtNew.setQuestion(tempQuest);
-					//loai dap an khong y kien
+					// loai dap an khong y kien
 					TypeRating typeRating = TYPE_RATING_SERVICE.findById(2);
 					rtNew.setType_rating(typeRating);
 					RATING_SERVICE.create(rtNew);
-				}else {
+				} else {
 					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 							"Vui lòng nhập đáp án!.");
 					PrimeFaces.current().dialog().showMessageDynamic(message);
 					return;
 				}
 			}
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-					"Thành công.");
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Thành công.");
 			PrimeFaces.current().dialog().showMessageDynamic(message);
 			questionNameNew = "";
 			answersNew = new String[2];
 			return;
 		}
-		
+
 		// nhieu dap an
 		if (questionTypeTempTest == ConfigQuestionType.MULTIPLE_CHOICE) {
 			List<Rating> ratingsTemp = new ArrayList<>();
-			//check coi co dap an nao hay khong
+			// check coi co dap an nao hay khong
 			if (answerMultipleChoice.isEmpty()) {
 				addRowNew();
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
@@ -186,23 +217,23 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 				PrimeFaces.current().dialog().showMessageDynamic(message);
 				return;
 			}
-			
-			//kiem tra dap an nao bi null thi bo
-			for(Rating r : answerMultipleChoice) {
-				if(StringUtils.isNotEmpty(r.getName()) && r.getType_rating() != null) {
+
+			// kiem tra dap an nao bi null thi bo
+			for (Rating r : answerMultipleChoice) {
+				if (StringUtils.isNotEmpty(r.getName()) && r.getType_rating() != null) {
 					ratingsTemp.add(r);
 				}
 			}
-			//cap nhat lai danh sach co dap an
+			// cap nhat lai danh sach co dap an
 			this.answerMultipleChoice = new ArrayList<>();
 			this.answerMultipleChoice.addAll(ratingsTemp);
-			
-			//dap an hop le moi cho them cau hoi
-			if(!this.answerMultipleChoice.isEmpty()) {
+
+			// dap an hop le moi cho them cau hoi
+			if (!this.answerMultipleChoice.isEmpty()) {
 				tempQ = QUESTION_SERVICE.create(tempQ);
 			}
-			if(tempQ.getId() != 0) {
-				for(Rating r: answerMultipleChoice) {
+			if (tempQ.getId() != 0) {
+				for (Rating r : answerMultipleChoice) {
 					r.setQuestion(tempQ);
 					RATING_SERVICE.create(r);
 				}
@@ -268,26 +299,26 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 		if (StringUtils.isEmpty(item.getName())) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng nhập đáp án.");
 			PrimeFaces.current().dialog().showMessageDynamic(message);
-		}else {
+		} else {
 			PrimeFaces.current().executeScript("PF('dialogChoose').show()");
 		}
 	}
-	
+
 	public void handleRatingSelectedMultipleChoice(Rating item) {
 		ratingSelected = item;
 		if (StringUtils.isEmpty(item.getName())) {
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Vui lòng nhập đáp án.");
 			PrimeFaces.current().dialog().showMessageDynamic(message);
-		}else {
+		} else {
 			PrimeFaces.current().executeScript("PF('dialogChooseMultipleChoice').show()");
 		}
 	}
 
 	public void deleteRow(Rating item) {
-		if(StringUtils.isNotEmpty(item.getName())) {
+		if (StringUtils.isNotEmpty(item.getName())) {
 			List<Rating> temp = new ArrayList<>();
-			for(Rating r : answerNewList) {
-				if(!r.getName().equals(item.getName())) {
+			for (Rating r : answerNewList) {
+				if (!r.getName().equals(item.getName())) {
 					temp.add(r);
 				}
 			}
@@ -295,31 +326,30 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 			answerNewList.addAll(temp);
 		}
 	}
-	
+
 	public void addRowNew() {
 		Rating abc = new Rating();
 		abc.setType_rating(typeRatings.get(1));
 		answerNewList.add(abc);
 	}
-	
+
 	public void addRowNewAnswerMultipleChoice() {
 		Rating abc = new Rating();
 		abc.setType_rating(typeRatings.get(1));
 		answerMultipleChoice.add(abc);
 	}
 
-
 	public void handleChoose() {
-		for(int i =0; i < answerNewList.size(); i++) {
-			if(answerNewList.get(i).getName().equals(ratingSelected.getName())) {
+		for (int i = 0; i < answerNewList.size(); i++) {
+			if (answerNewList.get(i).getName().equals(ratingSelected.getName())) {
 				answerNewList.get(i).setType_rating(typeRatingSelected);
 			}
 		}
 	}
-	
+
 	public void handleChooseMultipleChoice() {
-		for(int i =0; i < answerMultipleChoice.size(); i++) {
-			if(answerMultipleChoice.get(i).getName().equals(ratingSelected.getName())) {
+		for (int i = 0; i < answerMultipleChoice.size(); i++) {
+			if (answerMultipleChoice.get(i).getName().equals(ratingSelected.getName())) {
 				answerMultipleChoice.get(i).setType_rating(typeRatingSelected);
 			}
 		}
@@ -442,5 +472,13 @@ public class CreateQuestionBean extends AbstractBean implements Serializable {
 
 	public void setAnswerMultipleChoice(List<Rating> answerMultipleChoice) {
 		this.answerMultipleChoice = answerMultipleChoice;
+	}
+
+	public Question getQuestionNewEntity() {
+		return questionNewEntity;
+	}
+
+	public void setQuestionNewEntity(Question questionNewEntity) {
+		this.questionNewEntity = questionNewEntity;
 	}
 }

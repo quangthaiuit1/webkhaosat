@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
 import org.primefaces.PrimeFaces;
 
+import lixco.com.beans.entitystatic.MessageView;
 import lixco.com.config.ConfigQuestionType;
 import lixco.com.entities.Answer;
 import lixco.com.entities.Question;
@@ -37,9 +38,11 @@ public class ExcuteSurveyBean extends AbstractBean {
 	private List<Question> questionsTypeLayYKien; // Cau hoi lay y kien
 	private List<Question> questionsTypeDanhGia; // Cau hoi danh gia
 	private List<Question> questionsTypeThangDiem; // Cau hoi thang diem
-	private List<Question> questionsTypeMultipleChoice;// Cau hoi multiple choice
+	private List<Question> questionsTypeMultipleChoice;// Cau hoi multiple
+														// choice
 	private List<QuestionAndRating> questionAndMultipleChoiceAnswer;
-	private List<QuestionAndRating> questionAndAnswerRating; // bo cau hoi phan 1
+	private List<QuestionAndRating> questionAndAnswerRating; // bo cau hoi phan
+																// 1
 	private List<QuestionSlider> questionAndAnswerSlider;// thanng diem
 	private String[] ketquaPhanDanhGia; // dap an phan danh gia
 	// test
@@ -152,24 +155,24 @@ public class ExcuteSurveyBean extends AbstractBean {
 		// tao bien hung ket qua phan 1
 	}
 
-//Get session
+	// Get session
 	public Account getSession() {
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 		Account accountTemp = (Account) session.getAttribute("account");
 		return accountTemp;
 	}
 
-//Update view 
+	// Update view
 	public void test() {
 		PrimeFaces.current().ajax().update("total:OkFine");
 	}
 
-//DS cau hoi theo tung loai
+	// DS cau hoi theo tung loai
 	public List<Question> getListQuestionByType(long questionTypeId, Long setOfId) {
 		return QUESTION_SERVICE.find(questionTypeId, setOfId, null);
 	}
 
-//Tao bo cau hoi theo tung loai
+	// Tao bo cau hoi theo tung loai
 	public void buildSetOfQuestionByType(List<Question> questionsTypeDanhGia, List<Question> questionsTypeThangDiem,
 			List<Question> questionsTypeMultipleChoice) {
 
@@ -189,16 +192,23 @@ public class ExcuteSurveyBean extends AbstractBean {
 			tempQA.setRatings(tempRatings);
 			questionAndAnswerRating.add(tempQA);
 			if (isCompleted) {
+				UserResultDetail urd = new UserResultDetail();
+				// System.out.println("index err: " + i);
 				// gan dap an da chon vao bo cau hoi
-				UserResultDetail urd = USER_RESULT_DETAI_SERVICE
-						.find(checkComplete.getId(), 0L, questionsTypeDanhGia.get(i).getId()).get(0);
-				// gan y kien vao cho o nhap y kien
-				if (urd.getRating().getType_rating().getId() == ConfigQuestionType.DAP_AN_LAY_Y_KIEN) {
-					this.ketquaPhanDanhGia[i + 1] = String.valueOf(urd.getRating().getId());
-					noteRatingString[i + 1] = urd.getNote();
-					noteRating[i + 1] = true;
+				List<UserResultDetail> urds = USER_RESULT_DETAI_SERVICE.find(checkComplete.getId(), 0L,
+						questionsTypeDanhGia.get(i).getId());
+				if (!urds.isEmpty()) {
+					urd = urds.get(0);
+					// gan y kien vao cho o nhap y kien
+					if (urd.getRating().getType_rating().getId() == ConfigQuestionType.DAP_AN_LAY_Y_KIEN) {
+						this.ketquaPhanDanhGia[i + 1] = String.valueOf(urd.getRating().getId());
+						noteRatingString[i + 1] = urd.getNote();
+						noteRating[i + 1] = true;
+					} else {
+						this.ketquaPhanDanhGia[i + 1] = String.valueOf(urd.getRating().getId());
+					}
 				} else {
-					this.ketquaPhanDanhGia[i + 1] = String.valueOf(urd.getRating().getId());
+					System.out.println("index err: " + i);
 				}
 			}
 		}
@@ -274,7 +284,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 		}
 	}
 
-//Luu ket qua
+	// Luu ket qua
 	public void completeSurvey() throws Throwable {
 		List<UserResultDetail> listAddNew = new ArrayList<>();
 
@@ -301,7 +311,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 							userResultDetailTemp.setQuestion(temp.getQuestion());
 							userResultDetailTemp.setNote(noteRatingString[j]);
 							listAddNew.add(userResultDetailTemp);
-//							noteRatingString[j] = "";
+							// noteRatingString[j] = "";
 						} else {
 							FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 									"Anh/chị vui lòng cho biết ý kiến!.");
@@ -361,7 +371,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 									userResultDetailTemp.setQuestion(temp.getQuestion());
 									userResultDetailTemp.setNote(noteRatingMultipleChoice[j]);
 									listAddNew.add(userResultDetailTemp);
-//									noteRatingString[j] = "";
+									// noteRatingString[j] = "";
 								} else {
 									FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
 											"Anh/chị vui lòng cho biết ý kiến!.");
@@ -431,7 +441,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 			noteRatingString = new String[questionsTypeDanhGia.size() + 1];
 			noteRatingMultipleChoice = new String[questionsTypeMultipleChoice.size() + 1];
 
-//LOAD LAI TRANG // hoi chuoi ke di
+			// LOAD LAI TRANG // hoi chuoi ke di
 			ketquaPhanLayYKien = new ArrayList<>();
 			try {
 				if (surveyPlaying.getDescription() == null || StringUtils.isEmpty(surveyPlaying.getDescription())) {
@@ -493,15 +503,12 @@ public class ExcuteSurveyBean extends AbstractBean {
 				questionAndAnswerSlider = new ArrayList<>();
 				buildSetOfQuestionByType(questionsTypeDanhGia, questionsTypeThangDiem, questionsTypeMultipleChoice);
 				// excute load lai data
-				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo",
-						"Bạn đã hoàn thành khảo sát");
-				PrimeFaces.current().dialog().showMessageDynamic(message);
-
+				MessageView.INFO("Bạn đã hoàn thành khảo sát");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-//END LOAD LAI TRANG
-//			PrimeFaces.current().executeScript("PF('dialogCompleteSurvey').show();");
+			// END LOAD LAI TRANG
+			// PrimeFaces.current().executeScript("PF('dialogCompleteSurvey').show();");
 		}
 
 	}
@@ -535,7 +542,8 @@ public class ExcuteSurveyBean extends AbstractBean {
 	}
 
 	public void printABC(int id) {
-		// ham ajax khong nhan array object. chi nhan array string. nen phai pass id
+		// ham ajax khong nhan array object. chi nhan array string. nen phai
+		// pass id
 		// rating qua de tim dap an -> check loai dap an
 		long idRating = Long.parseLong(ketquaPhanDanhGia[id]);
 		Rating temp = RATING_SERVICE.findById(idRating);
@@ -549,7 +557,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 		}
 
 		// Gan dap an vao list ket qua phan danh gia
-//		ketquaPhanDanhGiaRating[id] = temp;
+		// ketquaPhanDanhGiaRating[id] = temp;
 	}
 
 	public void ajaxHandleQuestionLayYKien(String questionName) {
@@ -574,7 +582,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 		}
 	}
 
-//GET AND SET
+	// GET AND SET
 
 	public String[] getKetquaPhanDanhGia() {
 		return ketquaPhanDanhGia;

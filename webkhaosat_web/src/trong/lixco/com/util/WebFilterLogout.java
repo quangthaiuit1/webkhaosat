@@ -1,8 +1,9 @@
-package general;
+package trong.lixco.com.util;
 
 import java.io.IOException;
 
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -18,8 +19,6 @@ import trong.lixco.com.account.servicepublics.Account;
 
 @javax.servlet.annotation.WebFilter("/logout/*")
 public class WebFilterLogout implements Filter {
-	
-	private Logger logger;
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws ServletException,
 			IOException {
@@ -27,8 +26,6 @@ public class WebFilterLogout implements Filter {
 		HttpSession session = request.getSession(false);
 		try {
 			Account account = (Account) session.getAttribute("account");
-			if (account != null)
-				logger.info("(" + account.getUserName() + "): Ä�Äƒng xuáº¥t. ");
 			session.removeAttribute("account");
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.getExternalContext().invalidateSession();

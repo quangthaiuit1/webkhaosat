@@ -3,9 +3,6 @@
 	<name>webkhaosat_ear</name>
 	<comment></comment>
 	<projects>
-		<project>webkhaosat_web</project>
-		<project>webkhaosat_ejb</project>
-		<project>webkhaosat_jpa</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

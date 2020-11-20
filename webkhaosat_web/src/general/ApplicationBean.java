@@ -30,6 +30,7 @@ import trong.lixco.com.account.servicepublics.MemberServicePublic;
 import trong.lixco.com.account.servicepublics.MemberServicePublicProxy;
 import trong.lixco.com.account.servicepublics.PrivateConfigServicePublic;
 import trong.lixco.com.account.servicepublics.PrivateConfigServicePublicProxy;
+import trong.lixco.com.util.Notify;
 
 @ManagedBean
 @SessionScoped

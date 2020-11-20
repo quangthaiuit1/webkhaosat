@@ -12,6 +12,7 @@
 <h:body>
 	<ui:composition template="common.xhtml">
 		<ui:define name="content">
+			<p:growl id="growLoadResult" showDetail="true" sticky="false" />
 			<h:form id="loadResult">
 				<!-- Them bo cau hoi -->
 				<div class="row"
@@ -46,7 +47,8 @@
 									style="float:right;color: #fff!important;background-color: #007bff;border-color:#007bff"
 									value="Phòng ban" onclick="PF('dialogAddEmployee').show()" />
 
-								<p:autoComplete style="float:right;margin-right:5px" id="autocompleteNhanVien"
+								<p:autoComplete style="float:right;margin-right:5px"
+									id="autocompleteNhanVien"
 									value="#{settingUserBean.employeeDTOSelected}"
 									converter="abstractConverter" minQueryLength="5"
 									completeMethod="#{settingUserBean.completeEmployee}" var="p"
@@ -132,7 +134,7 @@
 									<p:commandButton
 										style="color: #fff!important;background-color: #007bff;border-color:#007bff"
 										process="@form" value="Thêm vào danh sách"
-										update="loadResult:dtEmployees"
+										update="loadResult:dtEmployees,growLoadResult"
 										action="#{settingUserBean.selectDep()}" />
 									<div style="clear: both;" />
 								</f:facet>

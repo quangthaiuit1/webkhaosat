@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+	<title>HỆ THỐNG KHẢO SÁT</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<!-- Bootstrap core CSS -->
+	<h:outputStylesheet library="bootstrap"
+		name="web/css/bootstrap.min.css" />
+	<h:outputStylesheet library="bootstrap" name="web/css/style-css.css" />
+	<h:outputStylesheet library="bootstrap" name="web/css/css-search.css" />
+
+	<!-- Custom styles for this template -->
+	<h:outputStylesheet library="bootstrap"
+		name="web/css/modern-business.css" />
+	<!-- CSS -->
+	<style type="text/css">
+.ui-state-highlight {
+	background: #208eb6 !important;
+	border-color: #208eb6 ! important;
+	color: white;
+}
+
+p {
+	font-size: 55px !important;
+}
+
+span.group-name {
+	font-size: 40px;
+}
+
+span.ui-button-text.ui-c {
+	font-size: 45px;
+}
+
+.ui-growl-message {
+	font-size: 35px;
+}
+
+label {
+	font-size: 50px;
+}
+
+.ui-inputfield {
+	font-size: 50px;
+}
+
+.ui-radiobutton {
+	width: 65px
+}
+
+.ui-radiobutton .ui-radiobutton-box {
+	width: 50px;
+	height: 50px;
+}
+
+.ui-chkbox {
+	width: 65px
+}
+
+.ui-chkbox .ui-chkbox-box {
+	width: 50px;
+	height: 50px;
+}
+
+.row {
+	font-size: 50px;
+}
+</style>
+</h:head>
+<h:body
+	style="background-color: #eee;width: 100%;margin: 0 auto;padding-top: 0px">
+	<p:growl id="growlKhaoSat" showDetail="true" sticky="false" />
+	<h:form id="total">
+		<div class="row"
+			style="background-color: #15aad3; margin-top: 5px; text-align: center">
+			<div style="width: 100%">
+				<h:graphicImage library="images" name="logo-lixco.png"
+					height="120px" />
+			</div>
+			<div style="width: 100%">
+				<h5
+					style="color: white; margin-top: 10px; margin-left: 2%; font-size: 55px; text-align: center">CÔNG
+					TY CỔ PHẦN BỘT GIẶT LIX</h5>
+			</div>
+		</div>
+		<c:if test="#{excuteSurveyBean.checkNullAll == false}">
+			<div class="row" style="background-color: white;">
+				<div class="col-sm-12 col-md-12 col-lg-12"
+					style="margin-bottom: 30px">
+					<p:notificationBar id="ahihi" position="top" widgetVar="topBar"
+						styleClass="top" rendered="">
+						<h:outputText value="Đã hoàn thành!"
+							style="color:#FFCC00;font-size:36px;" />
+					</p:notificationBar>
+					<h4
+						style="text-align: center; color: #1F83D9; margin-top: 10px; font-weight: bold; font-size: 50px">PHIẾU
+						KHẢO SÁT</h4>
+					<c:if test="#{excuteSurveyBean.checkNullDescription == false}">
+						<p>#{excuteSurveyBean.surveyPlaying.description}</p>
+					</c:if>
+				</div>
+				<!-- phan 1  -->
+				<c:if test="#{excuteSurveyBean.checkNullPhanDanhGia == false}">
+					<div class="row"
+						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+						<span class="group-name"
+							style="margin: 0 auto; margin-bottom: 15px; margin-top: 20px">PHẦN
+							KHẢO SÁT: ĐÁNH GIÁ</span> <span class="group-description"><p
+								style="text-align: center;"></p> </span>
+						<div class="row"
+							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.surveyPlaying.titleRating}</div>
+						<c:set var="evenCount" value="${0}" />
+						<c:forEach items="#{excuteSurveyBean.questionAndAnswerRating}"
+							var="question1">
+							<c:set var="evenCount" value="${evenCount+1}" />
+							<div class="row" style="width: 100%">
+								<p>
+									<h:outputText value="Câu #{evenCount}" style="margin-left: 5px" />
+									: #{question1.question.name}
+								</p>
+								<br></br>
+								<c:if test="${not empty question1.question.imageString()}">
+									<div style="width: 100%; text-align: center">
+										<img
+											src="data:image/jpg;base64, #{question1.question.imageString()}"
+											style="max-width: 200px; max-height: 200px; object-fit: contain; margin-top: 0px; margin-bottom: 5px" />
+									</div>
+								</c:if>
+							</div>
+							<div class="row" style="width: 100%; margin-left: 10px">
+								<h:panelGrid columns="1" style="margin-bottom:10px;width:100%"
+									cellpadding="5" id="panelGrid1_#{evenCount}">
+									<p:selectOneRadio id="id1_#{evenCount}"
+										value="#{excuteSurveyBean.ketquaPhanDanhGia[evenCount]}"
+										layout="grid" columns="1">
+										<f:selectItems value="#{question1.ratings}" var="r"
+											itemLabel="#{r.name}" itemValue="#{r.id}" />
+										<p:ajax process="@this"
+											listener="#{excuteSurveyBean.printABC(evenCount)}" />
+									</p:selectOneRadio>
+
+									<p:inputTextarea id="inputTextNote_#{evenCount}"
+										placeholder="Anh/chị vui lòng cho biết ý kiến!"
+										rendered="#{excuteSurveyBean.noteRating[evenCount]}"
+										style="margin-left: 5px;margin-bottom: 5px;width:98%"
+										value="#{excuteSurveyBean.noteRatingString[evenCount]}">
+										<p:ajax process="@this" />
+									</p:inputTextarea>
+								</h:panelGrid>
+							</div>
+						</c:forEach>
+					</div>
+				</c:if>
+				<!-- 	het phan 1 -->
+
+				<!-- phan 2 -->
+				<c:if test="#{excuteSurveyBean.checkNullPhanNhieuDapAn == false}">
+					<div class="row"
+						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+						<div class="row" style="width: 100%">
+							<span class="group-name"
+								style="margin: 0 auto; margin-bottom: 15px; margin-top: 20px; width: 90%; text-align: center">PHẦN
+								KHẢO SÁT: CÓ THỂ CHỌN NHIỀU ĐÁP ÁN</span> <span
+								class="group-description"><p
+									style="text-align: center; margin-left: 5px"></p></span>
+						</div>
+						<div class="row"
+							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.surveyPlaying.titleSlider}</div>
+						<c:if test="${evenCount == null}">
+							<c:set var="evenCount2" value="${0}" />
+						</c:if>
+						<c:if test="${evenCount != null}">
+							<c:set var="evenCount2" value="${evenCount}" />
+						</c:if>
+						<c:set var="indexBeginFrom1" value="${0}" />
+						<c:forEach
+							items="#{excuteSurveyBean.questionAndMultipleChoiceAnswer}"
+							var="questionMultipleChoice">
+							<c:set var="evenCount2" value="${evenCount2+1}" />
+							<c:set var="indexBeginFrom1" value="${indexBeginFrom1+1}" />
+							<div class="row" style="width: 100%">
+								<p>
+									<h:outputText value="Câu #{evenCount2}"
+										style="margin-left: 5px" />
+									: #{questionMultipleChoice.question.name}
+								</p>
+								<br></br>
+								<c:if
+									test="${not empty questionMultipleChoice.question.imageString()}">
+									<div style="width: 100%; text-align: center">
+										<img
+											src="data:image/jpg;base64, #{questionMultipleChoice.question.imageString()}"
+											style="max-width: 200px; max-height: 200px; object-fit: contain; margin-top: 0px; margin-bottom: 5px" />
+									</div>
+								</c:if>
+							</div>
+							<div class="row" style="width: 100%; margin-left: 10px">
+								<h:panelGrid columns="1" style="margin-bottom:10px;width:100%"
+									cellpadding="5" id="panelGrid2_#{indexBeginFrom1}">
+
+									<p:selectManyCheckbox id="id2_#{evenCount2}"
+										value="#{excuteSurveyBean.ketquaMultipleChoiceString2Chieu[indexBeginFrom1]}"
+										layout="grid" columns="1">
+										<f:selectItems value="#{questionMultipleChoice.ratings}"
+											var="r" itemLabel="#{r.name}" itemValue="#{r.id}" />
+										<p:ajax process="@this"
+											listener="#{excuteSurveyBean.handleResultMultipleChoice(indexBeginFrom1)}" />
+									</p:selectManyCheckbox>
+
+									<p:inputTextarea id="inputTextNote1_#{evenCount2}"
+										placeholder="Anh/chị vui lòng cho biết ý kiến!"
+										rendered="#{excuteSurveyBean.noteBooleanMultipleChoice[indexBeginFrom1]}"
+										style="margin-left: 5px;margin-bottom: 5px;width:98%"
+										value="#{excuteSurveyBean.noteRatingMultipleChoice[indexBeginFrom1]}">
+										<p:ajax process="@this" />
+									</p:inputTextarea>
+
+								</h:panelGrid>
+							</div>
+						</c:forEach>
+					</div>
+				</c:if>
+				<!-- Het phan 2 -->
+
+				<!-- trang khao sat phan thang diem -->
+				<!-- phan 3 -->
+				<c:if test="#{excuteSurveyBean.checkNullPhanThangDiem == false}">
+					<div class="row"
+						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+						<div class="row" style="width: 100%">
+							<span class="group-name"
+								style="margin: 0 auto; margin-bottom: 15px; margin-top: 20px">PHẦN
+								KHẢO SÁT: THANG ĐIỂM</span> <span class="group-description"><p
+									style="text-align: center; margin-left: 5px"></p></span>
+						</div>
+						<div class="row"
+							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.surveyPlaying.titleSlider}</div>
+						<c:if test="${evenCount == null}">
+							<c:if test="${evenCount2 == null}">
+								<c:set var="evenCount3" value="${0}" />
+							</c:if>
+							<c:if test="${evenCount2 != null}">
+								<c:set var="evenCount3" value="${evenCount2}" />
+							</c:if>
+						</c:if>
+						<c:if test="${evenCount != null}">
+							<c:if test="${evenCount2 == null}">
+								<c:set var="evenCount3" value="${evenCount}" />
+							</c:if>
+							<c:if test="${evenCount2 != null}">
+								<c:set var="evenCount3" value="${evenCount2}" />
+							</c:if>
+						</c:if>
+						<c:set var="indexBeginFrom1ThangDiem" value="${0}" />
+						<c:forEach items="#{excuteSurveyBean.questionAndAnswerSlider}"
+							var="questionSlider">
+							<c:set var="evenCount3" value="${evenCount3+1}" />
+							<c:set var="indexBeginFrom1ThangDiem"
+								value="${indexBeginFrom1ThangDiem+1}" />
+							<div class="row" style="width: 100%">
+								<p>
+									<h:outputText value="Câu #{evenCount3}: "
+										style="margin-left: 5px" />
+									#{questionSlider.question.name} (<span
+										style="font-style: italic; color: #ba5570">Vui lòng
+										nhập từ #{questionSlider.min} đến #{questionSlider.max} </span>)
+								</p>
+								<br></br>
+								<c:if test="${not empty questionSlider.question.imageString()}">
+									<div style="width: 100%; text-align: center">
+										<img
+											src="data:image/jpg;base64, #{questionSlider.question.imageString()}"
+											style="max-width: 200px; max-height: 200px; object-fit: contain; margin-top: 0px; margin-bottom: 5px" />
+									</div>
+								</c:if>
+								<br />
+								<div class="row" style="width: 100%">
+									<h:panelGrid columns="1"
+										style="margin-bottom: 10px;margin-left: 20px">
+										<p:spinner id="spinner1_#{evenCount3}"
+											value="#{excuteSurveyBean.ketquaPhanThangDiem[indexBeginFrom1ThangDiem]}"
+											min="#{questionSlider.min}" max="#{questionSlider.max}">
+										</p:spinner>
+										<p:slider for="spinner1_#{evenCount3}"
+											minValue="#{questionSlider.min}"
+											maxValue="#{questionSlider.max}" />
+									</h:panelGrid>
+									<br />
+								</div>
+							</div>
+						</c:forEach>
+					</div>
+				</c:if>
+				<!-- Het phan 3 -->
+
+				<!-- phan 4 -->
+				<c:if test="#{excuteSurveyBean.checkNullPhanLayYKien == false}">
+					<div class="row"
+						style="width: 90%; box-shadow: 0px 0px 5px #888;; margin: 0 auto; margin-bottom: 15px; border-radius: 5px">
+						<div class="row" style="width: 100%">
+							<span class="group-name"
+								style="margin: 0 auto; margin-bottom: 15px; margin-top: 20px">PHẦN
+								KHẢO SÁT: LẤY Ý KIẾN</span> <span class="group-description"><p
+									style="text-align: center; margin-left: 5px"></p></span>
+						</div>
+						<div class="row"
+							style="width: 100%; margin-bottom: 25px; margin-left: 5px; text-align: center; font-style: italic">#{excuteSurveyBean.surveyPlaying.titleFeedback}</div>
+						<c:if test="${evenCount == null}">
+							<c:if test="${evenCount2 == null}">
+								<c:if test="${evenCount3 == null}">
+									<c:set var="evenCount4" value="${0}" />
+								</c:if>
+								<c:if test="${evenCount3 != null}">
+									<c:set var="evenCount4" value="${evenCount3}" />
+								</c:if>
+							</c:if>
+							<c:if test="${evenCount2 != null}">
+								<c:if test="${evenCount3 == null}">
+									<c:set var="evenCount4" value="${evenCount2}" />
+								</c:if>
+								<c:if test="${evenCount3 != null}">
+									<c:set var="evenCount4" value="${evenCount3}" />
+								</c:if>
+							</c:if>
+						</c:if>
+						<c:if test="${evenCount != null}">
+							<c:if test="${evenCount2 == null}">
+								<c:if test="${evenCount3 == null}">
+									<c:set var="evenCount4" value="${evenCount}" />
+								</c:if>
+								<c:if test="${evenCount3 != null}">
+									<c:set var="evenCount4" value="${evenCount3}" />
+								</c:if>
+							</c:if>
+							<c:if test="${evenCount2 != null}">
+								<c:if test="${evenCount3 == null}">
+									<c:set var="evenCount4" value="${evenCount2}" />
+								</c:if>
+								<c:if test="${evenCount3 != null}">
+									<c:set var="evenCount4" value="${evenCount3}" />
+								</c:if>
+							</c:if>
+						</c:if>
+						<c:set var="indexQuestionLayYKien" value="${0}" />
+						<c:forEach items="#{excuteSurveyBean.questionsTypeLayYKien}"
+							var="question3">
+							<c:set var="evenCount4" value="${evenCount4+1}" />
+							<c:set var="indexQuestionLayYKien"
+								value="${indexQuestionLayYKien + 1}" />
+							<p style="width: 100%">
+								<h:outputText value="Câu #{evenCount4}: "
+									style="margin-left: 5px" />
+								#{question3.name}
+							</p>
+							<br></br>
+							<c:if test="${not empty question3.imageString()}">
+								<div style="width: 100%">
+									<img src="data:image/jpg;base64, #{question3.imageString()}"
+										style="max-width: 200px; max-height: 200px; object-fit: contain; margin-top: 0px; margin-bottom: 5px; margin-left: 9%" />
+								</div>
+							</c:if>
+							<br />
+							<p:inputTextarea id="id2_#{evenCount4}"
+								style="margin-bottom: 5px;width: 98%;margin-left:10px" rows="6"
+								cols="33"
+								value="#{excuteSurveyBean.dapAnLayYKienStringArray[indexQuestionLayYKien]}" />
+							<br />
+						</c:forEach>
+					</div>
+				</c:if>
+				<!-- Het phan 4 -->
+				<div class="row"
+					style="margin: 0 auto; margin-bottom: 30px; margin-top: 10px; width: 100%">
+					<p:commandButton style="color: white;width:50%" value="Hoàn thành"
+						update="total,growlKhaoSat" icon="fa fa-check" process="@form"
+						action="#{excuteSurveyBean.completeSurvey}" />
+				</div>
+			</div>
+			<p:dialog header="Thông báo" widgetVar="dialogCompleteSurvey"
+				modal="true" showEffect="fade" hideEffect="fade" resizable="true">
+				<p:outputPanel id="panelCompleteSurvey" style="text-align:center;">
+					<p:commandLink process="@this"
+						value="Bạn đã hoàn thành khảo sát. Nhấn   vào đây để trở lại."
+						action="#{excuteSurveyBean.rediretToAllSurvey()}" />
+					<br />
+				</p:outputPanel>
+			</p:dialog>
+			<p:dialog header="Thông báo" widgetVar="dialogErrorSurvey"
+				modal="true" showEffect="fade" hideEffect="fade" resizable="true">
+				<p:outputPanel id="panelErrorSurvey" style="text-align:center;">
+					<button class="btn btn-danger">Vui lòng hoàn thành tất cả
+						khảo sát</button>
+				</p:outputPanel>
+			</p:dialog>
+		</c:if>
+		<div class="row" style="margin: 0 auto; background-color: #208eb6">
+			<div class="col-sm-12 col-md-12 col-lg-12">
+				<center>
+					<h:outputText value="CÔNG 
+				TY CỔ PHẦN BỘT GIẶT LIX"
+						style="color: white; margin-top: 10px;font-size:35px" />
+				</center>
+				<center>
+					<h:outputText
+						style="text-align: center; color: white;margin-bottom:5px;font-size:40px"
+						value=" Số 3 Đường Số 2, P. Linh Trung, Q. Thủ Đức, TP. HCM."
+						styleClass="fa fa-location-arrow">
+					</h:outputText>
+				</center>
+				<center>
+					<h:outputText
+						style="text-align: center; color: white;margin-bottom:5px;font-size:40px"
+						value=" 028 - 38 964 072" styleClass="fa fa-phone-square">
+					</h:outputText>
+				</center>
+			</div>
+		</div>
+	</h:form>
+</h:body>
+
+</html>

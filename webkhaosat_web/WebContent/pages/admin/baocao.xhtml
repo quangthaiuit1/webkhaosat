@@ -23,7 +23,8 @@
 		<ui:define name="content">
 			<h:form id="formReport">
 				<p:fieldset style="width:90%;margin-left:5%; height:300px">
-					<h3 style="margin: 0px; font-size: 17px;font-weight:bold; color: #4b87f2;">Báo
+					<h3
+						style="margin: 0px; font-size: 17px; font-weight: bold; color: #4b87f2;">Báo
 						cáo khảo sát (theo tùy chọn)</h3>
 					<p:separator style="width:20%;margin:5px" />
 					<p:selectOneMenu value="#{baoCaoBean.surveySelected}"
@@ -39,13 +40,15 @@
 						style="width:15%;margin-right:10px">
 						<p:ajax process="@this" />
 						<f:selectItem itemLabel="Chọn loại báo cáo" itemValue="" />
-						<f:selectItem itemLabel="Báo cáo (toàn bộ)" itemValue="TB" />
-						<f:selectItem itemLabel="Báo cáo (đáp án ý kiến khác)" itemValue="YKK" />
-						<f:selectItem itemLabel="Báo cáo (câu hỏi lấy ý kiến)" itemValue="LYK" />
+						<f:selectItem itemLabel="Báo cáo (toàn bộ dữ liệu)" itemValue="TB" />
+						<f:selectItem itemLabel="Báo cáo (đáp án - ý kiến khác)"
+							itemValue="YKK" />
+						<f:selectItem itemLabel="Báo cáo (đáp án - câu hỏi lấy ý kiến)"
+							itemValue="LYK" />
 					</p:selectOneMenu>
 					<p:commandButton value="Xuất excel"
 						style="width:7%;color: #fff!important;background-color: #d79d39;border-color:#d79d39"
-						ajax="false" id="btnXuatExcel"
+						ajax="false" id="btnXuatExcel" onclick="this.form.target='_blank'"
 						actionListener="#{baoCaoBean.baoCaoNangLucCanDaoTao()}" />
 
 				</p:fieldset>

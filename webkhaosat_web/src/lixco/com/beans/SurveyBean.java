@@ -13,6 +13,7 @@ import javax.faces.bean.ViewScoped;
 import org.jboss.logging.Logger;
 import org.primefaces.PrimeFaces;
 
+import lixco.com.beans.entitystatic.MessageView;
 import lixco.com.entities.Survey;
 import lixco.com.entities.User_Result;
 import trong.lixco.com.account.servicepublics.Member;
@@ -23,7 +24,7 @@ public class SurveyBean extends AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-//Da hoan thanh	
+	// Da hoan thanh
 	private Survey surveyNew;
 	private List<Survey> surveys1; // Danh sach ky khao sat
 	private String answerAddNew;
@@ -33,10 +34,9 @@ public class SurveyBean extends AbstractBean implements Serializable {
 	// update and delete
 	private Survey surveyUpdated;
 	private Survey surveyDeleted;
-	
-	
-	
-	private List<User_Result> userResult1; // ket qua khao sat theo id bo khao sat
+
+	private List<User_Result> userResult1; // ket qua khao sat theo id bo khao
+											// sat
 	private List<User_Result> userResult2; // List sau filter
 	private List<User_Result> userResultTest; // test select user
 	private Member member;
@@ -51,26 +51,34 @@ public class SurveyBean extends AbstractBean implements Serializable {
 		surveyNew = new Survey();
 		surveyUpdated = new Survey();
 		surveyDeleted = new Survey();
-		//All ky khao sat
+		// All ky khao sat
 		surveys1 = SURVEY_SERVICE.findAllByFilter();
-		//sort time desc
-		Collections.sort(surveys1, new Comparator<Survey>()
-	    {
-	        @Override
-	        public int compare(Survey d1, Survey d2)
-	        {
-	            return d2.getEndDate().compareTo(d1.getEndDate());//use the name specified in the pojo class for getting the date in the place of 'getdate'
-	        }
-	    });
+		// sort time desc
+		Collections.sort(surveys1, new Comparator<Survey>() {
+			@Override
+			public int compare(Survey d1, Survey d2) {
+				return d2.getEndDate().compareTo(d1.getEndDate());// use the
+																	// name
+																	// specified
+																	// in the
+																	// pojo
+																	// class for
+																	// getting
+																	// the date
+																	// in the
+																	// place of
+																	// 'getdate'
+			}
+		});
 	}
 
-
-// BO THEM XOA SUA 
+	// BO THEM XOA SUA
 
 	// Tao ky khao sat
 	public void createSurvey() {
 		try {
-			surveyNew.setCreatedUser(member.getCode());;
+			surveyNew.setCreatedUser(member.getCode());
+			;
 			surveyNew.setCreatedDate(getDate());
 			SURVEY_SERVICE.create(surveyNew);
 			surveys1 = SURVEY_SERVICE.findAllByFilter();
@@ -82,31 +90,49 @@ public class SurveyBean extends AbstractBean implements Serializable {
 
 	// sua ky khao sat
 	public void updatesurvey() {
-		surveyUpdated.setModifiedDate(getDate());
-		surveyUpdated.setModifiedUser(member.getCode());
-		Date temp = surveyUpdated.getEndDate();
-		System.out.println(temp);
-		SURVEY_SERVICE.update(surveyUpdated);
-		PrimeFaces.current().executeScript("PF('dialogUpdateSetof').hide()");
-		notifyUpdateSuccess();
+		try {
+			// // neu khong co ai hoan thanh khao sat moi duoc xoa
+			// List<User_Result> isComplete =
+			// USER_RESULT_SERVICE.findByResult(surveyUpdated.getId(), null);
+			// if (!isComplete.isEmpty()) {
+			// MessageView.ERROR("Không thể sửa!");
+			// return;
+			// }
+			surveyUpdated.setModifiedDate(getDate());
+			surveyUpdated.setModifiedUser(member.getCode());
+			Date temp = surveyUpdated.getEndDate();
+			System.out.println(temp);
+			SURVEY_SERVICE.update(surveyUpdated);
+			// PrimeFaces.current().executeScript("PF('dialogUpdateSetof').hide()");
+			MessageView.INFO("Thành công");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Xoa ky khao sat
 	public void deleteSurvey() {
-		SURVEY_SERVICE.delete(surveyDeleted);
-		surveys1 = SURVEY_SERVICE.findAllByFilter();
-		PrimeFaces.current().executeScript("PF('dialogDeleteSetof').hide()");
-		notifyDeleteSuccess();
+		try {
+			// neu khong co ai hoan thanh khao sat moi duoc xoa
+			List<User_Result> isComplete = USER_RESULT_SERVICE.findByResult(surveyDeleted.getId(), null);
+			if (!isComplete.isEmpty()) {
+				MessageView.ERROR("Không thể xóa!");
+				return;
+			}
+			SURVEY_SERVICE.delete(surveyDeleted);
+			surveys1 = SURVEY_SERVICE.findAllByFilter();
+			// PrimeFaces.current().executeScript("PF('dialogDeleteSetof').hide()");
+			MessageView.INFO("Thành công");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
-
-
 
 	public void cancelDelete() {
 		PrimeFaces.current().executeScript("PF('dialogDelete').hide()");
 	}
-	
-// KET THUC THEM XOA SUA
+
+	// KET THUC THEM XOA SUA
 
 	public List<Survey> completesSurvey(String input) {
 		String queryLowerCase = input.toLowerCase();
@@ -114,9 +140,8 @@ public class SurveyBean extends AbstractBean implements Serializable {
 				.collect(Collectors.toList());
 	}
 
-	
-//GET AND SET
-	
+	// GET AND SET
+
 	public Survey getSurveyNew() {
 		return surveyNew;
 	}
@@ -196,7 +221,7 @@ public class SurveyBean extends AbstractBean implements Serializable {
 	public void setUserResultTest(List<User_Result> userResultTest) {
 		this.userResultTest = userResultTest;
 	}
-	
+
 	@Override
 	protected Logger getLogger() {
 		return null;

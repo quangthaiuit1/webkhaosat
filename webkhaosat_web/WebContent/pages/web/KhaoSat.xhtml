@@ -23,10 +23,16 @@
 		name="web/css/modern-business.css" />
 	<!-- CSS -->
 	<style type="text/css">
+.ui-state-highlight {
+	background: #208eb6 !important;
+	border-color: #208eb6 ! important;
+	color: white;
+}
 </style>
 </h:head>
 <h:body
 	style="background-color: #eee;width: 60%;margin: 0 auto;padding-top: 0px">
+	<p:growl id="growlKhaoSat" showDetail="true" sticky="false" />
 	<h:form id="total">
 		<div class="row" style="background-color: #15aad3; margin-top: 5px">
 			<div style="" class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
@@ -37,7 +43,6 @@
 					TY CỔ PHẦN BỘT GIẶT LIX</h5>
 			</div>
 		</div>
-
 		<c:if test="#{excuteSurveyBean.checkNullAll == false}">
 			<div class="row" style="background-color: white;">
 				<div class="col-sm-12 col-md-12 col-lg-12"
@@ -54,7 +59,6 @@
 						<p>#{excuteSurveyBean.surveyPlaying.description}</p>
 					</c:if>
 				</div>
-
 				<!-- phan 1  -->
 				<c:if test="#{excuteSurveyBean.checkNullPhanDanhGia == false}">
 					<div class="row"
@@ -74,6 +78,14 @@
 									<h:outputText value="Câu #{evenCount}" style="margin-left: 5px" />
 									: #{question1.question.name}
 								</p>
+								<br></br>
+								<c:if test="${not empty question1.question.imageString()}">
+									<div style="width: 100%; text-align: center">
+										<img
+											src="data:image/jpg;base64, #{question1.question.imageString()}"
+											style="max-width: 200px; max-height: 200px; object-fit: contain; margin-top: 0px; margin-bottom: 5px" />
+									</div>
+								</c:if>
 							</div>
 							<div class="row" style="width: 100%; margin-left: 10px">
 								<h:panelGrid columns="1" style="margin-bottom:10px;width:70%"
@@ -92,7 +104,7 @@
 										rendered="#{excuteSurveyBean.noteRating[evenCount]}"
 										style="margin-left: 10px;margin-bottom: 5px;width:100%"
 										value="#{excuteSurveyBean.noteRatingString[evenCount]}">
-										<p:ajax process="@this"/>
+										<p:ajax process="@this" />
 									</p:inputTextarea>
 								</h:panelGrid>
 							</div>
@@ -113,36 +125,52 @@
 						</div>
 						<div class="row"
 							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.surveyPlaying.titleSlider}</div>
-						<c:set var="evenCount2" value="${evenCount}" />
+						<c:if test="${evenCount == null}">
+							<c:set var="evenCount2" value="${0}" />
+						</c:if>
+						<c:if test="${evenCount != null}">
+							<c:set var="evenCount2" value="${evenCount}" />
+						</c:if>
+						<c:set var="indexBeginFrom1" value="${0}" />
 						<c:forEach
 							items="#{excuteSurveyBean.questionAndMultipleChoiceAnswer}"
 							var="questionMultipleChoice">
 							<c:set var="evenCount2" value="${evenCount2+1}" />
+							<c:set var="indexBeginFrom1" value="${indexBeginFrom1+1}" />
 							<div class="row" style="width: 100%">
 								<p>
 									<h:outputText value="Câu #{evenCount2}"
 										style="margin-left: 5px" />
 									: #{questionMultipleChoice.question.name}
 								</p>
+								<br></br>
+								<c:if
+									test="${not empty questionMultipleChoice.question.imageString()}">
+									<div style="width: 100%; text-align: center">
+										<img
+											src="data:image/jpg;base64, #{questionMultipleChoice.question.imageString()}"
+											style="max-width: 200px; max-height: 200px; object-fit: contain; margin-top: 0px; margin-bottom: 5px" />
+									</div>
+								</c:if>
 							</div>
 							<div class="row" style="width: 100%; margin-left: 10px">
 								<h:panelGrid columns="1" style="margin-bottom:10px;width:70%"
-									cellpadding="5" id="panelGrid2_#{evenCount2-evenCount}">
+									cellpadding="5" id="panelGrid2_#{indexBeginFrom1}">
 
 									<p:selectManyCheckbox id="id2_#{evenCount2}"
-										value="#{excuteSurveyBean.ketquaMultipleChoiceString2Chieu[evenCount2-evenCount]}"
+										value="#{excuteSurveyBean.ketquaMultipleChoiceString2Chieu[indexBeginFrom1]}"
 										layout="grid" columns="1">
 										<f:selectItems value="#{questionMultipleChoice.ratings}"
 											var="r" itemLabel="#{r.name}" itemValue="#{r.id}" />
 										<p:ajax process="@this"
-											listener="#{excuteSurveyBean.handleResultMultipleChoice(evenCount2-evenCount)}" />
+											listener="#{excuteSurveyBean.handleResultMultipleChoice(indexBeginFrom1)}" />
 									</p:selectManyCheckbox>
 
 									<p:inputTextarea id="inputTextNote1_#{evenCount2}"
 										placeholder="Anh/chị vui lòng cho biết ý kiến!"
-										rendered="#{excuteSurveyBean.noteBooleanMultipleChoice[evenCount2-evenCount]}"
+										rendered="#{excuteSurveyBean.noteBooleanMultipleChoice[indexBeginFrom1]}"
 										style="margin-left: 10px;margin-bottom: 5px;width:100%"
-										value="#{excuteSurveyBean.noteRatingMultipleChoice[evenCount2-evenCount]}">
+										value="#{excuteSurveyBean.noteRatingMultipleChoice[indexBeginFrom1]}">
 										<p:ajax process="@this" />
 									</p:inputTextarea>
 
@@ -166,10 +194,28 @@
 						</div>
 						<div class="row"
 							style="width: 100%; margin-bottom: 15px; margin-left: 15px; text-align: center; font-style: italic">#{excuteSurveyBean.surveyPlaying.titleSlider}</div>
-						<c:set var="evenCount3" value="${evenCount2}" />
+						<c:if test="${evenCount == null}">
+							<c:if test="${evenCount2 == null}">
+								<c:set var="evenCount3" value="${0}" />
+							</c:if>
+							<c:if test="${evenCount2 != null}">
+								<c:set var="evenCount3" value="${evenCount2}" />
+							</c:if>
+						</c:if>
+						<c:if test="${evenCount != null}">
+							<c:if test="${evenCount2 == null}">
+								<c:set var="evenCount3" value="${evenCount}" />
+							</c:if>
+							<c:if test="${evenCount2 != null}">
+								<c:set var="evenCount3" value="${evenCount2}" />
+							</c:if>
+						</c:if>
+						<c:set var="indexBeginFrom1ThangDiem" value="${0}" />
 						<c:forEach items="#{excuteSurveyBean.questionAndAnswerSlider}"
 							var="questionSlider">
 							<c:set var="evenCount3" value="${evenCount3+1}" />
+							<c:set var="indexBeginFrom1ThangDiem"
+								value="${indexBeginFrom1ThangDiem+1}" />
 							<div class="row" style="width: 100%">
 								<p>
 									<h:outputText value="Câu #{evenCount3}: "
@@ -178,12 +224,20 @@
 										style="font-style: italic; color: #ba5570">Vui lòng
 										nhập từ #{questionSlider.min} đến #{questionSlider.max} </span>)
 								</p>
+								<br></br>
+								<c:if test="${not empty questionSlider.question.imageString()}">
+									<div style="width: 100%; text-align: center">
+										<img
+											src="data:image/jpg;base64, #{questionSlider.question.imageString()}"
+											style="max-width: 200px; max-height: 200px; object-fit: contain; margin-top: 0px; margin-bottom: 5px" />
+									</div>
+								</c:if>
 								<br />
 								<div class="row" style="width: 100%">
 									<h:panelGrid columns="1"
 										style="margin-bottom: 10px;margin-left: 20px">
 										<p:spinner id="spinner1_#{evenCount3}"
-											value="#{excuteSurveyBean.ketquaPhanThangDiem[evenCount3-evenCount2]}"
+											value="#{excuteSurveyBean.ketquaPhanThangDiem[indexBeginFrom1ThangDiem]}"
 											min="#{questionSlider.min}" max="#{questionSlider.max}">
 										</p:spinner>
 										<p:slider for="spinner1_#{evenCount3}"
@@ -210,55 +264,74 @@
 						</div>
 						<div class="row"
 							style="width: 100%; margin-bottom: 25px; margin-left: 5px; text-align: center; font-style: italic">#{excuteSurveyBean.surveyPlaying.titleFeedback}</div>
-						<c:choose>
-							<c:when test="${evenCount3== null}">
-								<c:set var="evenCount4" value="${evenCount2}" />
-								<c:forEach items="#{excuteSurveyBean.questionsTypeLayYKien}"
-									var="question3">
-
-
-									<c:set var="evenCount4" value="${evenCount4+1}" />
-									<p>
-										<h:outputText value="Câu #{evenCount4}: "
-											style="margin-left: 5px" />
-										#{question3.name}
-									</p>
-									<br />
-									<p:inputTextarea id="id2_#{evenCount4}"
-										style="margin-left: 10px;margin-bottom: 5px;width: 80%"
-										rows="6" cols="33"
-										value="#{excuteSurveyBean.dapAnLayYKienStringArray[evenCount4-evenCount2]}" />
-									<br />
-								</c:forEach>
-							</c:when>
-							<c:otherwise>
-								<c:set var="evenCount4" value="${evenCount3}" />
-								<c:forEach items="#{excuteSurveyBean.questionsTypeLayYKien}"
-									var="question3">
-
-
-									<c:set var="evenCount4" value="${evenCount4+1}" />
-									<p>
-										<h:outputText value="Câu #{evenCount4}: "
-											style="margin-left: 5px" />
-										#{question3.name}
-									</p>
-									<br />
-									<p:inputTextarea id="id2_#{evenCount4}"
-										style="margin-left: 10px;margin-bottom: 5px;width: 80%"
-										rows="6" cols="33"
-										value="#{excuteSurveyBean.dapAnLayYKienStringArray[evenCount4-evenCount3]}" />
-									<br />
-								</c:forEach>
-							</c:otherwise>
-						</c:choose>
+						<c:if test="${evenCount == null}">
+							<c:if test="${evenCount2 == null}">
+								<c:if test="${evenCount3 == null}">
+									<c:set var="evenCount4" value="${0}" />
+								</c:if>
+								<c:if test="${evenCount3 != null}">
+									<c:set var="evenCount4" value="${evenCount3}" />
+								</c:if>
+							</c:if>
+							<c:if test="${evenCount2 != null}">
+								<c:if test="${evenCount3 == null}">
+									<c:set var="evenCount4" value="${evenCount2}" />
+								</c:if>
+								<c:if test="${evenCount3 != null}">
+									<c:set var="evenCount4" value="${evenCount3}" />
+								</c:if>
+							</c:if>
+						</c:if>
+						<c:if test="${evenCount != null}">
+							<c:if test="${evenCount2 == null}">
+								<c:if test="${evenCount3 == null}">
+									<c:set var="evenCount4" value="${evenCount}" />
+								</c:if>
+								<c:if test="${evenCount3 != null}">
+									<c:set var="evenCount4" value="${evenCount3}" />
+								</c:if>
+							</c:if>
+							<c:if test="${evenCount2 != null}">
+								<c:if test="${evenCount3 == null}">
+									<c:set var="evenCount4" value="${evenCount2}" />
+								</c:if>
+								<c:if test="${evenCount3 != null}">
+									<c:set var="evenCount4" value="${evenCount3}" />
+								</c:if>
+							</c:if>
+						</c:if>
+						<c:set var="indexQuestionLayYKien" value="${0}" />
+						<c:forEach items="#{excuteSurveyBean.questionsTypeLayYKien}"
+							var="question3">
+							<c:set var="evenCount4" value="${evenCount4+1}" />
+							<c:set var="indexQuestionLayYKien"
+								value="${indexQuestionLayYKien + 1}" />
+							<p style="width: 100%">
+								<h:outputText value="Câu #{evenCount4}: "
+									style="margin-left: 5px" />
+								#{question3.name}
+							</p>
+							<br></br>
+							<c:if test="${not empty question3.imageString()}">
+								<div style="width: 100%">
+									<img src="data:image/jpg;base64, #{question3.imageString()}"
+										style="max-width: 200px; max-height: 200px; object-fit: contain; margin-top: 0px; margin-bottom: 5px; margin-left: 9%" />
+								</div>
+							</c:if>
+							<br />
+							<p:inputTextarea id="id2_#{evenCount4}"
+								style="margin-bottom: 5px;width: 80%;margin-left:10px" rows="6"
+								cols="33"
+								value="#{excuteSurveyBean.dapAnLayYKienStringArray[indexQuestionLayYKien]}" />
+							<br />
+						</c:forEach>
 					</div>
 				</c:if>
-				<!-- Het phan 3 -->
+				<!-- Het phan 4 -->
 				<div class="row"
 					style="margin: 0 auto; margin-bottom: 30px; margin-top: 10px;">
 					<p:commandButton style="color: white" value="Hoàn thành"
-						update="total" icon="fa fa-check" process="@form"
+						update="total,growlKhaoSat" icon="fa fa-check" process="@form"
 						action="#{excuteSurveyBean.completeSurvey}" />
 				</div>
 			</div>

@@ -8,7 +8,6 @@
 package trong.lixco.com.servicepublic;
 
 import general.StaticPath;
-import net.xml.java.com.SerializationConnect;
 
 public class EmployeeServicePublicServiceLocator extends org.apache.axis.client.Service implements trong.lixco.com.servicepublic.EmployeeServicePublicService {
 

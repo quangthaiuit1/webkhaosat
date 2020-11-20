@@ -38,6 +38,7 @@ public class AuthorServlet extends HttpServlet {
 			String database = request.getParameter("database");
 			if (idStr != null && database != null) {
 				session.setAttribute("database", database);
+				session.setAttribute("isMobile", false);
 				setPathLink(request);
 				AccountServicePublic accountServicePublic = new AccountServicePublicProxy();
 				String loginURL = path + "/account/pages/Start.jsf";
@@ -50,18 +51,28 @@ public class AuthorServlet extends HttpServlet {
 						// trinh hay khong
 						// Neu cho phep thi cai dat bo quyen cho cho user
 						boolean allow = authorizationManager.isAllowed(account);
+						session.setAttribute("account", account);
 						if (allow) {
-							session.setAttribute("account", account);
-							response.sendRedirect(pathlocal + "/webkhaosat_web/pages/TrangChu.jsf");
+							if (request.getHeader("User-Agent").indexOf("Mobi") != -1) {
+								session.setAttribute("isMobile", true);
+								// response.sendRedirect(pathlocal +
+								// "/quanlydatcom/pages/home.htm");
+								response.sendRedirect(pathlocal + "/webkhaosat_web/pages/TrangChu.jsf");
+							} else {
+								// response.sendRedirect(pathlocal +
+								// "/quanlydatcom/pages/home.htm");
+								response.sendRedirect(pathlocal + "/webkhaosat_web/pages/TrangChu.jsf");
+							}
+							// response.sendRedirect(pathlocal +
+							// "/webkhaosat_web/pages/TrangChu.jsf");
 
 						} else {
-//							if (request.getHeader("User-Agent").indexOf("Mobi") != -1) {
-//								response.sendRedirect(
-//										pathlocal + "/" + NameSytem.NAMEPROGRAM + "/pages/khaiytemobile.htm");
-//							} else {
-							session.setAttribute("account", account);
-							response.sendRedirect(pathlocal + "/webkhaosat_web/pages/web/index.jsf");
-//							}
+							if (request.getHeader("User-Agent").indexOf("Mobi") != -1) {
+								session.setAttribute("isMobile", true);
+								response.sendRedirect(pathlocal + "/webkhaosat_web/pages/web/indexmobile.jsf");
+							} else {
+								response.sendRedirect(pathlocal + "/webkhaosat_web/pages/web/index.jsf");
+							}
 						}
 					}
 				} else {

@@ -1,5 +1,6 @@
 package lixco.com.beans;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,17 +15,24 @@ import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
 import org.omnifaces.cdi.ViewScoped;
 import org.primefaces.PrimeFaces;
+import org.primefaces.event.FileUploadEvent;
 
+import com.fasterxml.jackson.core.sym.Name;
+
+import lixco.com.beans.entitystatic.MessageView;
 import lixco.com.config.ConfigQuestionType;
 import lixco.com.entities.Answer;
 import lixco.com.entities.Question;
 import lixco.com.entities.Rating;
 import lixco.com.entities.TypeRating;
+import lixco.com.entities.User_Result;
 import lixco.com.services.TypeRatingService;
+import trong.lixco.com.util.Notify;
+import trong.lixco.com.util.ResizeImage;
 
 @Named
 @ViewScoped
-public class DetailQuestionBean extends AbstractBean implements Serializable {
+public class DetailQuestionBean extends AbstractBean {
 
 	private static final long serialVersionUID = 1L;
 	private Long setofId;
@@ -46,6 +54,7 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 	private List<TypeRating> typeRatings;
 	private TypeRating typeRatingSelected;
 	private Rating ratingSelected;
+	private Notify notify;
 
 	@Override
 	protected void initItem() {
@@ -54,7 +63,6 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 		typeRatings = TYPE_RATING_SERVICE.findAll();
 		typeRatingSelected = new TypeRating();
 		listQuestionBySet = new ArrayList<>();
-		// ?? Tai sao lai phai khoi tao
 		questionUpdated = new Question();
 		questionDeleted = new Question();
 		answerUpdated = new Answer();
@@ -65,8 +73,9 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 			setofId = getParamSetOfId();
 			listQuestionBySet = QUESTION_SERVICE.find(0L, setofId, null);
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
+		notify = new Notify(FacesContext.getCurrentInstance());
 	}
 
 	// Get param from URL
@@ -77,20 +86,45 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 		setofId = Long.parseLong(setofIdTemp);
 	}
 
+	public void uploadAlbumUpdate(FileUploadEvent event) {
+		notify = new Notify(FacesContext.getCurrentInstance());
+		try (InputStream input = event.getFile().getInputstream()) {
+			byte[] file = ResizeImage.toByteArray(input);
+			questionUpdated.setImage(file);
+			PrimeFaces current = PrimeFaces.current();
+			current.executeScript("PF('dlavatar').hide();");
+		} catch (Exception e) {
+			e.printStackTrace();
+			notify.error();
+		}
+	}
+
 	// Xoa Cau hoi
 	public void deleteQuestion() {
+		// neu khong co ai hoan thanh khao sat moi duoc xoa
+		List<User_Result> isComplete = USER_RESULT_SERVICE.findByResult(questionDeleted.getSurvey().getId(), null);
+		if (!isComplete.isEmpty()) {
+			MessageView.ERROR("Không thể xóa!");
+			return;
+		}
 		QUESTION_SERVICE.delete(questionDeleted);
 		listQuestionBySet = QUESTION_SERVICE.find(0L, setofId, null);
-		PrimeFaces.current().executeScript("PF('dialogDeleteQuest').hide()");
-		notifyDeleteSuccess();
+//		PrimeFaces.current().executeScript("PF('dialogDeleteQuest').hide()");
+		MessageView.INFO("Thành công");
 	}
 
 	// Sua cau hoi
 	public void updateQuesion() {
+		// neu khong co ai hoan thanh khao sat moi duoc xoa
+		List<User_Result> isComplete = USER_RESULT_SERVICE.findByResult(questionUpdated.getSurvey().getId(), null);
+		if (!isComplete.isEmpty()) {
+			MessageView.ERROR("Không thể sửa!");
+			return;
+		}
 		questionUpdated.setModifiedDate(getDate());
 		QUESTION_SERVICE.update(questionUpdated);
-		PrimeFaces.current().executeScript("PF('dialogUpdateQuest').hide()");
-		notifyUpdateSuccess();
+//		PrimeFaces.current().executeScript("PF('dialogUpdateQuest').hide()");
+		MessageView.INFO("Thành công");
 	}
 
 	// sua cau tra loi
@@ -108,13 +142,12 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 		notifyDeleteSuccess();
 	}
 
-
 	public void deleteRating(Rating item) {
 		List<Rating> temp = new ArrayList<>();
-		for(Rating r : listRatingByQuestion) {
-			if(r.getId() != item.getId()) {
+		for (Rating r : listRatingByQuestion) {
+			if (r.getId() != item.getId()) {
 				temp.add(r);
-			}else {
+			} else {
 				listRatingRemove.add(r);
 			}
 		}
@@ -135,7 +168,7 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 			// Reset ds dap ap cua loai cau hoi
 			listAnswersByQuestion = new ArrayList<>();
 		}
-		if(questionSelected.getQuestionType().getId() == ConfigQuestionType.MULTIPLE_CHOICE) {
+		if (questionSelected.getQuestionType().getId() == ConfigQuestionType.MULTIPLE_CHOICE) {
 			listRatingByQuestion = RATING_SERVICE.find(questionSelected.getId(), 0L);
 			listAnswersByQuestion = new ArrayList<>();
 		}
@@ -153,8 +186,8 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 	public void updateRatingNew() {
 		boolean check = false;
 		try {
-			if(!listRatingRemove.isEmpty()) {
-				for(Rating ra: listRatingRemove) {
+			if (!listRatingRemove.isEmpty()) {
+				for (Rating ra : listRatingRemove) {
 					RATING_SERVICE.delete(ra);
 				}
 				listRatingRemove = new ArrayList<>();
@@ -162,22 +195,21 @@ public class DetailQuestionBean extends AbstractBean implements Serializable {
 			for (Rating r : listRatingByQuestion) {
 				if (r.getId() != 0) {
 					Rating newR = RATING_SERVICE.update(r);
-					if(newR == null) {
+					if (newR == null) {
 						check = true;
 					}
 				} else {
 					if (StringUtils.isNotEmpty(r.getName()) && r.getType_rating() != null) {
 						r.setQuestion(listRatingByQuestion.get(0).getQuestion());
 						Rating newR = RATING_SERVICE.create(r);
-						if(newR == null) {
+						if (newR == null) {
 							check = true;
 						}
 					}
 				}
 			}
-			if(check == false) {
-				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Thông báo", "Cập nhật thành công.");
-				PrimeFaces.current().dialog().showMessageDynamic(message);
+			if (check == false) {
+				MessageView.INFO("Cập nhật thành công");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

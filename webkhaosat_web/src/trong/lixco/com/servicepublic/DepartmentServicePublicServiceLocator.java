@@ -8,7 +8,6 @@
 package trong.lixco.com.servicepublic;
 
 import general.StaticPath;
-import net.xml.java.com.SerializationConnect;
 
 public class DepartmentServicePublicServiceLocator extends org.apache.axis.client.Service implements
 		trong.lixco.com.servicepublic.DepartmentServicePublicService {
@@ -48,7 +47,7 @@ public class DepartmentServicePublicServiceLocator extends org.apache.axis.clien
 			throws javax.xml.rpc.ServiceException {
 		java.net.URL endpoint = null;
 		try {
-			if (new SerializationConnect().connect(DepartmentServicePublicPort_address))
+//			if (new SerializationConnect().connect(DepartmentServicePublicPort_address))
 				endpoint = new java.net.URL(DepartmentServicePublicPort_address);
 		} catch (java.net.MalformedURLException e) {
 			throw new javax.xml.rpc.ServiceException(e);
