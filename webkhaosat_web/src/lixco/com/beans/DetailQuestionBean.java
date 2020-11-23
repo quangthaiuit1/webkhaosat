@@ -116,11 +116,11 @@ public class DetailQuestionBean extends AbstractBean {
 	// Sua cau hoi
 	public void updateQuesion() {
 		// neu khong co ai hoan thanh khao sat moi duoc xoa
-		List<User_Result> isComplete = USER_RESULT_SERVICE.findByResult(questionUpdated.getSurvey().getId(), null);
-		if (!isComplete.isEmpty()) {
-			MessageView.ERROR("Không thể sửa!");
-			return;
-		}
+//		List<User_Result> isComplete = USER_RESULT_SERVICE.findByResult(questionUpdated.getSurvey().getId(), null);
+//		if (!isComplete.isEmpty()) {
+//			MessageView.ERROR("Không thể sửa!");
+//			return;
+//		}
 		questionUpdated.setModifiedDate(getDate());
 		QUESTION_SERVICE.update(questionUpdated);
 //		PrimeFaces.current().executeScript("PF('dialogUpdateQuest').hide()");
