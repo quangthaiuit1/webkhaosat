@@ -109,40 +109,40 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 		CellStyle styleContent = workbook.createCellStyle();
 		row = sheet.createRow(rownum);
 
-		// EmpNo
-		cell = row.createCell(0);
-		cell.setCellValue("Mã NV");
-		// xep loai// EmpName
-		cell = row.createCell(1);
-		cell.setCellValue("Tên NV");
-		cell.setCellStyle(style);
-		// Salary
-		cell = row.createCell(2);
-		cell.setCellValue("Phòng ban");
-		cell.setCellStyle(style);
+//		// EmpNo
+//		cell = row.createCell(0);
+//		cell.setCellValue("Mã NV");
+//		// xep loai// EmpName
+//		cell = row.createCell(1);
+//		cell.setCellValue("Tên NV");
+//		cell.setCellStyle(style);
+//		// Salary
+//		cell = row.createCell(2);
+//		cell.setCellValue("Phòng ban");
+//		cell.setCellStyle(style);
 
 		// Grade
-		cell = row.createCell(3);
+		cell = row.createCell(0);
 		cell.setCellValue("Kỳ khảo sát");
 		cell.setCellStyle(style);
 		// Bonus
-		cell = row.createCell(4);
+		cell = row.createCell(1);
 		cell.setCellValue("Câu hỏi");
 		cell.setCellStyle(style);
 		// xep loai
-		cell = row.createCell(5);
+		cell = row.createCell(2);
 		cell.setCellValue("Kết quả");
 		cell.setCellStyle(style);
 
-		cell = row.createCell(6);
+		cell = row.createCell(3);
 		cell.setCellValue("Thang điểm");
 		cell.setCellStyle(style);
 
-		cell = row.createCell(7);
+		cell = row.createCell(4);
 		cell.setCellValue("Lấy ý kiến");
 		cell.setCellStyle(style);
 
-		cell = row.createCell(8);
+		cell = row.createCell(5);
 		cell.setCellValue("Ý kiến khác");
 		cell.setCellStyle(style);
 		// Data
@@ -152,49 +152,49 @@ public class BaoCaoBean extends AbstractBean implements Serializable {
 				rownum++;
 				row = sheet.createRow(rownum);
 
-				// EmpNo (A)
-				cell = row.createCell(0);
-				cell.setCellValue(kq.getUser_result().getEmployeeCode());
-				// EmpName (B)
-				cell = row.createCell(1);
-				cell.setCellValue(kq.getUser_result().getEmployeeName());
-				// phong
-				cell = row.createCell(2);
-				// xu ly phong theo du lieu moi
-				Department dep = departmentServicePublic.findByCode("code", kq.getUser_result().getDepartmentCode());
-				if (dep == null) {
-					cell.setCellValue(kq.getUser_result().getDepartmentName());
-				} else {
-					if (dep.getLevelDep().getLevel() == 2) {
-						cell.setCellValue(kq.getUser_result().getDepartmentName());
-					}
-					if (dep.getLevelDep().getLevel() == 3) {
-						cell.setCellValue(dep.getDepartment().getName());
-					}
-				}
+//				// EmpNo (A)
+//				cell = row.createCell(0);
+//				cell.setCellValue(kq.getUser_result().getEmployeeCode());
+//				// EmpName (B)
+//				cell = row.createCell(1);
+//				cell.setCellValue(kq.getUser_result().getEmployeeName());
+//				// phong
+//				cell = row.createCell(2);
+//				// xu ly phong theo du lieu moi
+//				Department dep = departmentServicePublic.findByCode("code", kq.getUser_result().getDepartmentCode());
+//				if (dep == null) {
+//					cell.setCellValue(kq.getUser_result().getDepartmentName());
+//				} else {
+//					if (dep.getLevelDep().getLevel() == 2) {
+//						cell.setCellValue(kq.getUser_result().getDepartmentName());
+//					}
+//					if (dep.getLevelDep().getLevel() == 3) {
+//						cell.setCellValue(dep.getDepartment().getName());
+//					}
+//				}
 
-				cell = row.createCell(3);
+				cell = row.createCell(0);
 				cell.setCellValue(kq.getQuestion().getSurvey().getName());
 
-				cell = row.createCell(4);
+				cell = row.createCell(1);
 				cell.setCellValue(kq.getQuestion().getName());
 				// Nhom nang luc
 
 				if (kq.getRating() != null) {
-					cell = row.createCell(5);
+					cell = row.createCell(2);
 					cell.setCellValue(kq.getRating().getName());
 
 				}
 				if (kq.getThangdiem() != 0) {
-					cell = row.createCell(6);
+					cell = row.createCell(3);
 					cell.setCellValue(kq.getThangdiem());
 				}
 				if (kq.getLay_y_kien() != null) {
-					cell = row.createCell(7);
+					cell = row.createCell(4);
 					cell.setCellValue(kq.getLay_y_kien());
 				}
 				if (kq.getNote() != null) {
-					cell = row.createCell(8);
+					cell = row.createCell(5);
 					cell.setCellValue(kq.getNote());
 				}
 			}

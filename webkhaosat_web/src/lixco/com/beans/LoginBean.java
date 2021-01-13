@@ -39,6 +39,15 @@ public class LoginBean extends AbstractBean {
 			FacesContext fContext = FacesContext.getCurrentInstance();
 			ExternalContext extContext = fContext.getExternalContext();
 			extContext.redirect("http://erp.lixco.com/account/index.jsf");
+			
+			// FacesContext fContext = FacesContext.getCurrentInstance();
+			// ExternalContext extContext = fContext.getExternalContext();
+			// HttpServletRequest ht = (HttpServletRequest)
+			// FacesContext.getCurrentInstance().getExternalContext()
+			// .getRequest();
+			// String path = "http://" + ht.getServerName() + ":" +
+			// ht.getServerPort() + "/account/index.jsf";
+			// extContext.redirect(path);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

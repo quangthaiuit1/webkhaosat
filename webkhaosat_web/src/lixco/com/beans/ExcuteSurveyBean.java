@@ -304,7 +304,7 @@ public class ExcuteSurveyBean extends AbstractBean {
 					Long idRating = Long.parseLong(ketquaPhanDanhGia[j]);
 					Rating temp = RATING_SERVICE.findById(idRating);
 					if (temp.getType_rating().getId() == ConfigQuestionType.DAP_AN_LAY_Y_KIEN) {
-						if (StringUtils.isNotEmpty(noteRatingString[j])) {
+						if (!noteRatingString[j].trim().isEmpty()) {
 							UserResultDetail userResultDetailTemp = new UserResultDetail();
 							userResultDetailTemp.setCreatedDate(getDate());
 							userResultDetailTemp.setRating(temp);
